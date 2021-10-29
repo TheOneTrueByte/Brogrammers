@@ -20,12 +20,12 @@ import { MaterialIcons } from "@expo/vector-icons";
 
 export default function App() {
   return (
-    // <View>
-    //   <Login />
+    <NativeBaseProvider>
+      <Login />
+    </NativeBaseProvider>
+    // <View style={styles.container}>
+    //   <StoreSelection />
     // </View>
-    <View style={styles.container}>
-      <StoreSelection />
-    </View>
   );
 }
 

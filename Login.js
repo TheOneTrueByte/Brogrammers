@@ -3,6 +3,7 @@ import StoreSelection from "./StoreSelection";
 import { MaterialCommunityIcons, Ionicons } from "@expo/vector-icons";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+
 import {
   Image,
   Center,
@@ -19,22 +20,25 @@ import {
   IconButton,
   HStack,
   Divider,
-  View,
+  AspectRatio,
 } from "native-base";
 
 const Login = () => {
   return (
     <NativeBaseProvider>
-      <Box>
-        <Center flex={1} px="3">
-          <Image
-            source={require("./assets/Logo.png")}
-            width="700px"
-            height="200px"
-          />
-        </Center>
+      <Box safeArea flex={1} pt="10" pb="0" w="90%" mx="auto">
+        <Image
+          py="10"
+          justifyContent="center"
+          alignItems="center"
+          flex={1}
+          mx="auto"
+          alt="Logo"
+          style={{ width: 400, height: 100 }}
+          source={require("./assets/Logo.png")}
+        />
       </Box>
-      <Box safeArea flex={1} p="2" py="8" w="90%" mx="auto">
+      <Box safeArea flex={10} py="2" w="90%" mx="auto">
         <Heading size="lg" fontWeight="600" color="coolGray.800">
           Welcome
         </Heading>
@@ -67,7 +71,11 @@ const Login = () => {
             </FormControl.Label>
             <Input type="password" />
             <Link
-              _text={{ fontSize: "xs", fontWeight: "500", color: "indigo.500" }}
+              _text={{
+                fontSize: "xs",
+                fontWeight: "500",
+                color: "indigo.500",
+              }}
               alignSelf="flex-end"
               mt="1"
             >

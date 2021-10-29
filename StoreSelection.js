@@ -1,5 +1,9 @@
 import React from "react";
 import {
+  HamburgerIcon,
+  Menu,
+  Divider,
+  Pressable,
   Text,
   Heading,
   VStack,
@@ -71,7 +75,7 @@ function AppBar() {
         alignItems="center"
       >
         <HStack space="4" alignItems="center">
-          <IconButton
+          {/* <IconButton
             icon={
               <Icon
                 size="sm"
@@ -79,7 +83,10 @@ function AppBar() {
                 color="white"
               />
             }
-          />
+          /> */}
+          <Center flex={1} px="3">
+            <Example />
+          </Center>
         </HStack>
         <HStack space="4" alignItems="center">
           <Text color="white" fontSize="20" fontWeight="bold">
@@ -95,5 +102,36 @@ function AppBar() {
         </HStack>
       </HStack>
     </>
+  );
+}
+
+function Example() {
+  return (
+    <Box h="80%" w="90%" alignItems="flex-start">
+      <Menu
+        w="190"
+        closeOnSelect={false}
+        onOpen={() => console.log("opened")}
+        onClose={() => console.log("closed")}
+        trigger={(triggerProps) => {
+          return (
+            <Pressable {...triggerProps}>
+              <HamburgerIcon />
+            </Pressable>
+          );
+        }}
+      >
+        <Menu.Group title="Free">
+          <Menu.Item>Arial</Menu.Item>
+          <Menu.Item>Nunito Sans</Menu.Item>
+          <Menu.Item>Roboto</Menu.Item>
+        </Menu.Group>
+        <Divider mt="3" w="100%" />
+        <Menu.Group title="Paid">
+          <Menu.Item>SF Pro</Menu.Item>
+          <Menu.Item>Helvetica</Menu.Item>
+        </Menu.Group>
+      </Menu>
+    </Box>
   );
 }
