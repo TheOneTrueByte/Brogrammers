@@ -28,10 +28,8 @@ const Login = () => {
     <NativeBaseProvider>
       <Box safeArea flex={1} pt="10" pb="0" w="90%" mx="auto">
         <Image
-          py="10"
           justifyContent="center"
           alignItems="center"
-          flex={1}
           mx="auto"
           alt="Logo"
           style={{ width: 400, height: 100 }}
