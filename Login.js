@@ -32,8 +32,8 @@ const Login = () => {
           alignItems="center"
           mx="auto"
           alt="Logo"
-          style={{ width: 400, height: 100 }}
-          source={require("./assets/Logo.png")}
+          style={{ width: 500, height: 100}}
+          source={require("./assets/SPLogo.jpg")}
         />
       </Box>
       <Box safeArea flex={10} py="2" w="90%" mx="auto">
@@ -53,7 +53,7 @@ const Login = () => {
                 fontWeight: 500,
               }}
             >
-              Email ID
+              Phone Number or Email ID
             </FormControl.Label>
             <Input />
           </FormControl>
