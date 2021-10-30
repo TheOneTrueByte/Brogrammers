@@ -22,8 +22,11 @@ import {
   Divider,
   AspectRatio,
 } from "native-base";
-
-const Login = () => {
+const Stack = createNativeStackNavigator();
+function StoreSelectionScreen({ navigation }) {
+  return <StoreSelection />;
+}
+const LoginScreen = ({ navigation }) => {
   return (
     <NativeBaseProvider>
       <Box safeArea flex={1} pt="10" pb="0" w="90%" mx="auto">
@@ -80,7 +83,13 @@ const Login = () => {
               Forget Password?
             </Link>
           </FormControl>
-          <Button mt="2" colorScheme="red" _text={{ color: "white" }}>
+          <Button
+            title="Go to StoreSelection"
+            onPress={() => navigation.navigate("StoreSelection")}
+            mt="2"
+            colorScheme="red"
+            _text={{ color: "white" }}
+          >
             Sign in
           </Button>
           <HStack mt="6" justifyContent="center">
@@ -103,5 +112,16 @@ const Login = () => {
     </NativeBaseProvider>
   );
 };
+
+function Login() {
+  return (
+    <NavigationContainer>
+      <Stack.Navigator initialRouteName="Login">
+        <Stack.Screen name="Login" component={LoginScreen} />
+        <Stack.Screen name="StoreSelection" component={StoreSelectionScreen} />
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+}
 
 export default Login;
