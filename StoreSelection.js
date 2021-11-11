@@ -12,6 +12,7 @@ import {
 } from "react-native";
 import { createDrawerNavigator, DrawerItem } from "@react-navigation/drawer";
 import { NavigationContainer } from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Login from "./Login";
 
 const DATA = [
@@ -99,10 +100,13 @@ function Settings() {
   );
 }
 
-function LogOut() {
+function LogOut({ navigation }) {
   return (
-    <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-      <Text>LogOut Screen</Text>
+    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+      <Button
+        onPress={() => navigation.navigate('Login')}
+        title="LogOut Now"
+      />
     </View>
   );
 }
@@ -110,7 +114,7 @@ function LogOut() {
 function About() {
   return (
     <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-      <Text>About Screen</Text>
+      <Text>This application is intended for the purposes of logging and managing inventory at Soccer Post. Special thanks goes to Anthony Do, Jorge Guzman, Raymond Mullikin, Juan Sanchez, and Nhan Dang.</Text>
     </View>
   );
 }
