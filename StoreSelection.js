@@ -9,48 +9,58 @@ import {
   SafeAreaView,
   StatusBar,
   TouchableOpacity,
+  ScrollView,
 } from "react-native";
 import { createDrawerNavigator, DrawerItem } from "@react-navigation/drawer";
 import { NavigationContainer } from "@react-navigation/native";
-import Login from "./Login";
+
 import { style } from "styled-system";
+import AddItem from "./AddItem";
+
 
 
 function Stores() {
-  const DATA = [
-    {
-      id: '1',
-      title: 'Store 1',
-    },
-    {
-      id: '2',
-      title: 'Store 2',
-    },
-    {
-      id: '3',
-      title: 'Store 3',
-    }
-  ]
-  const Item = ({ title }) => (
-    <View style={styles.item}>
-      <Text style={styles.title}>{title}</Text>
-    </View>
-  );
-  const renderItem = ({ item }) => (
-    <Item title={item.title} />
-  );
+  const [items, setItems] = useState([
+    { name: 'Store 1', key: '1' },
+    { name: 'Store 2', key: '2' },
+    { name: 'Store 3', key: '3' },
+    { name: 'Store 4', key: '4' },
+  ]);
+
+  const pressHandler = (key) => {
+    setItems((prevItems) => {
+      return prevItems.filter(item => item.key != key);
+    })
+  }
+
+  const submitHandler = (name) => {
+    setItems((prevItems) => {
+      return [
+        { name: name, key: Math.random().toString() },
+        ...prevItems
+      ];
+    })
+  }
   return (
-    <SafeAreaView style={styles.container}>
-      <FlatList
-        data={DATA}
-        renderItem={renderItem}
-        keyExtractor={item => item.id}
-      />
-      <Button
-        title="Press me"
-        onPress={() => Alert.alert("Simple Button pressed")}
-      />
-    </SafeAreaView>
+    <>
+
+      <SafeAreaView style={styles.container}>
+        <FlatList
+
+          data={items}
+          keyExtractor={item => item.key}
+          renderItem={({ item }) => (
+            <Text style={styles.item}>{item.name}</Text>
+          )}
+        >
+
+        </FlatList>
+        <AddItem
+          submitHandler={submitHandler} />
+      </SafeAreaView>
+
+
+    </>
   );
 }
 
@@ -149,7 +159,7 @@ function StoreSelection() {
 
 const styles = StyleSheet.create({
   container: {
-
+    flex: 1,
     paddingTop: 40,
     paddingHorizontal: 20,
 
@@ -161,9 +171,6 @@ const styles = StyleSheet.create({
     padding: 30,
     backgroundColor: 'pink',
     fontSize: 24,
-  },
-  title: {
-    fontSize: 32,
   },
 });
 
