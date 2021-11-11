@@ -9,70 +9,60 @@ import {
   SafeAreaView,
   StatusBar,
   TouchableOpacity,
+  ScrollView,
 } from "react-native";
 import { createDrawerNavigator, DrawerItem } from "@react-navigation/drawer";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Login from "./Login";
 
-const DATA = [
-  {
-    id: "bd7acbea-c1b1-46c2-aed5-3ad53abb28ba",
-    title: "First Item",
-  },
-  {
-    id: "3ac68afc-c605-48d3-a4f8-fbd91aa97f63",
-    title: "Second Item",
-  },
-  {
-    id: "58694a0f-3da1-471f-bd96-145571e29d72",
-    title: "Third Item",
-  },
-];
+import { style } from "styled-system";
+import AddItem from "./AddItem";
 
-const Item = ({ item, onPress, backgroundColor, textColor }) => (
-  <TouchableOpacity onPress={onPress} style={[styles.item, backgroundColor]}>
-    <Text style={[styles.title, textColor]}>{item.title}</Text>
-  </TouchableOpacity>
-);
+
 
 function Stores() {
-  const [selectedId, setSelectedId] = useState(null);
+  const [items, setItems] = useState([
+    { name: 'Store 1', key: '1' },
+    { name: 'Store 2', key: '2' },
+    { name: 'Store 3', key: '3' },
+    { name: 'Store 4', key: '4' },
+  ]);
 
-  const renderItem = ({ item }) => {
-    const backgroundColor = item.id === selectedId ? "#6e3b6e" : "#f9c2ff";
-    const color = item.id === selectedId ? "white" : "black";
+  const pressHandler = (key) => {
+    setItems((prevItems) => {
+      return prevItems.filter(item => item.key != key);
+    })
+  }
 
-    return (
-      <Item
-        item={item}
-        onPress={() => setSelectedId(item.id)}
-        backgroundColor={{ backgroundColor }}
-        textColor={{ color }}
-      />
-    );
-  };
+  const submitHandler = (name) => {
+    setItems((prevItems) => {
+      return [
+        { name: name, key: Math.random().toString() },
+        ...prevItems
+      ];
+    })
+  }
   return (
-    <View
-      style={{
-        flex: 1,
-        justifyContent: "flex start",
-        alignItems: "center",
-      }}
-    >
+    <>
+
       <SafeAreaView style={styles.container}>
         <FlatList
-          data={DATA}
-          renderItem={renderItem}
-          keyExtractor={(item) => item.id}
-          extraData={selectedId}
-        />
-        <Button
-          title="Press me"
-          onPress={() => Alert.alert("Simple Button pressed")}
-        />
+
+          data={items}
+          keyExtractor={item => item.key}
+          renderItem={({ item }) => (
+            <Text style={styles.item}>{item.name}</Text>
+          )}
+        >
+
+        </FlatList>
+        <AddItem
+          submitHandler={submitHandler} />
       </SafeAreaView>
-    </View>
+
+
+    </>
   );
 }
 
@@ -175,15 +165,17 @@ function StoreSelection() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginTop: StatusBar.currentHeight || 20,
+    paddingTop: 40,
+    paddingHorizontal: 20,
+
   },
   item: {
-    padding: 20,
-    marginVertical: 8,
-    marginHorizontal: 16,
-  },
-  title: {
-    fontSize: 32,
+    flex: 1,
+    marginHorizontal: 10,
+    marginTop: 24,
+    padding: 30,
+    backgroundColor: 'pink',
+    fontSize: 24,
   },
 });
 
