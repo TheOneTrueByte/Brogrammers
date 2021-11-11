@@ -48,7 +48,7 @@ const LoginScreen = ({ navigation }) => {
         </Heading>
 
         <VStack space={3} mt="5">
-          <FormControl>
+          <FormControl isRequired>
             <FormControl.Label
               _text={{
                 color: "coolGray.800",
@@ -60,7 +60,7 @@ const LoginScreen = ({ navigation }) => {
             </FormControl.Label>
             <Input />
           </FormControl>
-          <FormControl>
+          <FormControl isRequired>
             <FormControl.Label
               _text={{
                 color: "coolGray.800",
@@ -70,6 +70,7 @@ const LoginScreen = ({ navigation }) => {
             >
               Password
             </FormControl.Label>
+            <FormControl.ErrorMessage>Incorrect Email or Password. Try Again</FormControl.ErrorMessage>
             <Input type="password" />
             <Link
               _text={{
