@@ -3,21 +3,10 @@ import StoreSelection from "./StoreSelection";
 import { MaterialCommunityIcons, Ionicons } from "@expo/vector-icons";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { initializeApp } from "@firebase/app";
-import {getFirestore, setDoc, doc } from 'firebase/firestore';
+import { StyleSheet, View } from "react-native";
+import { useState } from "react";
+import { auth } from './firebase'
 
-const firebaseConfig = {
-  apiKey: "AIzaSyCml_AxQYdLee-QUAR3CYw83w914zbTsuU",
-  authDomain: "soccer-inventory-ab9f4.firebaseapp.com",
-  projectId: "soccer-inventory-ab9f4",
-  storageBucket: "soccer-inventory-ab9f4.appspot.com",
-  messagingSenderId: "204772762321",
-  appId: "1:204772762321:web:e31691245d98cc84381bf0",
-  measurementId: "G-EBZ53PWMLN"
-}
-
-const app = initializeApp(firebaseConfig);
-const firestore = getFirestore();
 
 import {
   Image,
@@ -37,11 +26,33 @@ import {
   Divider,
   AspectRatio,
 } from "native-base";
+import { TextInput } from "react-native-gesture-handler";
+import { signInWithEmailAndPassword } from "@firebase/auth";
+
 const Stack = createNativeStackNavigator();
+
 function StoreSelectionScreen({ navigation }) {
   return <StoreSelection />;
 }
+
 const LoginScreen = ({ navigation }) => {
+    const [loginEmail, setLoginEmail] = useState("");
+    const [loginPassword, setLoginPassword] = useState("");
+    
+  const loginUser = async () => {
+   try {
+     const user = await signInWithEmailAndPassword(
+       auth,
+       loginEmail,
+       loginPassword
+     );
+     console.log(user);
+     navigation.navigate("StoreSelection")
+   } catch (error) {
+     console.log(error.message);
+   }
+   };
+
   return (
     <NativeBaseProvider>
       <Box safeArea flex={1} pt="10" pb="0" w="90%" mx="auto">
@@ -63,45 +74,24 @@ const LoginScreen = ({ navigation }) => {
         </Heading>
 
         <VStack space={3} mt="5">
-          <FormControl isRequired>
-            <FormControl.Label
-              _text={{
-                color: "coolGray.800",
-                fontSize: "xs",
-                fontWeight: 500,
-              }}
-            >
-              Phone Number or Email ID
-            </FormControl.Label>
-            <Input />
-          </FormControl>
-          <FormControl isRequired>
-            <FormControl.Label
-              _text={{
-                color: "coolGray.800",
-                fontSize: "xs",
-                fontWeight: 500,
-              }}
-            >
-              Password
-            </FormControl.Label>
-            <FormControl.ErrorMessage>Incorrect Email or Password. Try Again</FormControl.ErrorMessage>
-            <Input type="password" />
-            <Link
-              _text={{
-                fontSize: "xs",
-                fontWeight: "500",
-                color: "indigo.500",
-              }}
-              alignSelf="flex-end"
-              mt="1"
-            >
-              Forget Password?
-            </Link>
-          </FormControl>
+        <TextInput
+          onChange={(event) => {
+            setLoginEmail(event.target.value);
+          }}
+          placeholder={'Email'}
+          style={loginstyles.input}
+        /> 
+        <TextInput
+          onChange={(event) => {
+            setLoginPassword(event.target.value);
+          }}
+          placeholder={'Password'}
+          secureTextEntry={true}
+          style={loginstyles.input}
+        />
           <Button
             title="Go to StoreSelection"
-            onPress={() => navigation.navigate("StoreSelection")}
+            onPress={() => loginUser()}
             mt="2"
             colorScheme="red"
             _text={{ color: "white" }}
@@ -139,5 +129,21 @@ function Login() {
     </NavigationContainer>
   );
 }
+
+const loginstyles = StyleSheet.create({
+  container: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#ecf0f1',
+  },
+  input: {
+    height: 44,
+    padding: 10,
+    borderWidth: .5,
+    borderColor: 'grey',
+    marginBottom: 10,
+  },
+});
 
 export default Login;
