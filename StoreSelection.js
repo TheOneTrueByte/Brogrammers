@@ -20,7 +20,12 @@ import { style } from "styled-system";
 import AddItem from "./AddItem";
 
 import { initializeApp } from "@firebase/app";
-import {getFirestore, setDoc, doc } from 'firebase/firestore';
+import { getFirestore, setDoc, doc } from 'firebase/firestore';
+import { Icon } from "native-base";
+
+const Separator = () => (
+  <View style={styles.separator} />
+);
 
 const firebaseConfig = {
   apiKey: "AIzaSyCml_AxQYdLee-QUAR3CYw83w914zbTsuU",
@@ -59,25 +64,38 @@ function Stores() {
       ];
     })
   }
+
+  const DeleteItem = ({ item, pressHandler }) => {
+    return (
+      <TouchableOpacity
+        style={styles.btnStyle}
+        onPress={() => pressHandler(item.key)}
+      >
+        <Text style={{ fontSize: 20, color: 'white' }}>Delete</Text>
+      </TouchableOpacity>
+    )
+  }
   return (
     <>
-
       <SafeAreaView style={styles.container}>
         <FlatList
-
           data={items}
           keyExtractor={item => item.key}
           renderItem={({ item }) => (
-            <Text style={styles.item}>{item.name}</Text>
+            <View style={styles.flatListStyle}>
+              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <Text style={{ fontSize: 24 }}>{item.name}</Text>
+              </View>
+              <DeleteItem item={item} pressHandler={pressHandler} />
+
+
+            </View>
           )}
         >
-
         </FlatList>
         <AddItem
           submitHandler={submitHandler} />
-      </SafeAreaView>
-
-
+      </SafeAreaView >
     </>
   );
 }
@@ -181,8 +199,18 @@ function StoreSelection() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 40,
-    paddingHorizontal: 20,
+    padding: 24,
+    // paddingTop: 40,
+    // paddingHorizontal: 20,
+  },
+  flatListStyle: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    backgroundColor: 'pink',
+    marginBottom: 16,
+    padding: 10,
+    borderRadius: 8,
 
   },
   item: {
@@ -193,6 +221,24 @@ const styles = StyleSheet.create({
     backgroundColor: 'pink',
     fontSize: 24,
   },
+  separator: {
+    marginVertical: 8,
+    borderBottomColor: '#737373',
+    borderBottomWidth: StyleSheet.hairlineWidth,
+  },
+  button: {
+    flex: 1,
+    marginHorizontal: 10,
+    marginTop: 24,
+    padding: 30,
+    backgroundColor: 'pink',
+    fontSize: 24,
+  },
+  btnStyle: {
+    backgroundColor: '#140d94',
+    padding: 20,
+    borderRadius: 8,
+  }
 });
 
 export default StoreSelection;
