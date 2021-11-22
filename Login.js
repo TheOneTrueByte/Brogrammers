@@ -123,9 +123,21 @@ const LoginScreen = ({ navigation }) => {
 function Login() {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Login">
-        <Stack.Screen name="Login" component={LoginScreen} />
-        <Stack.Screen name="StoreSelection" component={StoreSelectionScreen} />
+      <Stack.Navigator initialRouteName="Login" headerMode = 'none'>
+        <Stack.Screen 
+          name="Login" 
+          component={LoginScreen} 
+          options = {{
+            headerShown: false,
+          }}
+        />
+        <Stack.Screen 
+          name="StoreSelection" 
+          component={StoreSelectionScreen} 
+          options = {{
+            headerShown: false
+          }}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );
