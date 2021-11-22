@@ -40,6 +40,8 @@ const LoginScreen = ({ navigation }) => {
     const [loginPassword, setLoginPassword] = useState("");
     
   const loginUser = async () => {
+    console.log(loginEmail);
+    console.log(loginPassword);
    try {
      const user = await signInWithEmailAndPassword(
        auth,
@@ -75,16 +77,15 @@ const LoginScreen = ({ navigation }) => {
 
         <VStack space={3} mt="5">
         <TextInput
-          onChange={(event) => {
-            setLoginEmail(event.target.value);
-          }}
+          onChangeText = {text => setLoginEmail(text)}
           placeholder={'Email'}
           style={loginstyles.input}
         /> 
         <TextInput
-          onChange={(event) => {
-            setLoginPassword(event.target.value);
-          }}
+          // onChange={(event) => {
+          //   setLoginPassword(event.target.value);
+          // }}
+          onChangeText = {text => setLoginPassword(text)}
           placeholder={'Password'}
           secureTextEntry={true}
           style={loginstyles.input}
@@ -96,7 +97,7 @@ const LoginScreen = ({ navigation }) => {
             colorScheme="red"
             _text={{ color: "white" }}
           >
-            Sign in
+          Sign In
           </Button>
           <HStack mt="6" justifyContent="center">
             <Text fontSize="sm" color="muted.700" fontWeight={400}>
