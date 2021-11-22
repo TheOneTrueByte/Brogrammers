@@ -1,5 +1,6 @@
 import * as React from "react";
 import StoreSelection from "./StoreSelection";
+import Home from "./HomeScreen";
 import { MaterialCommunityIcons, Ionicons } from "@expo/vector-icons";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
@@ -35,6 +36,10 @@ function StoreSelectionScreen({ navigation }) {
   return <StoreSelection />;
 }
 
+function HomeScreen({ navigation }) {
+  return <Home />;
+}
+
 const LoginScreen = ({ navigation }) => {
     const [loginEmail, setLoginEmail] = useState("");
     const [loginPassword, setLoginPassword] = useState("");
@@ -49,7 +54,7 @@ const LoginScreen = ({ navigation }) => {
        loginPassword
      );
      console.log(user);
-     navigation.navigate("StoreSelection")
+     navigation.navigate("Home")
    } catch (error) {
      console.log(error.message);
    }
@@ -82,9 +87,6 @@ const LoginScreen = ({ navigation }) => {
           style={loginstyles.input}
         /> 
         <TextInput
-          // onChange={(event) => {
-          //   setLoginPassword(event.target.value);
-          // }}
           onChangeText = {text => setLoginPassword(text)}
           placeholder={'Password'}
           secureTextEntry={true}
@@ -132,8 +134,10 @@ function Login() {
           }}
         />
         <Stack.Screen 
-          name="StoreSelection" 
-          component={StoreSelectionScreen} 
+          // name="StoreSelection" 
+          // component={StoreSelectionScreen}
+          name = 'Home'
+          component = {HomeScreen}
           options = {{
             headerShown: false
           }}
