@@ -123,7 +123,7 @@ const LoginScreen = ({ navigation }) => {
 function Login() {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Login" headerMode = 'none'>
+      <Stack.Navigator initialRouteName="Login" screenOptions = {{gestureEnabled: false}}>
         <Stack.Screen 
           name="Login" 
           component={LoginScreen} 
@@ -135,7 +135,7 @@ function Login() {
           name="StoreSelection" 
           component={StoreSelectionScreen} 
           options = {{
-            headerShown: false
+            headerShown: false,
           }}
         />
       </Stack.Navigator>
