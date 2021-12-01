@@ -103,7 +103,7 @@ function Stores() {
 function TeamAndStorage() {
   return (
     <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-      <Text>Team and Storage screen</Text>
+      <Text>This page will allow the user to be able to see and update the select teams and their storages.</Text>
     </View>
   );
 }
@@ -111,7 +111,7 @@ function TeamAndStorage() {
 function Inventory() {
   return (
     <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-      <Text>Inventory</Text>
+      <Text>This page will allow the user to view and manage the inventory that has been recorded.</Text>
     </View>
   );
 }
@@ -119,7 +119,7 @@ function Inventory() {
 function Settings() {
   return (
     <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-      <Text>Setting Screen</Text>
+      <Text>This page will allow the user to change certain settings depending on permission levels.</Text>
     </View>
   );
 }
