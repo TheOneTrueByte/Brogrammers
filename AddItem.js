@@ -8,6 +8,16 @@ export default function AddItem({ submitHandler }) {
     const changeHandler = (val) => {
         setText(val);
     };
+    const checkTextInput = () => {
+        //Check for the Name TextInput
+        if (!text.trim()) {
+          alert('Please Enter Item Name');
+          return;
+        }else{
+            submitHandler(text);
+            return;
+        }
+    }
     return (
         <>
             <TextInput
@@ -19,7 +29,11 @@ export default function AddItem({ submitHandler }) {
                 onChangeText={changeHandler}
 
             />
-            <Button onPress={() => submitHandler(text)} title="Add Item" color='red' />
+            <Button 
+            
+            onPress={checkTextInput} title="Add Item" color='red' 
+            
+            />
         </>
     )
 }
