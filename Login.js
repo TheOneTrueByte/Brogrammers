@@ -3,7 +3,7 @@ import StoreSelection from "./StoreSelection";
 import { MaterialCommunityIcons, Ionicons } from "@expo/vector-icons";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, View, Alert } from "react-native";
 import { useState } from "react";
 import { auth } from './firebase'
 
@@ -24,7 +24,7 @@ import {
   IconButton,
   HStack,
   Divider,
-  AspectRatio,
+  AspectRatio
 } from "native-base";
 import { TextInput } from "react-native-gesture-handler";
 import { signInWithEmailAndPassword } from "@firebase/auth";
@@ -40,8 +40,9 @@ const LoginScreen = ({ navigation }) => {
     const [loginPassword, setLoginPassword] = useState("");
     
   const loginUser = async () => {
-    console.log(loginEmail);
-    console.log(loginPassword);
+    //uncomment for testing but PLEASE don't leave it in for release cuz security - Juan
+    //console.log(loginEmail);
+    //console.log(loginPassword);
    try {
      const user = await signInWithEmailAndPassword(
        auth,
@@ -52,6 +53,7 @@ const LoginScreen = ({ navigation }) => {
      navigation.navigate("StoreSelection")
    } catch (error) {
      console.log(error.message);
+     alert("Invalid Email/Password")
    }
    };
 
