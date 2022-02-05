@@ -5,8 +5,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { StyleSheet, View, Alert } from "react-native";
 import { useState } from "react";
-import { auth } from './firebase'
-
+import { auth } from "../firebase";
 
 import {
   Image,
@@ -24,7 +23,7 @@ import {
   IconButton,
   HStack,
   Divider,
-  AspectRatio
+  AspectRatio,
 } from "native-base";
 import { TextInput } from "react-native-gesture-handler";
 import { signInWithEmailAndPassword } from "@firebase/auth";
@@ -36,26 +35,26 @@ function StoreSelectionScreen({ navigation }) {
 }
 
 const LoginScreen = ({ navigation }) => {
-    const [loginEmail, setLoginEmail] = useState("");
-    const [loginPassword, setLoginPassword] = useState("");
-    
+  const [loginEmail, setLoginEmail] = useState("");
+  const [loginPassword, setLoginPassword] = useState("");
+
   const loginUser = async () => {
     //uncomment for testing but PLEASE don't leave it in for release cuz security - Juan
     //console.log(loginEmail);
     //console.log(loginPassword);
-   try {
-     const user = await signInWithEmailAndPassword(
-       auth,
-       loginEmail,
-       loginPassword
-     );
-     console.log(user);
-     navigation.navigate("StoreSelection")
-   } catch (error) {
-     console.log(error.message);
-     alert("Invalid Email/Password")
-   }
-   };
+    try {
+      const user = await signInWithEmailAndPassword(
+        auth,
+        loginEmail,
+        loginPassword
+      );
+      console.log(user);
+      navigation.navigate("StoreSelection");
+    } catch (error) {
+      console.log(error.message);
+      alert("Invalid Email/Password");
+    }
+  };
 
   return (
     <NativeBaseProvider>
@@ -65,8 +64,8 @@ const LoginScreen = ({ navigation }) => {
           alignItems="center"
           mx="auto"
           alt="Logo"
-          style={{ width: 500, height: 100}}
-          source={require("./assets/SPLogo.jpg")}
+          style={{ width: 500, height: 100 }}
+          source={require("../assets/SPLogo.jpg")}
         />
       </Box>
       <Box safeArea flex={10} py="2" w="90%" mx="auto">
@@ -78,20 +77,20 @@ const LoginScreen = ({ navigation }) => {
         </Heading>
 
         <VStack space={3} mt="5">
-        <TextInput
-          onChangeText = {text => setLoginEmail(text)}
-          placeholder={'Email'}
-          style={loginstyles.input}
-        /> 
-        <TextInput
-          // onChange={(event) => {
-          //   setLoginPassword(event.target.value);
-          // }}
-          onChangeText = {text => setLoginPassword(text)}
-          placeholder={'Password'}
-          secureTextEntry={true}
-          style={loginstyles.input}
-        />
+          <TextInput
+            onChangeText={(text) => setLoginEmail(text)}
+            placeholder={"Email"}
+            style={loginstyles.input}
+          />
+          <TextInput
+            // onChange={(event) => {
+            //   setLoginPassword(event.target.value);
+            // }}
+            onChangeText={(text) => setLoginPassword(text)}
+            placeholder={"Password"}
+            secureTextEntry={true}
+            style={loginstyles.input}
+          />
           <Button
             title="Go to StoreSelection"
             onPress={() => loginUser()}
@@ -99,7 +98,7 @@ const LoginScreen = ({ navigation }) => {
             colorScheme="red"
             _text={{ color: "white" }}
           >
-          Sign In
+            Sign In
           </Button>
           <HStack mt="6" justifyContent="center">
             <Text fontSize="sm" color="muted.700" fontWeight={400}>
@@ -125,18 +124,21 @@ const LoginScreen = ({ navigation }) => {
 function Login() {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Login" screenOptions = {{gestureEnabled: false}}>
-        <Stack.Screen 
-          name="Login" 
-          component={LoginScreen} 
-          options = {{
+      <Stack.Navigator
+        initialRouteName="Login"
+        screenOptions={{ gestureEnabled: false }}
+      >
+        <Stack.Screen
+          name="Login"
+          component={LoginScreen}
+          options={{
             headerShown: false,
           }}
         />
-        <Stack.Screen 
-          name="StoreSelection" 
-          component={StoreSelectionScreen} 
-          options = {{
+        <Stack.Screen
+          name="StoreSelection"
+          component={StoreSelectionScreen}
+          options={{
             headerShown: false,
           }}
         />
@@ -148,15 +150,15 @@ function Login() {
 const loginstyles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#ecf0f1',
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#ecf0f1",
   },
   input: {
     height: 44,
     padding: 10,
-    borderWidth: .5,
-    borderColor: 'grey',
+    borderWidth: 0.5,
+    borderColor: "grey",
     marginBottom: 10,
   },
 });

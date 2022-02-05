@@ -20,12 +20,10 @@ import { style } from "styled-system";
 import AddItem from "./AddItem";
 
 import { initializeApp } from "@firebase/app";
-import { getFirestore, setDoc, doc } from 'firebase/firestore';
+import { getFirestore, setDoc, doc } from "firebase/firestore";
 import { Icon } from "native-base";
 
-const Separator = () => (
-  <View style={styles.separator} />
-);
+const Separator = () => <View style={styles.separator} />;
 
 const firebaseConfig = {
   apiKey: "AIzaSyCml_AxQYdLee-QUAR3CYw83w914zbTsuU",
@@ -34,36 +32,26 @@ const firebaseConfig = {
   storageBucket: "soccer-inventory-ab9f4.appspot.com",
   messagingSenderId: "204772762321",
   appId: "1:204772762321:web:e31691245d98cc84381bf0",
-  measurementId: "G-EBZ53PWMLN"
-}
+  measurementId: "G-EBZ53PWMLN",
+};
 
 const app = initializeApp(firebaseConfig);
 const firestore = getFirestore();
 
-
-
 function Stores() {
-  const [items, setItems] = useState([
-    { name: 'Store 1', key: '1' },
-    { name: 'Store 2', key: '2' },
-    { name: 'Store 3', key: '3' },
-    { name: 'Store 4', key: '4' },
-  ]);
+  const [items, setItems] = useState("");
 
   const pressHandler = (key) => {
     setItems((prevItems) => {
-      return prevItems.filter(item => item.key != key);
-    })
-  }
+      return prevItems.filter((item) => item.key != key);
+    });
+  };
 
   const submitHandler = (name) => {
     setItems((prevItems) => {
-      return [
-        { name: name, key: Math.random().toString() },
-        ...prevItems
-      ];
-    })
-  }
+      return [{ name: name, key: Math.random().toString() }, ...prevItems];
+    });
+  };
 
   const DeleteItem = ({ item, pressHandler }) => {
     return (
@@ -71,31 +59,27 @@ function Stores() {
         style={styles.btnStyle}
         onPress={() => pressHandler(item.key)}
       >
-        <Text style={{ fontSize: 20, color: 'white' }}>Delete</Text>
+        <Text style={{ fontSize: 20, color: "white" }}>Delete</Text>
       </TouchableOpacity>
-    )
-  }
+    );
+  };
   return (
     <>
       <SafeAreaView style={styles.container}>
         <FlatList
           data={items}
-          keyExtractor={item => item.key}
+          keyExtractor={(item) => item.key}
           renderItem={({ item }) => (
             <View style={styles.flatListStyle}>
-              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <View style={{ flexDirection: "row", alignItems: "center" }}>
                 <Text style={{ fontSize: 24 }}>{item.name}</Text>
               </View>
               <DeleteItem item={item} pressHandler={pressHandler} />
-
-
             </View>
           )}
-        >
-        </FlatList>
-        <AddItem
-          submitHandler={submitHandler} />
-      </SafeAreaView >
+        ></FlatList>
+        <AddItem submitHandler={submitHandler} />
+      </SafeAreaView>
     </>
   );
 }
@@ -103,7 +87,10 @@ function Stores() {
 function TeamAndStorage() {
   return (
     <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-      <Text>This page will allow the user to be able to see and update the select teams and their storages.</Text>
+      <Text>
+        This page will allow the user to be able to see and update the select
+        teams and their storages.
+      </Text>
     </View>
   );
 }
@@ -111,7 +98,10 @@ function TeamAndStorage() {
 function Inventory() {
   return (
     <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-      <Text>This page will allow the user to view and manage the inventory that has been recorded.</Text>
+      <Text>
+        This page will allow the user to view and manage the inventory that has
+        been recorded.
+      </Text>
     </View>
   );
 }
@@ -119,18 +109,18 @@ function Inventory() {
 function Settings() {
   return (
     <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-      <Text>This page will allow the user to change certain settings depending on permission levels.</Text>
+      <Text>
+        This page will allow the user to change certain settings depending on
+        permission levels.
+      </Text>
     </View>
   );
 }
 
 function LogOut({ navigation }) {
   return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <Button
-        onPress={() => navigation.navigate('Login')}
-        title="LogOut Now"
-      />
+    <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+      <Button onPress={() => navigation.navigate("Login")} title="LogOut Now" />
     </View>
   );
 }
@@ -138,7 +128,11 @@ function LogOut({ navigation }) {
 function About() {
   return (
     <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-      <Text>This application is intended for the purposes of logging and managing inventory at Soccer Post. Special thanks goes to Anthony Do, Jorge Guzman, Raymond Mullikin, Juan Sanchez, and Nhan Dang.</Text>
+      <Text>
+        This application is intended for the purposes of logging and managing
+        inventory at Soccer Post. Special thanks goes to Anthony Do, Jorge
+        Guzman, Raymond Mullikin, Juan Sanchez, and Nhan Dang.
+      </Text>
     </View>
   );
 }
@@ -204,26 +198,25 @@ const styles = StyleSheet.create({
     // paddingHorizontal: 20,
   },
   flatListStyle: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    backgroundColor: 'pink',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    backgroundColor: "pink",
     marginBottom: 16,
     padding: 10,
     borderRadius: 8,
-
   },
   item: {
     flex: 1,
     marginHorizontal: 10,
     marginTop: 24,
     padding: 30,
-    backgroundColor: 'pink',
+    backgroundColor: "pink",
     fontSize: 24,
   },
   separator: {
     marginVertical: 8,
-    borderBottomColor: '#737373',
+    borderBottomColor: "#737373",
     borderBottomWidth: StyleSheet.hairlineWidth,
   },
   button: {
@@ -231,14 +224,14 @@ const styles = StyleSheet.create({
     marginHorizontal: 10,
     marginTop: 24,
     padding: 30,
-    backgroundColor: 'pink',
+    backgroundColor: "pink",
     fontSize: 24,
   },
   btnStyle: {
-    backgroundColor: '#140d94',
+    backgroundColor: "#140d94",
     padding: 20,
     borderRadius: 8,
-  }
+  },
 });
 
 export default StoreSelection;
