@@ -3,25 +3,29 @@ import {
   Button,
   View,
   Text,
+  Alert,
   StyleSheet,
   FlatList,
   SafeAreaView,
+  StatusBar,
   TouchableOpacity,
+  ScrollView,
 } from "react-native";
 import { createDrawerNavigator, DrawerItem } from "@react-navigation/drawer";
+import { NavigationContainer } from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import Login from "./Login";
 
+import { style } from "styled-system";
 import AddItem from "./AddItem";
 
 import { initializeApp } from "@firebase/app";
-import { getFirestore, setDoc, doc } from "firebase/firestore";
+import { getFirestore, setDoc, doc } from 'firebase/firestore';
+import { Icon } from "native-base";
 
-// Pages
-import Inventory from "./Pages/inventory";
-import About from "./Pages/about";
-import TeamAndStorage from "./Pages/teamAndStorage";
-import Settings from "./Pages/settings";
-
-const Separator = () => <View style={styles.separator} />;
+const Separator = () => (
+  <View style={styles.separator} />
+);
 
 const firebaseConfig = {
   apiKey: "AIzaSyCml_AxQYdLee-QUAR3CYw83w914zbTsuU",
@@ -30,26 +34,36 @@ const firebaseConfig = {
   storageBucket: "soccer-inventory-ab9f4.appspot.com",
   messagingSenderId: "204772762321",
   appId: "1:204772762321:web:e31691245d98cc84381bf0",
-  measurementId: "G-EBZ53PWMLN",
-};
+  measurementId: "G-EBZ53PWMLN"
+}
 
 const app = initializeApp(firebaseConfig);
 const firestore = getFirestore();
 
+
+
 function Stores() {
-  const [items, setItems] = useState("");
+  const [items, setItems] = useState([
+    { name: 'Store 1', key: '1' },
+    { name: 'Store 2', key: '2' },
+    { name: 'Store 3', key: '3' },
+    { name: 'Store 4', key: '4' },
+  ]);
 
   const pressHandler = (key) => {
     setItems((prevItems) => {
-      return prevItems.filter((item) => item.key != key);
-    });
-  };
+      return prevItems.filter(item => item.key != key);
+    })
+  }
 
   const submitHandler = (name) => {
     setItems((prevItems) => {
-      return [{ name: name, key: Math.random().toString() }, ...prevItems];
-    });
-  };
+      return [
+        { name: name, key: Math.random().toString() },
+        ...prevItems
+      ];
+    })
+  }
 
   const DeleteItem = ({ item, pressHandler }) => {
     return (
@@ -57,35 +71,74 @@ function Stores() {
         style={styles.btnStyle}
         onPress={() => pressHandler(item.key)}
       >
-        <Text style={{ fontSize: 20, color: "white" }}>Delete</Text>
+        <Text style={{ fontSize: 20, color: 'white' }}>Delete</Text>
       </TouchableOpacity>
-    );
-  };
+    )
+  }
   return (
     <>
       <SafeAreaView style={styles.container}>
         <FlatList
           data={items}
-          keyExtractor={(item) => item.key}
+          keyExtractor={item => item.key}
           renderItem={({ item }) => (
             <View style={styles.flatListStyle}>
-              <View style={{ flexDirection: "row", alignItems: "center" }}>
+              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                 <Text style={{ fontSize: 24 }}>{item.name}</Text>
               </View>
               <DeleteItem item={item} pressHandler={pressHandler} />
+
+
             </View>
           )}
-        ></FlatList>
-        <AddItem submitHandler={submitHandler} />
-      </SafeAreaView>
+        >
+        </FlatList>
+        <AddItem
+          submitHandler={submitHandler} />
+      </SafeAreaView >
     </>
+  );
+}
+
+function TeamAndStorage() {
+  return (
+    <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+      <Text>Team and Storage screen</Text>
+    </View>
+  );
+}
+
+function Inventory() {
+  return (
+    <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+      <Text>Inventory</Text>
+    </View>
+  );
+}
+
+function Settings() {
+  return (
+    <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+      <Text>Setting Screen</Text>
+    </View>
   );
 }
 
 function LogOut({ navigation }) {
   return (
-    <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-      <Button onPress={() => navigation.navigate("Login")} title="LogOut Now" />
+    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+      <Button
+        onPress={() => navigation.navigate('Login')}
+        title="LogOut Now"
+      />
+    </View>
+  );
+}
+
+function About() {
+  return (
+    <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+      <Text>This application is intended for the purposes of logging and managing inventory at Soccer Post. Special thanks goes to Anthony Do, Jorge Guzman, Raymond Mullikin, Juan Sanchez, and Nhan Dang.</Text>
     </View>
   );
 }
@@ -151,25 +204,26 @@ const styles = StyleSheet.create({
     // paddingHorizontal: 20,
   },
   flatListStyle: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    backgroundColor: "pink",
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    backgroundColor: 'pink',
     marginBottom: 16,
     padding: 10,
     borderRadius: 8,
+
   },
   item: {
     flex: 1,
     marginHorizontal: 10,
     marginTop: 24,
     padding: 30,
-    backgroundColor: "pink",
+    backgroundColor: 'pink',
     fontSize: 24,
   },
   separator: {
     marginVertical: 8,
-    borderBottomColor: "#737373",
+    borderBottomColor: '#737373',
     borderBottomWidth: StyleSheet.hairlineWidth,
   },
   button: {
@@ -177,14 +231,14 @@ const styles = StyleSheet.create({
     marginHorizontal: 10,
     marginTop: 24,
     padding: 30,
-    backgroundColor: "pink",
+    backgroundColor: 'pink',
     fontSize: 24,
   },
   btnStyle: {
-    backgroundColor: "#140d94",
+    backgroundColor: '#140d94',
     padding: 20,
     borderRadius: 8,
-  },
+  }
 });
 
 export default StoreSelection;
