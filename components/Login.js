@@ -56,6 +56,8 @@ const LoginScreen = ({ navigation }) => {
     }
   };
 
+  const [emailField, resetEmailField] = useState('')
+  const [passwordField, resetPasswordField] = useState('')
   return (
     <NativeBaseProvider>
       <Box safeArea flex={1} pt="10" pb="0" w="90%" mx="auto">
@@ -78,22 +80,31 @@ const LoginScreen = ({ navigation }) => {
 
         <VStack space={3} mt="5">
           <TextInput
-            onChangeText={(text) => setLoginEmail(text)}
+            onChange={(event) => {
+              setLoginEmail(event.target.value);
+          }}
+            onChangeText={value => resetEmailField(value)}
             placeholder={"Email"}
+            value={emailField}
             style={loginstyles.input}
           />
           <TextInput
-            // onChange={(event) => {
-            //   setLoginPassword(event.target.value);
-            // }}
-            onChangeText={(text) => setLoginPassword(text)}
+            onChange={(event) => {
+              setLoginPassword(event.target.value);
+             }}
+            onChangeText={value => resetPasswordField(value)}
             placeholder={"Password"}
+            value={passwordField}
             secureTextEntry={true}
             style={loginstyles.input}
           />
           <Button
             title="Go to StoreSelection"
-            onPress={() => loginUser()}
+            onPress={() => {
+              loginUser();
+              resetEmailField('');
+              resetPasswordField('');             
+            }}
             mt="2"
             colorScheme="red"
             _text={{ color: "white" }}
