@@ -53,6 +53,8 @@ const LoginScreen = ({ navigation }) => {
    }
    };
 
+
+   const [emailField, resetEmailField] = useState('')
   return (
     <NativeBaseProvider>
       <Box safeArea flex={1} pt="10" pb="0" w="90%" mx="auto">
@@ -78,7 +80,9 @@ const LoginScreen = ({ navigation }) => {
           onChange={(event) => {
             setLoginEmail(event.target.value);
           }}
-          placeholder={'Email'}
+          value={emailField}
+          onChangeText={value => setText(value)}
+          placeholder={'Emailasdfasdf'}
           style={loginstyles.input}
         /> 
         <TextInput
@@ -91,7 +95,9 @@ const LoginScreen = ({ navigation }) => {
         />
           <Button
             title="Go to StoreSelection"
-            onPress={() => loginUser()}
+            onPress={() => {
+              loginUser();
+              resetEmailField();}}
             mt="2"
             colorScheme="red"
             _text={{ color: "white" }}
