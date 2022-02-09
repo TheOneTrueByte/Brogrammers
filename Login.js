@@ -82,7 +82,7 @@ const LoginScreen = ({ navigation }) => {
           }}
           value={emailField}
           onChangeText={value => setText(value)}
-          placeholder={'Emailasdfasdf'}
+          placeholder={'Email'}
           style={loginstyles.input}
         /> 
         <TextInput
