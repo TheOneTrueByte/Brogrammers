@@ -1,5 +1,6 @@
 import * as React from "react";
 import StoreSelection from "./StoreSelection";
+import Home from "./HomeScreen";
 import { MaterialCommunityIcons, Ionicons } from "@expo/vector-icons";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
@@ -30,8 +31,8 @@ import { signInWithEmailAndPassword } from "@firebase/auth";
 
 const Stack = createNativeStackNavigator();
 
-function StoreSelectionScreen({ navigation }) {
-  return <StoreSelection />;
+function HomeScreen({ navigation }) {
+  return <Home />;
 }
 
 const LoginScreen = ({ navigation }) => {
@@ -51,7 +52,7 @@ const LoginScreen = ({ navigation }) => {
       console.log(user);
       resetEmailField('');
       resetPasswordField('');    
-      navigation.navigate("HomeScreen");
+      navigation.navigate("Home");
     } catch (error) {
       console.log(error.message);
       resetPasswordField('');  
@@ -148,15 +149,8 @@ function Login() {
           }}
         />
         <Stack.Screen
-          name="StoreSelection"
-          component={StoreSelectionScreen}
-          options={{
-            headerShown: false,
-          }}
-        />
-        <Stack.Screen
-          name="HomeScreen"
-          component={StoreSelectionScreen}
+          name="Home"
+          component={HomeScreen}
           options={{
             headerShown: false,
           }}
