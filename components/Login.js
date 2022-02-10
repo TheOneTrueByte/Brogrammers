@@ -49,9 +49,12 @@ const LoginScreen = ({ navigation }) => {
         loginPassword
       );
       console.log(user);
-      navigation.navigate("StoreSelection");
+      resetEmailField('');
+      resetPasswordField('');    
+      navigation.navigate("HomeScreen");
     } catch (error) {
       console.log(error.message);
+      resetPasswordField('');  
       alert("Invalid Email/Password");
     }
   };
@@ -101,9 +104,7 @@ const LoginScreen = ({ navigation }) => {
           <Button
             title="Go to StoreSelection"
             onPress={() => {
-              loginUser();
-              resetEmailField('');
-              resetPasswordField('');             
+              loginUser();         
             }}
             mt="2"
             colorScheme="red"
@@ -148,6 +149,13 @@ function Login() {
         />
         <Stack.Screen
           name="StoreSelection"
+          component={StoreSelectionScreen}
+          options={{
+            headerShown: false,
+          }}
+        />
+        <Stack.Screen
+          name="HomeScreen"
           component={StoreSelectionScreen}
           options={{
             headerShown: false,
