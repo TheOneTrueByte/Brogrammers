@@ -28,6 +28,7 @@ import {
 } from "native-base";
 import { TextInput } from "react-native-gesture-handler";
 import { signInWithEmailAndPassword } from "@firebase/auth";
+import * as firebase from "../firebase";
 
 const Stack = createNativeStackNavigator();
 
@@ -40,16 +41,12 @@ const LoginScreen = ({ navigation }) => {
   const [loginPassword, setLoginPassword] = useState("");
 
   const loginUser = async () => {
-    //uncomment for testing but PLEASE don't leave it in for release cuz security - Juan
-    //console.log(loginEmail);
-    //console.log(loginPassword);
     try {
       const user = await signInWithEmailAndPassword(
         auth,
-        loginEmail,
-        loginPassword
+        emailField,
+        passwordField
       );
-      console.log(user);
       resetEmailField('');
       resetPasswordField('');    
       navigation.navigate("Home");
