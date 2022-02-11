@@ -11,7 +11,7 @@ export default function AddItem({ submitHandler }) {
     const checkTextInput = () => {
         //Check for the Name TextInput
         if (!text.trim()) {
-          alert('Please Enter Item Name');
+          alert('Please Enter Team Name');
           return;
         }else{
             submitHandler(text);
@@ -25,13 +25,13 @@ export default function AddItem({ submitHandler }) {
                 multiline
                 numberOfLines={3}
                 style={styles.input}
-                placeholder='new item...'
+                placeholder='Tap to enter a new team name'
                 onChangeText={changeHandler}
 
             />
             <Button 
             
-            onPress={checkTextInput} title="Add Item" color='red' 
+            onPress={checkTextInput} title="Add Team" color='red' 
             
             />
         </>
@@ -46,7 +46,7 @@ const styles = StyleSheet.create({
         fontSize: 20,
         marginBottom: 10,
         paddingHorizontal: 8,
-        paddingVertical: 6,
+        paddingVertical: 500,
         borderBottomWidth: 1,
         borderBottomColor: '#ddd',
     },
