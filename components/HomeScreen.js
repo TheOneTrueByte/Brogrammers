@@ -21,6 +21,7 @@ import { background, borderLeft, style } from "styled-system";
 import AddItem from "./AddItem";
 
 import { initializeApp } from "@firebase/app";
+import "firebase/firestore";
 import { getFirestore, setDoc, doc } from 'firebase/firestore';
 import { Icon } from "native-base";
 
@@ -28,39 +29,60 @@ const Separator = () => (
   <View style={styles.separator} />
 );
 
-const firebaseConfig = {
-  apiKey: "AIzaSyCml_AxQYdLee-QUAR3CYw83w914zbTsuU",
-  authDomain: "soccer-inventory-ab9f4.firebaseapp.com",
-  projectId: "soccer-inventory-ab9f4",
-  storageBucket: "soccer-inventory-ab9f4.appspot.com",
-  messagingSenderId: "204772762321",
-  appId: "1:204772762321:web:e31691245d98cc84381bf0",
-  measurementId: "G-EBZ53PWMLN"
-}
-
-const app = initializeApp(firebaseConfig);
 const firestore = getFirestore();
 
+
 function MainMenu() {
+  const [items, setItems] = useState("");
+
+  const pressHandler = (key) => {
+    setItems((prevItems) => {
+      return prevItems.filter((item) => item.key != key);
+    });
+  };
+
+  const submitHandler = (name) => {
+    setItems((prevItems) => {
+
+      setDoc(doc(firestore, "Teams", name), {
+          Name: name
+      });
+
+      return [{ name: name, key: Math.random().toString() }, ...prevItems];
+    });
+  };
+
+  const DeleteItem = ({ item, pressHandler }) => {
+    return (
+      <TouchableOpacity
+        style={styles.btnStyle}
+        onPress={() => pressHandler(item.key)}
+      >
+        <Text style={{ fontSize: 20, color: "white" }}>Delete</Text>
+      </TouchableOpacity>
+    );
+  };
+
+
   return(
-    <ScrollView style = {styles.container}>
-      <View style = {styles.layout}>
-        <Pressable 
-          style = {styles.button}
-          title = "Teams"
-        >
-          <Text style = {styles.text} >Team 1</Text>
-        </Pressable>
-      </View>
-      <View style = {styles.layout}>
-        <Pressable 
-          style = {styles.button}
-          title = "Teams"
-        >
-          <Text style = {styles.text} >Team 2</Text>
-        </Pressable>
-      </View>
-    </ScrollView>
+      <SafeAreaView style={styles.container}>
+        <FlatList
+          data={items}
+          keyExtractor={(item) => item.key}
+          renderItem={({ item }) => (
+            <View style={styles.flatListStyle}>
+              <View style={{ flexDirection: "row", alignItems: "center" }}>
+                <Text style={{ fontSize: 24 }}>{item.name}</Text>
+              </View>
+              <DeleteItem item={item} pressHandler={pressHandler} />
+            </View>
+          )}
+        ></FlatList>
+          <AddItem submitHandler={submitHandler}/>
+      </SafeAreaView>
+
+
+      
   )
 }
 
@@ -68,7 +90,16 @@ function LogOut({ navigation }) {
   return (
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
       <Button
-        onPress={() => navigation.navigate('Login')}
+        onPress={() => {
+          navigation.navigate('Login');
+          try {
+                  firebase.auth().signOut();
+              } 
+              catch (err) 
+              {
+                  Alert.alert('There is something wrong!', err.message);
+              }
+          }}
         title="Log Out Now"
       />
     </View>
@@ -140,8 +171,35 @@ const styles = StyleSheet.create({
     paddingHorizontal: 50,
     borderRadius: 15,
   },
+  flatListStyle: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    backgroundColor: '#ff4545',
+    marginBottom: 16,
+    padding: 10,
+    borderRadius: 8,
+  },
+  item: {
+    flex: 1,
+    marginHorizontal: 10,
+    marginTop: 24,
+    padding: 30,
+    backgroundColor: '#ff4545',
+    fontSize: 24,
+  },
   text: {
     fontSize: 16,
     color: 'white',
+  },
+  separator: {
+    marginVertical: 8,
+    borderBottomColor: "#737373",
+    borderBottomWidth: StyleSheet.hairlineWidth,
+  },
+  btnStyle: {
+    backgroundColor: "#140d94",
+    padding: 20,
+    borderRadius: 8,
   },
 });
