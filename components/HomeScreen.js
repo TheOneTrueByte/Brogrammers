@@ -71,13 +71,6 @@ function MainMenu() {
         }
       ]
     )
-
-    // setItems((prevItems) => {
-
-    //   deleteDoc(doc(firestore, "Teams", item.name));
-
-    //   return prevItems.filter((thisItem) => thisItem.key != item.key);
-    // });
   };
 
   const submitHandler = (name) => {
