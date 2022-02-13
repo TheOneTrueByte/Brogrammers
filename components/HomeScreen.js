@@ -47,12 +47,37 @@ function MainMenu() {
   const [items, setItems] = useState("");
 
   const pressHandler = (item) => {
-    setItems((prevItems) => {
+    //alert that confirms the user wants to cancel the selected team
+    Alert.alert(
+      "Confirm Team Deletion",
+      //"Are you sure you want to delete this team?",
+      `Are you sure you want to delete ${item.name} from the database?`,
+      [
+        {
+          text: "No",
+          onPress: () => console.log("Deletion cancelled"),
+          style: "cancel"
+        },
+        {
+          text: "Yes", 
+          onPress: () => {
+            setItems((prevItems) => {
 
-      deleteDoc(doc(firestore, "Teams", item.name));
+              deleteDoc(doc(firestore, "Teams", item.name));
+        
+              return prevItems.filter((thisItem) => thisItem.key != item.key);
+            });
+          }
+        }
+      ]
+    )
 
-      return prevItems.filter((thisItem) => thisItem.key != item.key);
-    });
+    // setItems((prevItems) => {
+
+    //   deleteDoc(doc(firestore, "Teams", item.name));
+
+    //   return prevItems.filter((thisItem) => thisItem.key != item.key);
+    // });
   };
 
   const submitHandler = (name) => {
