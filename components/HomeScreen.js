@@ -1,4 +1,11 @@
-import React, { useState } from "react";
+import * as React from "react";
+
+import {
+  NativeBaseProvider,
+  Box,
+  Heading,
+  VStack,
+} from "native-base";
 import {
   Button,
   View,
@@ -12,8 +19,10 @@ import {
   ScrollView,
   Pressable,
 } from "react-native";
+import { useState } from "react";
 import { createDrawerNavigator, DrawerItem } from "@react-navigation/drawer";
 import { NavigationContainer } from "@react-navigation/native";
+import { TextInput } from "react-native-gesture-handler";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Login from "./Login";
 
@@ -24,6 +33,8 @@ import { initializeApp } from "@firebase/app";
 import "firebase/firestore";
 import { getFirestore, setDoc, doc } from 'firebase/firestore';
 import { Icon } from "native-base";
+import { getAuth, updateEmail, signOut } from "firebase/auth";
+import { auth } from "../firebase";
 
 const Separator = () => (
   <View style={styles.separator} />
@@ -31,7 +42,7 @@ const Separator = () => (
 
 const firestore = getFirestore();
 
-
+//Main Menu & Teams Functionality
 function MainMenu() {
   const [items, setItems] = useState("");
 
@@ -80,24 +91,73 @@ function MainMenu() {
         ></FlatList>
           <AddItem submitHandler={submitHandler}/>
       </SafeAreaView>
-
-
-      
   )
 }
 
+
+//Edit Current User Section
+function EditCurrentUser() {
+
+  const changeEmailAddress = async () => {
+    try {
+      //Figure out how to change the email address here
+      await updateEmail(getAuth().currentUser, userEmail.toString());
+      await alert("Your Email address has successfully been updated!"); 
+      await editUserEmail('');
+    } catch (error) {
+      console.log(error.message);
+      editUserEmail('');  
+      alert("Uh-Oh. Something went wrong. Your email was not changed. This may mean you have to have a recent login. Attempt to logout and then back in again.");
+    }
+  };
+
+  const [userEmail, editUserEmail] = useState('') //Used for purposes of resetting the email address
+
+  return (
+    <NativeBaseProvider>
+      <Box safeArea flex={10} py="2" w="90%" mx="auto">
+        <VStack space={3} mt="5">
+        <Heading size="lg" fontWeight="600" color="coolGray.800">
+          Your current email address is {getAuth().currentUser.email}
+        </Heading>
+          <TextInput
+            onChangeText={value => editUserEmail(value)}
+            placeholder={"Enter a new email"}
+            value={userEmail}
+          />
+          <Button
+            title="Change the Current User Email"
+            onPress={() => {
+              changeEmailAddress();         
+            }}
+            mt="2"
+            colorScheme="red"
+            _text={{ color: "white" }}
+          >
+            Change Email
+          </Button>
+        </VStack>
+      </Box>
+    </NativeBaseProvider>
+  );
+}
+
+//Logout Section
 function LogOut({ navigation }) {
   return (
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
       <Button
-        onPress={() => {
-          navigation.navigate('Login');
+        onPress= {async() => {
           try {
-                  firebase.auth().signOut();
+                  signOut(auth);
               } 
               catch (err) 
               {
                   Alert.alert('There is something wrong!', err.message);
+              }
+              finally
+              {
+                navigation.navigate('Login');
               }
           }}
         title="Log Out Now"
@@ -106,6 +166,7 @@ function LogOut({ navigation }) {
   );
 }
 
+//Other Settings Functionality
 function Settings() {
   return (
     <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
@@ -113,6 +174,8 @@ function Settings() {
     </View>
   );
 }
+
+
 
 const Drawer = createDrawerNavigator();
 
@@ -134,15 +197,20 @@ function MyDrawer() {
         component = {MainMenu}
         options = {{drawerLabel: 'Main Menu'}}
       />
-      <Drawer.Screen
-        name="LogOut"
-        component={LogOut}
-        options={{ drawerLabel: "LogOut" }}
+      <Drawer.Screen 
+        name = 'Edit Current User'
+        component = {EditCurrentUser}
+        options = {{drawerLabel: 'Edit Current User'}}
       />
       <Drawer.Screen 
         name = 'Settings'
         component = {Settings}
         options = {{drawerLabel: 'Settings'}}
+      />
+            <Drawer.Screen
+        name="LogOut"
+        component={LogOut}
+        options={{ drawerLabel: "LogOut" }}
       />
     </Drawer.Navigator>  
   );
