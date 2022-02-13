@@ -31,7 +31,7 @@ import AddItem from "./AddItem";
 
 import { initializeApp } from "@firebase/app";
 import "firebase/firestore";
-import { getFirestore, setDoc, doc } from 'firebase/firestore';
+import { getFirestore, setDoc, doc, deleteDoc } from 'firebase/firestore';
 import { Icon } from "native-base";
 import { getAuth, updateEmail, signOut } from "firebase/auth";
 import { auth } from "../firebase";
@@ -46,9 +46,12 @@ const firestore = getFirestore();
 function MainMenu() {
   const [items, setItems] = useState("");
 
-  const pressHandler = (key) => {
+  const pressHandler = (item) => {
     setItems((prevItems) => {
-      return prevItems.filter((item) => item.key != key);
+
+      deleteDoc(doc(firestore, "Teams", item.name));
+
+      return prevItems.filter((thisItem) => thisItem.key != item.key);
     });
   };
 
@@ -67,7 +70,7 @@ function MainMenu() {
     return (
       <TouchableOpacity
         style={styles.btnStyle}
-        onPress={() => pressHandler(item.key)}
+        onPress={() => pressHandler(item)}
       >
         <Text style={{ fontSize: 20, color: "white" }}>Delete</Text>
       </TouchableOpacity>
@@ -77,6 +80,7 @@ function MainMenu() {
 
   return(
       <SafeAreaView style={styles.container}>
+        <AddItem submitHandler={submitHandler}/>
         <FlatList
           data={items}
           keyExtractor={(item) => item.key}
@@ -89,7 +93,6 @@ function MainMenu() {
             </View>
           )}
         ></FlatList>
-          <AddItem submitHandler={submitHandler}/>
       </SafeAreaView>
   )
 }
