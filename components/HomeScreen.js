@@ -50,7 +50,6 @@ function MainMenu() {
     //alert that confirms the user wants to cancel the selected team
     Alert.alert(
       "Confirm Team Deletion",
-      //"Are you sure you want to delete this team?",
       `Are you sure you want to delete ${item.name} from the database?`,
       [
         {
