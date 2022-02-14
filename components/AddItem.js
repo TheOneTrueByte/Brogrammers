@@ -33,7 +33,7 @@ export default function AddItem({ submitHandler }) {
         placeholder="Tap to enter a new team name"
         onChangeText={changeHandler}
       />
-      <Button onPress={checkTextInput} title="Add Team" color="red" />
+      <Button onPress={checkTextInput} title="Add Team" color="red"/>
     </>
   );
 }
