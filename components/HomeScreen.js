@@ -16,6 +16,7 @@ import {
   SafeAreaView,
   StatusBar,
   TouchableOpacity,
+  Platform,
   ScrollView,
   Pressable,
 } from "react-native";
@@ -48,38 +49,79 @@ function MainMenu() {
 
   const pressHandler = (item) => {
     //alert that confirms the user wants to cancel the selected team
-    Alert.alert(
-      "Confirm Team Deletion",
-      `Are you sure you want to delete ${item.name} from the database?`,
-      [
-        {
-          text: "No",
-          onPress: () => console.log("Deletion cancelled"),
-          style: "cancel"
-        },
-        {
-          text: "Yes", 
-          onPress: () => {
-            setItems((prevItems) => {
+    if(Platform.OS === 'android')
+    {
+      Alert.alert(
+        "Confirm Team Deletion",
+        `Are you sure you want to delete ${item.name} from the database?`,
+        [
+          {
+            text: "No",
+            onPress: () => console.log("Deletion cancelled"),
+            style: "cancel"
+          },
+          {
+            text: "Yes", 
+            onPress: () => {
+              setItems((prevItems) => {
 
-              deleteDoc(doc(firestore, "Teams", item.name));
+                deleteDoc(doc(firestore, "Teams", item.name));
         
-              return prevItems.filter((thisItem) => thisItem.key != item.key);
-            });
+                return prevItems.filter((thisItem) => thisItem.key != item.key);
+              });
+            }
           }
-        }
-      ]
-    )
+        ]
+      )
+    }
+    else if(Platform.OS === 'ios')
+    {
+      Alert.alert(
+        "Confirm Team Deletion",
+        `Are you sure you want to delete ${item.name} from the database?`,
+        [
+          {
+            text: "No",
+            onPress: () => console.log("Deletion cancelled"),
+            style: "cancel"
+          },
+          {
+            text: "Yes", 
+            onPress: () => {
+              setItems((prevItems) => {
+
+                deleteDoc(doc(firestore, "Teams", item.name));
+        
+                return prevItems.filter((thisItem) => thisItem.key != item.key);
+              });
+            }
+          }
+        ]
+      ) 
+    }
+    else
+    {
+        setItems((prevItems) => {
+
+          deleteDoc(doc(firestore, "Teams", item.name));
+  
+          return prevItems.filter((thisItem) => thisItem.key != item.key);
+        });
+    }
   };
 
   const submitHandler = (name) => {
     setItems((prevItems) => {
-
-      setDoc(doc(firestore, "Teams", name), {
+      try {
+        setDoc(doc(firestore, "Teams", name), {
           Name: name
-      });
+        });
 
-      return [{ name: name, key: Math.random().toString() }, ...prevItems];
+        return [{ name: name, key: Math.random().toString() }, ...prevItems];
+      }
+      catch {
+        alert("Can't add team. This is likely because a team with the same name already exists");
+      }
     });
   };
 
@@ -116,14 +158,15 @@ function MainMenu() {
 
 
 //Edit Current User Section
-function EditCurrentUser() {
+function EditCurrentUser({ navigation }) {
 
   const changeEmailAddress = async () => {
     try {
       //Figure out how to change the email address here
       await updateEmail(getAuth().currentUser, userEmail.toString());
-      await alert("Your Email address has successfully been updated!"); 
+      await alert("Your Email address has successfully been updated! You will be signed out now"); 
       await editUserEmail('');
+      await navigation.navigate('Login');
     } catch (error) {
       console.log(error.message);
       editUserEmail('');  
