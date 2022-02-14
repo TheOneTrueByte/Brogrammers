@@ -31,7 +31,7 @@ import AddItem from "./AddItem";
 
 import { initializeApp } from "@firebase/app";
 import "firebase/firestore";
-import { getFirestore, setDoc, doc } from 'firebase/firestore';
+import { getFirestore, setDoc, doc, deleteDoc } from 'firebase/firestore';
 import { Icon } from "native-base";
 import { getAuth, updateEmail, signOut } from "firebase/auth";
 import { auth } from "../firebase";
@@ -46,10 +46,30 @@ const firestore = getFirestore();
 function MainMenu() {
   const [items, setItems] = useState("");
 
-  const pressHandler = (key) => {
-    setItems((prevItems) => {
-      return prevItems.filter((item) => item.key != key);
-    });
+  const pressHandler = (item) => {
+    //alert that confirms the user wants to cancel the selected team
+    Alert.alert(
+      "Confirm Team Deletion",
+      `Are you sure you want to delete ${item.name} from the database?`,
+      [
+        {
+          text: "No",
+          onPress: () => console.log("Deletion cancelled"),
+          style: "cancel"
+        },
+        {
+          text: "Yes", 
+          onPress: () => {
+            setItems((prevItems) => {
+
+              deleteDoc(doc(firestore, "Teams", item.name));
+        
+              return prevItems.filter((thisItem) => thisItem.key != item.key);
+            });
+          }
+        }
+      ]
+    )
   };
 
   const submitHandler = (name) => {
@@ -67,7 +87,7 @@ function MainMenu() {
     return (
       <TouchableOpacity
         style={styles.btnStyle}
-        onPress={() => pressHandler(item.key)}
+        onPress={() => pressHandler(item)}
       >
         <Text style={{ fontSize: 20, color: "white" }}>Delete</Text>
       </TouchableOpacity>
@@ -77,6 +97,7 @@ function MainMenu() {
 
   return(
       <SafeAreaView style={styles.container}>
+        <AddItem submitHandler={submitHandler}/>
         <FlatList
           data={items}
           keyExtractor={(item) => item.key}
@@ -89,7 +110,6 @@ function MainMenu() {
             </View>
           )}
         ></FlatList>
-          <AddItem submitHandler={submitHandler}/>
       </SafeAreaView>
   )
 }
