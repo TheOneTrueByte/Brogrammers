@@ -27,16 +27,16 @@ import { TextInput } from "react-native-gesture-handler";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Login from "./Login";
 
-import { background, borderLeft, style } from "styled-system";
+import { background, borderLeft, get, style } from "styled-system";
 import AddItem from "./AddItem";
 
 import { initializeApp } from "@firebase/app";
+import firebase from 'firebase/app';
 import "firebase/firestore";
-import { getFirestore, setDoc, doc, deleteDoc } from 'firebase/firestore';
+import { getFirestore, setDoc, doc, deleteDoc, Firestore, collection, query, getDocs, onSnapshot, QuerySnapshot } from 'firebase/firestore';
 import { Icon } from "native-base";
 import { getAuth, updateEmail, signOut } from "firebase/auth";
 import { auth } from "../firebase";
-
 const Separator = () => (
   <View style={styles.separator} />
 );
@@ -46,6 +46,16 @@ const firestore = getFirestore();
 //Main Menu & Teams Functionality
 function MainMenu() {
   const [items, setItems] = useState("");
+  const [teams, setTeams] = useState([]);
+  const teamCol = collection(firestore, 'Teams');
+  const q = query(teamCol);
+  const unsub = onSnapshot(q, (QuerySnapshot) => {
+    const teamNames = [];
+    QuerySnapshot.forEach((doc) => {
+      teamNames.push(doc.data().Name);
+    });
+    setTeams(teamNames);
+  });
 
   const pressHandler = (item) => {
     //alert that confirms the user wants to cancel the selected team
@@ -136,17 +146,30 @@ function MainMenu() {
     );
   };
 
-
-  return(
-      <SafeAreaView style={styles.container}>
-        <AddItem submitHandler={submitHandler}/>
-        <FlatList
+/* <FlatList
           data={items}
           keyExtractor={(item) => item.key}
           renderItem={({ item }) => (
             <View style={styles.flatListStyle}>
               <View style={{ flexDirection: "row", alignItems: "center" }}>
                 <Text style={{ fontSize: 24 }}>{item.name}</Text>
+              </View>
+              <DeleteItem item={item} pressHandler={pressHandler} />
+            </View>
+          )}
+        ></FlatList>*/
+  return(
+      <SafeAreaView style={styles.container}>
+        <AddItem submitHandler={submitHandler}/>
+        
+
+      <FlatList
+          data={teams}
+          keyExtractor={(item) => item.key}
+          renderItem={({ item }) => (
+            <View style={styles.flatListStyle}>
+              <View style={{ flexDirection: "row", alignItems: "center" }}>
+                <Text style={{ fontSize: 24 }}>{item.Name}</Text>
               </View>
               <DeleteItem item={item} pressHandler={pressHandler} />
             </View>

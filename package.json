@@ -9,7 +9,9 @@
   },
   "dependencies": {
     "@react-native-community/async-storage": "^1.12.1",
-    "@react-native-firebase/app": "^13.0.1",
+    "@react-native-firebase/app": "^14.5.0",
+    "@react-native-firebase/database": "^14.5.0",
+    "@react-native-firebase/firestore": "^14.5.0",
     "@react-navigation/drawer": "^6.1.8",
     "@react-navigation/native": "^6.0.6",
     "@react-navigation/native-stack": "^6.2.5",
