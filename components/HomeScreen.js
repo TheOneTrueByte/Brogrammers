@@ -49,8 +49,7 @@ function MainMenu() {
 
   const pressHandler = (item) => {
     //alert that confirms the user wants to cancel the selected team
-    if(Platform.OS === 'android')
-    {
+    if (Platform.OS === 'android') {
       Alert.alert(
         "Confirm Team Deletion",
         `Are you sure you want to delete ${item.name} from the database?`,
@@ -61,12 +60,12 @@ function MainMenu() {
             style: "cancel"
           },
           {
-            text: "Yes", 
+            text: "Yes",
             onPress: () => {
               setItems((prevItems) => {
 
                 deleteDoc(doc(firestore, "Teams", item.name));
-        
+
                 return prevItems.filter((thisItem) => thisItem.key != item.key);
               });
             }
@@ -74,8 +73,7 @@ function MainMenu() {
         ]
       )
     }
-    else if(Platform.OS === 'ios')
-    {
+    else if (Platform.OS === 'ios') {
       Alert.alert(
         "Confirm Team Deletion",
         `Are you sure you want to delete ${item.name} from the database?`,
@@ -86,27 +84,26 @@ function MainMenu() {
             style: "cancel"
           },
           {
-            text: "Yes", 
+            text: "Yes",
             onPress: () => {
               setItems((prevItems) => {
 
                 deleteDoc(doc(firestore, "Teams", item.name));
-        
+
                 return prevItems.filter((thisItem) => thisItem.key != item.key);
               });
             }
           }
         ]
-      ) 
+      )
     }
-    else
-    {
-        setItems((prevItems) => {
+    else {
+      setItems((prevItems) => {
 
-          deleteDoc(doc(firestore, "Teams", item.name));
-  
-          return prevItems.filter((thisItem) => thisItem.key != item.key);
-        });
+        deleteDoc(doc(firestore, "Teams", item.name));
+
+        return prevItems.filter((thisItem) => thisItem.key != item.key);
+      });
     }
   };
 
@@ -137,22 +134,22 @@ function MainMenu() {
   };
 
 
-  return(
-      <SafeAreaView style={styles.container}>
-        <AddItem submitHandler={submitHandler}/>
-        <FlatList
-          data={items}
-          keyExtractor={(item) => item.key}
-          renderItem={({ item }) => (
-            <View style={styles.flatListStyle}>
-              <View style={{ flexDirection: "row", alignItems: "center" }}>
-                <Text style={{ fontSize: 24 }}>{item.name}</Text>
-              </View>
-              <DeleteItem item={item} pressHandler={pressHandler} />
+  return (
+    <SafeAreaView style={styles.container}>
+      <AddItem submitHandler={submitHandler} />
+      <FlatList
+        data={items}
+        keyExtractor={(item) => item.key}
+        renderItem={({ item }) => (
+          <View style={styles.flatListStyle}>
+            <View style={{ flexDirection: "row", alignItems: "center" }}>
+              <Text style={{ fontSize: 24 }}>{item.name}</Text>
             </View>
-          )}
-        ></FlatList>
-      </SafeAreaView>
+            <DeleteItem item={item} pressHandler={pressHandler} />
+          </View>
+        )}
+      ></FlatList>
+    </SafeAreaView>
   )
 }
 
@@ -164,12 +161,12 @@ function EditCurrentUser({ navigation }) {
     try {
       //Figure out how to change the email address here
       await updateEmail(getAuth().currentUser, userEmail.toString());
-      await alert("Your Email address has successfully been updated! You will be signed out now"); 
+      await alert("Your Email address has successfully been updated! You will be signed out now");
       await editUserEmail('');
       await navigation.navigate('Login');
     } catch (error) {
       console.log(error.message);
-      editUserEmail('');  
+      editUserEmail('');
       alert("Uh-Oh. Something went wrong. Your email was not changed. This may mean you have to have a recent login. Attempt to logout and then back in again.");
     }
   };
@@ -180,9 +177,9 @@ function EditCurrentUser({ navigation }) {
     <NativeBaseProvider>
       <Box safeArea flex={10} py="2" w="90%" mx="auto">
         <VStack space={3} mt="5">
-        <Heading size="lg" fontWeight="600" color="coolGray.800">
-          Your current email address is {getAuth().currentUser.email}
-        </Heading>
+          <Heading size="lg" fontWeight="600" color="coolGray.800">
+            Your current email address is {getAuth().currentUser.email}
+          </Heading>
           <TextInput
             onChangeText={value => editUserEmail(value)}
             placeholder={"Enter a new email"}
@@ -191,7 +188,7 @@ function EditCurrentUser({ navigation }) {
           <Button
             title="Change the Current User Email"
             onPress={() => {
-              changeEmailAddress();         
+              changeEmailAddress();
             }}
             mt="2"
             colorScheme="red"
@@ -210,19 +207,17 @@ function LogOut({ navigation }) {
   return (
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
       <Button
-        onPress= {async() => {
+        onPress={async () => {
           try {
-                  signOut(auth);
-              } 
-              catch (err) 
-              {
-                  Alert.alert('There is something wrong!', err.message);
-              }
-              finally
-              {
-                navigation.navigate('Login');
-              }
-          }}
+            signOut(auth);
+          }
+          catch (err) {
+            Alert.alert('There is something wrong!', err.message);
+          }
+          finally {
+            navigation.navigate('Login');
+          }
+        }}
         title="Log Out Now"
       />
     </View>
@@ -233,6 +228,13 @@ function LogOut({ navigation }) {
 function Settings() {
   return (
     <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+      <Button
+        onPress={() => {
+
+          alert('This feature has yet to be implemented.');
+        }}
+        title="Change Password"
+      />
       <Text>Setting Screen</Text>
     </View>
   );
@@ -243,10 +245,10 @@ function Settings() {
 const Drawer = createDrawerNavigator();
 
 function MyDrawer() {
-  return(
+  return (
     <Drawer.Navigator
-      initialRouteName = 'MainMenu'
-      screenOptions = {{
+      initialRouteName='MainMenu'
+      screenOptions={{
         drawerStyle: {
           backgroundColor: 'red',
         },
@@ -255,27 +257,27 @@ function MyDrawer() {
         },
       }}
     >
-      <Drawer.Screen 
-        name = 'Main Menu'
-        component = {MainMenu}
-        options = {{drawerLabel: 'Main Menu'}}
+      <Drawer.Screen
+        name='Main Menu'
+        component={MainMenu}
+        options={{ drawerLabel: 'Main Menu' }}
       />
-      <Drawer.Screen 
-        name = 'Edit Current User'
-        component = {EditCurrentUser}
-        options = {{drawerLabel: 'Edit Current User'}}
+      <Drawer.Screen
+        name='Edit Current User'
+        component={EditCurrentUser}
+        options={{ drawerLabel: 'Edit Current User' }}
       />
-      <Drawer.Screen 
-        name = 'Settings'
-        component = {Settings}
-        options = {{drawerLabel: 'Settings'}}
+      <Drawer.Screen
+        name='Settings'
+        component={Settings}
+        options={{ drawerLabel: 'Settings' }}
       />
-            <Drawer.Screen
+      <Drawer.Screen
         name="LogOut"
         component={LogOut}
         options={{ drawerLabel: "LogOut" }}
       />
-    </Drawer.Navigator>  
+    </Drawer.Navigator>
   );
 }
 
