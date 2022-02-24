@@ -21,7 +21,7 @@ import {
   Pressable,
 } from "react-native";
 import { useState } from "react";
-import { createDrawerNavigator, DrawerItem } from "@react-navigation/drawer";
+import { createDrawerNavigator, DrawerItem, getDrawerStatusFromState } from "@react-navigation/drawer";
 import { NavigationContainer } from "@react-navigation/native";
 import { TextInput } from "react-native-gesture-handler";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
@@ -46,20 +46,19 @@ const firestore = getFirestore();
 //Main Menu & Teams Functionality
 function MainMenu() {
   const [items, setItems] = useState("");
+  const teamCol = collection(firestore, 'Teams');
+  const q = query(teamCol);
 
   //used to get live data from FIrebase
   const getTeams = async () => {
-    const teamCol = collection(firestore, 'Teams');
-    const q = query(teamCol);
     const teams = [];
     const querySnapshot = await getDocs(teamCol);
       querySnapshot.forEach((doc) => {
-        teams.push([{ name: doc.data().Name, key: Math.random().toString() }]);
+        teams.push({ name: doc.data().Name, key: Math.random().toString() });
       });
-      setItems(teams);
+      return teams;
   }
 
-  
   const pressHandler = (item) => {
     //alert that confirms the user wants to cancel the selected team
     if(Platform.OS === 'android')
@@ -149,12 +148,15 @@ function MainMenu() {
       </TouchableOpacity>
     );
   };
-
+  let teamNames = [];
+(async function(){
+  let its = await getTeams();
   setTimeout(() => {
-    getTeams(); 
-  }, 5000);
-console.log(items)
- 
+    setItems(its);
+  }, 1000);
+   
+})();
+
 
   return(
       <SafeAreaView style={styles.container}>
