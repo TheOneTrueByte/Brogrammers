@@ -46,17 +46,16 @@ const firestore = getFirestore();
 //Main Menu & Teams Functionality
 function MainMenu() {
   const [items, setItems] = useState("");
-  const [teams, setTeams] = useState([]);
-  const teamCol = collection(firestore, 'Teams');
-  const q = query(teamCol);
-  const unsub = onSnapshot(q, (QuerySnapshot) => {
-    const teamNames = [];
-    QuerySnapshot.forEach((doc) => {
-      teamNames.push(doc.data().Name);
-    });
-    setTeams(teamNames);
-  });
 
+  //used to get live data from FIrebase
+  const teamCol = collection(firestore, 'Teams');
+  const unsubscribe = onSnapshot(teamCol, (docs) => {
+    docs.forEach((doc) => {
+      setItems((prevItems) => { 
+        return [{ name: doc.data().Name, key: Math.random().toString() }, ...prevItems];
+      });
+    });
+  });
   const pressHandler = (item) => {
     //alert that confirms the user wants to cancel the selected team
     if(Platform.OS === 'android')
@@ -135,6 +134,7 @@ function MainMenu() {
     });
   };
 
+  
   const DeleteItem = ({ item, pressHandler }) => {
     return (
       <TouchableOpacity
@@ -145,31 +145,19 @@ function MainMenu() {
       </TouchableOpacity>
     );
   };
-
-/* <FlatList
+ 
+        
+  return(
+      <SafeAreaView style={styles.container}>
+        <AddItem submitHandler={submitHandler}/>
+        
+        <FlatList
           data={items}
           keyExtractor={(item) => item.key}
           renderItem={({ item }) => (
             <View style={styles.flatListStyle}>
               <View style={{ flexDirection: "row", alignItems: "center" }}>
                 <Text style={{ fontSize: 24 }}>{item.name}</Text>
-              </View>
-              <DeleteItem item={item} pressHandler={pressHandler} />
-            </View>
-          )}
-        ></FlatList>*/
-  return(
-      <SafeAreaView style={styles.container}>
-        <AddItem submitHandler={submitHandler}/>
-        
-
-      <FlatList
-          data={teams}
-          keyExtractor={(item) => item.key}
-          renderItem={({ item }) => (
-            <View style={styles.flatListStyle}>
-              <View style={{ flexDirection: "row", alignItems: "center" }}>
-                <Text style={{ fontSize: 24 }}>{item.Name}</Text>
               </View>
               <DeleteItem item={item} pressHandler={pressHandler} />
             </View>
