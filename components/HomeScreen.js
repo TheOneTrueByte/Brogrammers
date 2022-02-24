@@ -48,14 +48,18 @@ function MainMenu() {
   const [items, setItems] = useState("");
 
   //used to get live data from FIrebase
-  const teamCol = collection(firestore, 'Teams');
-  const unsubscribe = onSnapshot(teamCol, (docs) => {
-    docs.forEach((doc) => {
-      setItems((prevItems) => { 
-        return [{ name: doc.data().Name, key: Math.random().toString() }, ...prevItems];
+  const getTeams = async () => {
+    const teamCol = collection(firestore, 'Teams');
+    const q = query(teamCol);
+    const teams = [];
+    const querySnapshot = await getDocs(teamCol);
+      querySnapshot.forEach((doc) => {
+        teams.push([{ name: doc.data().Name, key: Math.random().toString() }]);
       });
-    });
-  });
+      setItems(teams);
+  }
+
+  
   const pressHandler = (item) => {
     //alert that confirms the user wants to cancel the selected team
     if(Platform.OS === 'android')
@@ -145,15 +149,19 @@ function MainMenu() {
       </TouchableOpacity>
     );
   };
+
+  setTimeout(() => {
+    getTeams(); 
+  }, 5000);
+console.log(items)
  
-        
+
   return(
       <SafeAreaView style={styles.container}>
         <AddItem submitHandler={submitHandler}/>
-        
         <FlatList
           data={items}
-          keyExtractor={(item) => item.key}
+          //keyExtractor={(item) => item.key}
           renderItem={({ item }) => (
             <View style={styles.flatListStyle}>
               <View style={{ flexDirection: "row", alignItems: "center" }}>
