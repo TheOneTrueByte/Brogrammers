@@ -1,11 +1,6 @@
 import * as React from "react";
 
-import {
-  NativeBaseProvider,
-  Box,
-  Heading,
-  VStack,
-} from "native-base";
+import { NativeBaseProvider, Box, Heading, VStack } from "native-base";
 import {
   Button,
   View,
@@ -26,20 +21,18 @@ import { NavigationContainer } from "@react-navigation/native";
 import { TextInput } from "react-native-gesture-handler";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Login from "./Login";
-
+import Create from "./Create";
 import { background, borderLeft, style } from "styled-system";
 import AddItem from "./AddItem";
 
 import { initializeApp } from "@firebase/app";
 import "firebase/firestore";
-import { getFirestore, setDoc, doc, deleteDoc } from 'firebase/firestore';
-import { Icon } from "native-base";
+import { getFirestore, setDoc, doc, deleteDoc } from "firebase/firestore";
+
 import { getAuth, updateEmail, signOut } from "firebase/auth";
 import { auth } from "../firebase";
 
-const Separator = () => (
-  <View style={styles.separator} />
-);
+const Separator = () => <View style={styles.separator} />;
 
 const firestore = getFirestore();
 
@@ -49,7 +42,7 @@ function MainMenu() {
 
   const pressHandler = (item) => {
     //alert that confirms the user wants to cancel the selected team
-    if (Platform.OS === 'android') {
+    if (Platform.OS === "android") {
       Alert.alert(
         "Confirm Team Deletion",
         `Are you sure you want to delete ${item.name} from the database?`,
@@ -57,23 +50,21 @@ function MainMenu() {
           {
             text: "No",
             onPress: () => console.log("Deletion cancelled"),
-            style: "cancel"
+            style: "cancel",
           },
           {
             text: "Yes",
             onPress: () => {
               setItems((prevItems) => {
-
                 deleteDoc(doc(firestore, "Teams", item.name));
 
                 return prevItems.filter((thisItem) => thisItem.key != item.key);
               });
-            }
-          }
+            },
+          },
         ]
-      )
-    }
-    else if (Platform.OS === 'ios') {
+      );
+    } else if (Platform.OS === "ios") {
       Alert.alert(
         "Confirm Team Deletion",
         `Are you sure you want to delete ${item.name} from the database?`,
@@ -81,25 +72,22 @@ function MainMenu() {
           {
             text: "No",
             onPress: () => console.log("Deletion cancelled"),
-            style: "cancel"
+            style: "cancel",
           },
           {
             text: "Yes",
             onPress: () => {
               setItems((prevItems) => {
-
                 deleteDoc(doc(firestore, "Teams", item.name));
 
                 return prevItems.filter((thisItem) => thisItem.key != item.key);
               });
-            }
-          }
+            },
+          },
         ]
-      )
-    }
-    else {
+      );
+    } else {
       setItems((prevItems) => {
-
         deleteDoc(doc(firestore, "Teams", item.name));
 
         return prevItems.filter((thisItem) => thisItem.key != item.key);
@@ -111,13 +99,14 @@ function MainMenu() {
     setItems((prevItems) => {
       try {
         setDoc(doc(firestore, "Teams", name), {
-          Name: name
+          Name: name,
         });
 
         return [{ name: name, key: Math.random().toString() }, ...prevItems];
-      }
-      catch {
-        alert("Can't add team. This is likely because a team with the same name already exists");
+      } catch {
+        alert(
+          "Can't add team. This is likely because a team with the same name already exists"
+        );
       }
     });
   };
@@ -132,7 +121,6 @@ function MainMenu() {
       </TouchableOpacity>
     );
   };
-
 
   return (
     <SafeAreaView style={styles.container}>
@@ -150,28 +138,30 @@ function MainMenu() {
         )}
       ></FlatList>
     </SafeAreaView>
-  )
+  );
 }
-
 
 //Edit Current User Section
 function EditCurrentUser({ navigation }) {
-
   const changeEmailAddress = async () => {
     try {
       //Figure out how to change the email address here
       await updateEmail(getAuth().currentUser, userEmail.toString());
-      await alert("Your Email address has successfully been updated! You will be signed out now");
-      await editUserEmail('');
-      await navigation.navigate('Login');
+      await alert(
+        "Your Email address has successfully been updated! You will be signed out now"
+      );
+      await editUserEmail("");
+      await navigation.navigate("Login");
     } catch (error) {
       console.log(error.message);
-      editUserEmail('');
-      alert("Uh-Oh. Something went wrong. Your email was not changed. This may mean you have to have a recent login. Attempt to logout and then back in again.");
+      editUserEmail("");
+      alert(
+        "Uh-Oh. Something went wrong. Your email was not changed. This may mean you have to have a recent login. Attempt to logout and then back in again."
+      );
     }
   };
 
-  const [userEmail, editUserEmail] = useState('') //Used for purposes of resetting the email address
+  const [userEmail, editUserEmail] = useState(""); //Used for purposes of resetting the email address
 
   return (
     <NativeBaseProvider>
@@ -181,7 +171,7 @@ function EditCurrentUser({ navigation }) {
             Your current email address is {getAuth().currentUser.email}
           </Heading>
           <TextInput
-            onChangeText={value => editUserEmail(value)}
+            onChangeText={(value) => editUserEmail(value)}
             placeholder={"Enter a new email"}
             value={userEmail}
           />
@@ -205,17 +195,15 @@ function EditCurrentUser({ navigation }) {
 //Logout Section
 function LogOut({ navigation }) {
   return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+    <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
       <Button
         onPress={async () => {
           try {
             signOut(auth);
-          }
-          catch (err) {
-            Alert.alert('There is something wrong!', err.message);
-          }
-          finally {
-            navigation.navigate('Login');
+          } catch (err) {
+            Alert.alert("There is something wrong!", err.message);
+          } finally {
+            navigation.navigate("Login");
           }
         }}
         title="Log Out Now"
@@ -230,8 +218,7 @@ function Settings() {
     <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
       <Button
         onPress={() => {
-
-          alert('This feature has yet to be implemented.');
+          alert("This feature has yet to be implemented.");
         }}
         title="Change Password"
       />
@@ -240,42 +227,45 @@ function Settings() {
   );
 }
 
-
-
 const Drawer = createDrawerNavigator();
 
 function MyDrawer() {
   return (
     <Drawer.Navigator
-      initialRouteName='MainMenu'
+      initialRouteName="MainMenu"
       screenOptions={{
         drawerStyle: {
-          backgroundColor: 'red',
+          backgroundColor: "red",
         },
         drawerLabelStyle: {
-          color: 'white',
+          color: "white",
         },
       }}
     >
       <Drawer.Screen
-        name='Main Menu'
+        name="Main Menu"
         component={MainMenu}
-        options={{ drawerLabel: 'Main Menu' }}
+        options={{ drawerLabel: "Main Menu" }}
       />
       <Drawer.Screen
-        name='Edit Current User'
+        name="Edit Current User"
         component={EditCurrentUser}
-        options={{ drawerLabel: 'Edit Current User' }}
+        options={{ drawerLabel: "Edit Current User" }}
       />
       <Drawer.Screen
-        name='Settings'
+        name="Settings"
         component={Settings}
-        options={{ drawerLabel: 'Settings' }}
+        options={{ drawerLabel: "Settings" }}
       />
       <Drawer.Screen
         name="LogOut"
         component={LogOut}
         options={{ drawerLabel: "LogOut" }}
+      />
+      <Drawer.Screen
+        name="Create"
+        component={Create}
+        options={{ drawerLabel: "Create" }}
       />
     </Drawer.Navigator>
   );
@@ -288,7 +278,7 @@ export default function Home() {
 const styles = StyleSheet.create({
   layout: {
     flex: 1,
-    justifyContent: 'center',
+    justifyContent: "center",
     padding: 5,
   },
   container: {
@@ -297,9 +287,9 @@ const styles = StyleSheet.create({
   },
   button: {
     flex: 1,
-    backgroundColor: '#ff4545',
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: "#ff4545",
+    alignItems: "center",
+    justifyContent: "center",
     paddingVertical: 50,
     paddingHorizontal: 50,
     borderRadius: 15,
@@ -308,7 +298,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    backgroundColor: '#ff4545',
+    backgroundColor: "#ff4545",
     marginBottom: 16,
     padding: 10,
     borderRadius: 8,
@@ -318,12 +308,12 @@ const styles = StyleSheet.create({
     marginHorizontal: 10,
     marginTop: 24,
     padding: 30,
-    backgroundColor: '#ff4545',
+    backgroundColor: "#ff4545",
     fontSize: 24,
   },
   text: {
     fontSize: 16,
-    color: 'white',
+    color: "white",
   },
   separator: {
     marginVertical: 8,
