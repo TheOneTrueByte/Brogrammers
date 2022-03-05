@@ -6,6 +6,7 @@ import {
   Button,
   SafeAreaView,
   Alert,
+  View,
 } from "react-native";
 
 export default function AddItem({ submitHandler }) {
@@ -26,13 +27,15 @@ export default function AddItem({ submitHandler }) {
   };
   return (
     <>
+    <View style = {styles.view}>
       <TextInput
-        multiline
-        numberOfLines={3}
-        style={styles.input}
-        placeholder="Tap to enter a new team name"
-        onChangeText={changeHandler}
+          multiline
+          numberOfLines={3}
+          style={styles.input}
+          placeholder="Tap to enter a new team name"
+          onChangeText={changeHandler}
       />
+    </View>
       <Button onPress={checkTextInput} title="Add Team" color="red"/>
     </>
   );
@@ -44,10 +47,16 @@ const styles = StyleSheet.create({
     textAlign: "center",
     justifyContent: "center",
     fontSize: 20,
-    marginBottom: 10,
+    marginBottom: 8,
     paddingHorizontal: 8,
     // paddingVertical: 500,
     borderBottomWidth: 1,
     borderBottomColor: "#ddd",
+  },
+  view: {
+    padding: 8,
+    backgroundColor: "#ddd",
+    borderRadius: 8,
+    margin: 8,
   },
 });

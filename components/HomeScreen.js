@@ -180,7 +180,7 @@ function MainMenuNavigator ({ navigation }) {
         <Stack.Screen 
           name = "Teams"
           component = {MainMenu}
-          options = {{ headerShown: false, }}
+          //options = {{ headerShown: false, }}
         />
         <Stack.Screen 
           name = "TeamItems"
@@ -292,6 +292,7 @@ function MyDrawer() {
         drawerLabelStyle: {
           color: 'white',
         },
+        title: '',
       }}
     >
       <Drawer.Screen

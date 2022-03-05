@@ -43,6 +43,6 @@ export default function ViewItems({ navigation }) {
     const [teamItems, setTeamItems] = useState("");
 
     return (
-        <Text>this is where the teams's items  will be</Text>
+        <Text>this is where the teams's items will be</Text>
     )
 }
