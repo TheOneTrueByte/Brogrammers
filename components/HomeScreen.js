@@ -24,23 +24,27 @@ import {
   Pressable,
 } from "react-native";
 import { useState } from "react";
-import { createDrawerNavigator, DrawerItem } from "@react-navigation/drawer";
+import { createDrawerNavigator, DrawerItem, getDrawerStatusFromState } from "@react-navigation/drawer";
 import { NavigationContainer } from "@react-navigation/native";
 import { TextInput } from "react-native-gesture-handler";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Login from "./Login";
 
+<<<<<<< HEAD
 import { background, borderLeft, createStyleFunction, style } from "styled-system";
+=======
+import { background, borderLeft, get, style } from "styled-system";
+>>>>>>> main
 import AddItem from "./AddTeam";
 import ViewItems from "./Items";
 
 import { initializeApp } from "@firebase/app";
+import firebase from 'firebase/app';
 import "firebase/firestore";
-import { getFirestore, setDoc, doc, deleteDoc } from 'firebase/firestore';
+import { getFirestore, setDoc, doc, deleteDoc, Firestore, collection, query, getDocs, onSnapshot, QuerySnapshot } from 'firebase/firestore';
 import { Icon } from "native-base";
 import { getAuth, updateEmail, signOut } from "firebase/auth";
 import { auth } from "../firebase";
-
 const Separator = () => (
   <View style={styles.separator} />
 );
@@ -56,6 +60,18 @@ const firestore = getFirestore();
 //Main Menu & Teams Functionality
 function MainMenu({ navigation }) {
   const [items, setItems] = useState("");
+  const teamCol = collection(firestore, 'Teams');
+  const q = query(teamCol);
+
+  //used to get live data from FIrebase
+  const getTeams = async () => {
+    const teams = [];
+    const querySnapshot = await getDocs(teamCol);
+      querySnapshot.forEach((doc) => {
+        teams.push({ name: doc.data().Name, key: Math.random().toString() });
+      });
+      return teams;
+  }
 
   const pressHandler = (item) => {
     //alert that confirms the user wants to cancel the selected team
@@ -132,6 +148,7 @@ function MainMenu({ navigation }) {
     });
   };
 
+  
   const DeleteItem = ({ item, pressHandler }) => {
     return (
       <TouchableOpacity
@@ -142,6 +159,14 @@ function MainMenu({ navigation }) {
       </TouchableOpacity>
     );
   };
+  let teamNames = [];
+(async function(){
+  let its = await getTeams();
+  setTimeout(() => {
+    setItems(its);
+  }, 1000);
+   
+})();
 
 
   return (
