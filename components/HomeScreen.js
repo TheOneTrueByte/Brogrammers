@@ -30,8 +30,9 @@ import { TextInput } from "react-native-gesture-handler";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Login from "./Login";
 
-import { background, borderLeft, style } from "styled-system";
+import { background, borderLeft, createStyleFunction, style } from "styled-system";
 import AddItem from "./AddTeam";
+import ViewItems from "./Items";
 
 import { initializeApp } from "@firebase/app";
 import "firebase/firestore";
@@ -44,10 +45,16 @@ const Separator = () => (
   <View style={styles.separator} />
 );
 
+const Stack = createNativeStackNavigator();
+
+function ItemsScreen({ navigation }) {
+  return <ViewItems />;
+}
+
 const firestore = getFirestore();
 
 //Main Menu & Teams Functionality
-function MainMenu() {
+function MainMenu({ navigation }) {
   const [items, setItems] = useState("");
 
   const pressHandler = (item) => {
@@ -140,19 +147,46 @@ function MainMenu() {
   return (
     <SafeAreaView style={styles.container}>
       <AddItem submitHandler={submitHandler} />
+      <View style = {styles.GoToItemsInstructionsView} >
+        <Text style = {styles.GoToItemsInstructions} >
+          Tap on a team to view and edit its items
+        </Text>
+      </View> 
       <FlatList
         data={items}
         keyExtractor={(item) => item.key}
         renderItem={({ item }) => (
-          <View style={styles.flatListStyle}>
+          <Pressable 
+            style={styles.flatListStyle}
+            onPress = {() => navigation.navigate("TeamItems")}
+            >
             <View style={{ flexDirection: "row", alignItems: "center" }}>
               <Text style={{ fontSize: 24 }}>{item.name}</Text>
             </View>
             <DeleteItem item={item} pressHandler={pressHandler} />
-          </View>
+          </Pressable>
         )}
       ></FlatList>
     </SafeAreaView>
+  )
+}
+
+function MainMenuNavigator ({ navigation }) {
+  return (
+      <Stack.Navigator
+        initialRouteName = "Teams"
+        screenOptions = {{gestureEnabled: false}}
+      >
+        <Stack.Screen 
+          name = "Teams"
+          component = {MainMenu}
+          options = {{ headerShown: false, }}
+        />
+        <Stack.Screen 
+          name = "TeamItems"
+          component={ItemsScreen}
+        />
+      </Stack.Navigator>
   )
 }
 
@@ -262,7 +296,7 @@ function MyDrawer() {
     >
       <Drawer.Screen
         name='Main Menu'
-        component={MainMenu}
+        component={MainMenuNavigator}
         options={{ drawerLabel: 'Main Menu' }}
       />
       <Drawer.Screen
@@ -312,9 +346,10 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     backgroundColor: '#ff4545',
-    marginBottom: 16,
+    marginBottom: 8,
     padding: 10,
     borderRadius: 8,
+    marginHorizontal: 8,
   },
   item: {
     flex: 1,
@@ -327,6 +362,15 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 16,
     color: 'white',
+  },
+  GoToItemsInstructionsView: {
+    alignItems: 'center',
+    marginBottom: 8,
+  },
+  GoToItemsInstructions: {
+    fontSize: 16,
+    color: 'grey',
+    alignItems: 'center',
   },
   separator: {
     marginVertical: 8,

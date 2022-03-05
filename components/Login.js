@@ -1,7 +1,7 @@
 import * as React from "react";
 import StoreSelection from "./StoreSelection";
 import Home from "./HomeScreen";
-import ViewItems from "./items.js"
+import ViewItems from "./Items.js"
 import { MaterialCommunityIcons, Ionicons } from "@expo/vector-icons";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
@@ -152,7 +152,7 @@ function Login() {
           options={{
             headerShown: false,
           }}
-        />
+        />  
       </Stack.Navigator>
     </NavigationContainer>
   );

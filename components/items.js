@@ -39,10 +39,10 @@ import { Icon } from "native-base";
 import { getAuth, updateEmail, signOut } from "firebase/auth";
 import { auth } from "../firebase";
 
-function ViewItems() {
+export default function ViewItems({ navigation }) {
     const [teamItems, setTeamItems] = useState("");
 
     return (
-        <Text>this is where the teams will be</Text>
+        <Text>this is where the teams's items  will be</Text>
     )
 }
