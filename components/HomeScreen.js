@@ -30,11 +30,7 @@ import { TextInput } from "react-native-gesture-handler";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Login from "./Login";
 
-<<<<<<< HEAD
-import { background, borderLeft, createStyleFunction, style } from "styled-system";
-=======
-import { background, borderLeft, get, style } from "styled-system";
->>>>>>> main
+import { background, borderLeft, get, createStyleFunction, style } from "styled-system";
 import AddItem from "./AddTeam";
 import ViewItems from "./Items";
 
