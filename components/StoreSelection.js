@@ -10,7 +10,7 @@ import {
 } from "react-native";
 import { createDrawerNavigator, DrawerItem } from "@react-navigation/drawer";
 
-import AddItem from "./AddItem";
+import AddItem from "./AddTeam";
 
 import { initializeApp } from "@firebase/app";
 import { getFirestore, setDoc, doc } from "firebase/firestore";

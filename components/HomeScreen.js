@@ -28,7 +28,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Login from "./Login";
 
 import { background, borderLeft, style } from "styled-system";
-import AddItem from "./AddItem";
+import AddItem from "./AddTeam";
 
 import { initializeApp } from "@firebase/app";
 import "firebase/firestore";
