@@ -39,7 +39,7 @@ import firebase from 'firebase/app';
 import "firebase/firestore";
 import { getFirestore, setDoc, doc, deleteDoc, Firestore, collection, query, getDocs, onSnapshot, QuerySnapshot } from 'firebase/firestore';
 import { Icon } from "native-base";
-import { getAuth, updateEmail, signOut } from "firebase/auth";
+import { getAuth, updateEmail, signOut, updatePassword } from "firebase/auth";
 import { auth } from "../firebase";
 const Separator = () => (
   <View style={styles.separator} />
@@ -136,6 +136,7 @@ function MainMenu({ navigation }) {
           Name: name
         });
 
+        
         return [{ name: name, key: Math.random().toString() }, ...prevItems];
       }
       catch {
@@ -215,6 +216,9 @@ function MainMenuNavigator ({ navigation }) {
 //Edit Current User Section
 function EditCurrentUser({ navigation }) {
 
+  const [userEmail, editUserEmail] = useState('') //Used for purposes of resetting the email address
+
+  //function for changing the users email address
   const changeEmailAddress = async () => {
     try {
       //Figure out how to change the email address here
@@ -229,7 +233,6 @@ function EditCurrentUser({ navigation }) {
     }
   };
 
-  const [userEmail, editUserEmail] = useState('') //Used for purposes of resetting the email address
 
   return (
     <NativeBaseProvider>
@@ -286,13 +289,6 @@ function LogOut({ navigation }) {
 function Settings() {
   return (
     <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-      <Button
-        onPress={() => {
-
-          alert('This feature has yet to be implemented.');
-        }}
-        title="Change Password"
-      />
       <Text>Setting Screen</Text>
     </View>
   );
