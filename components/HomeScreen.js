@@ -1,7 +1,7 @@
 import * as React from "react";
 
 //This page is the homescreen for the app
-//It shows the current teams in a scrollable element
+//It shows the current teams in a scrollable elements
 
 import {
   NativeBaseProvider,
