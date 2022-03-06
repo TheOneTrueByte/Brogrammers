@@ -11,7 +11,6 @@ import {
 
 export default function AddItem({ submitHandler }) {
   const [text, setText] = useState("");
-  const [textEntry, resetTextEntry] = useState('')
 
   const checkTextInput = () => {
     //Check for the Name TextInput
@@ -20,7 +19,6 @@ export default function AddItem({ submitHandler }) {
       return;
     } else {
       submitHandler(text);
-      resetTextEntry('');
       setText('');
       return;
     }
@@ -33,12 +31,8 @@ export default function AddItem({ submitHandler }) {
           numberOfLines={3}
           style={styles.input}
           placeholder="Tap to enter a new team name"
-          onChange={(event) => 
-          {
-              setText(event.target.value);
-          }}
-            onChangeText={value => resetTextEntry(value)}
-            value={textEntry}
+          onChangeText={value => setText(value)}
+          value={text}
       />
     </View>
       <Button onPress={checkTextInput} title="Add Team" color="red"/>

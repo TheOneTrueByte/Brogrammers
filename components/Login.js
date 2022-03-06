@@ -38,8 +38,6 @@ function HomeScreen({ navigation }) {
 }
 
 const LoginScreen = ({ navigation }) => {
-  const [loginEmail, setLoginEmail] = useState("");
-  const [loginPassword, setLoginPassword] = useState("");
 
   const loginUser = async () => {
     try {
@@ -48,18 +46,18 @@ const LoginScreen = ({ navigation }) => {
         emailField,
         passwordField
       );
-      resetEmailField('');
-      resetPasswordField('');    
+      editEmailField('');
+      editPasswordField('');    
       navigation.navigate("Home");
     } catch (error) {
       console.log(error.message);
-      resetPasswordField('');  
+      editPasswordField('');  
       alert("Invalid Email/Password");
     }
   };
 
-  const [emailField, resetEmailField] = useState('')
-  const [passwordField, resetPasswordField] = useState('')
+  const [emailField, editEmailField] = useState('')
+  const [passwordField, editPasswordField] = useState('')
   return (
     <NativeBaseProvider>
       <Box safeArea flex={1} pt="10" pb="0" w="90%" mx="auto">
@@ -82,19 +80,13 @@ const LoginScreen = ({ navigation }) => {
 
         <VStack space={3} mt="5">
           <TextInput
-            onChange={(event) => {
-              setLoginEmail(event.target.value);
-          }}
-            onChangeText={value => resetEmailField(value)}
+            onChangeText={value => editEmailField(value)}
             placeholder={"Email"}
             value={emailField}
             style={loginstyles.input}
           />
           <TextInput
-            onChange={(event) => {
-              setLoginPassword(event.target.value);
-             }}
-            onChangeText={value => resetPasswordField(value)}
+            onChangeText={value => editPasswordField(value)}
             placeholder={"Password"}
             value={passwordField}
             secureTextEntry={true}
