@@ -217,22 +217,42 @@ function MainMenuNavigator ({ navigation }) {
 function EditCurrentUser({ navigation }) {
 
   const [userEmail, editUserEmail] = useState('') //Used for purposes of resetting the email address
+  const [userPassword, editUserPassword] = useState('') //Used for purposes of resetting the password address
 
   //function for changing the users email address
   const changeEmailAddress = async () => {
     try {
-      //Figure out how to change the email address here
-      await updateEmail(getAuth().currentUser, userEmail.toString());
-      await alert("Your Email address has successfully been updated! You will be signed out now");
-      await editUserEmail('');
-      await navigation.navigate('Login');
+      if(userEmail.toString == "")
+      {
+        alert("Box is empty. Enter a valid email address")
+      }
+      else
+      {
+          await updateEmail(getAuth().currentUser, userEmail.toString());
+          await alert("Your Email address has successfully been updated! You will be signed out now");
+          await editUserEmail('');
+          await navigation.navigate('Login');
+      }
     } catch (error) {
       console.log(error.message);
       editUserEmail('');
-      alert("Uh-Oh. Something went wrong. Your email was not changed. This may mean you have to have a recent login. Attempt to logout and then back in again.");
+      alert("Uh-Oh. Something went wrong. Your email was not changed.");
     }
   };
 
+  const changePassword = async () => {
+    try {
+      //Figure out how to change the email address here
+      await updatePassword(getAuth().currentUser, userPassword.toString());
+      await alert("Your Password address has successfully been updated! You will be signed out now");
+      await editUserPassword('');
+      await navigation.navigate('Login');
+    } catch (error) {
+      console.log(error.message);
+      editUserPassword('');
+      alert("Uh-Oh. Something went wrong. Your password was not changed. This may mean you have to have a recent login. Attempt to logout and then back in again.");
+    }
+  };
 
   return (
     <NativeBaseProvider>
@@ -245,9 +265,10 @@ function EditCurrentUser({ navigation }) {
             onChangeText={value => editUserEmail(value)}
             placeholder={"Enter a new email"}
             value={userEmail}
+            style={styles.input}
           />
           <Button
-            title="Change the Current User Email"
+            title="Change Email"
             onPress={() => {
               changeEmailAddress();
             }}
@@ -256,6 +277,30 @@ function EditCurrentUser({ navigation }) {
             _text={{ color: "white" }}
           >
             Change Email
+          </Button>
+        </VStack>
+      </Box>
+      <Box safeArea flex={10} py="2" w="90%" mx="auto">
+        <VStack space={3} mt="5">
+          <Heading size="lg" fontWeight="600" color="coolGray.800">
+            Your current password is... Just kidding. No one can see your password
+          </Heading>
+          <TextInput
+            onChangeText={value => editUserPassword(value)}
+            placeholder={"Enter a new password"}
+            value={userPassword}
+            style={styles.input}
+          />
+          <Button
+            title="Change Password"
+            onPress={() => {
+              changePassword();
+            }}
+            mt="2"
+            colorScheme="red"
+            _text={{ color: "white" }}
+          >
+            Change Password
           </Button>
         </VStack>
       </Box>
@@ -399,5 +444,12 @@ const styles = StyleSheet.create({
     backgroundColor: "#140d94",
     padding: 20,
     borderRadius: 8,
+  },
+  input: {
+    height: 44,
+    padding: 10,
+    borderWidth: 0.5,
+    borderColor: "grey",
+    marginBottom: 10,
   },
 });
