@@ -222,7 +222,7 @@ function EditCurrentUser({ navigation }) {
   //function for changing the users email address
   const changeEmailAddress = async () => {
     try {
-      if(userEmail.toString == "")
+      if((userEmail.toString).length < 1)
       {
         alert("Box is empty. Enter a valid email address")
       }
@@ -242,11 +242,17 @@ function EditCurrentUser({ navigation }) {
 
   const changePassword = async () => {
     try {
-      //Figure out how to change the email address here
-      await updatePassword(getAuth().currentUser, userPassword.toString());
-      await alert("Your Password address has successfully been updated! You will be signed out now");
-      await editUserPassword('');
-      await navigation.navigate('Login');
+      if((userPassword.toString).length < 3)
+      {
+        alert("Your Password is too short. Enter in a longer password");
+      }
+      else
+      {
+          await updatePassword(getAuth().currentUser, userPassword.toString());
+          await alert("Your Password address has successfully been updated! You will be signed out now");
+          await editUserPassword('');
+          await navigation.navigate('Login');
+      }
     } catch (error) {
       console.log(error.message);
       editUserPassword('');
