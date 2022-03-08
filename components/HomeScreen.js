@@ -3,12 +3,7 @@ import * as React from "react";
 //This page is the homescreen for the app
 //It shows the current teams in a scrollable elements
 
-import {
-  NativeBaseProvider,
-  Box,
-  Heading,
-  VStack,
-} from "native-base";
+import { NativeBaseProvider, Box, Heading, VStack } from "native-base";
 import {
   Button,
   View,
@@ -24,26 +19,45 @@ import {
   Pressable,
 } from "react-native";
 import { useState } from "react";
-import { createDrawerNavigator, DrawerItem, getDrawerStatusFromState } from "@react-navigation/drawer";
+import {
+  createDrawerNavigator,
+  DrawerItem,
+  getDrawerStatusFromState,
+} from "@react-navigation/drawer";
 import { NavigationContainer } from "@react-navigation/native";
 import { TextInput } from "react-native-gesture-handler";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Login from "./Login";
-
-import { background, borderLeft, get, createStyleFunction, style } from "styled-system";
+import Create from "./Create";
+import {
+  background,
+  borderLeft,
+  get,
+  createStyleFunction,
+  style,
+} from "styled-system";
 import AddItem from "./AddTeam";
 import ViewItems from "./Items";
 
 import { initializeApp } from "@firebase/app";
-import firebase from 'firebase/app';
+import firebase from "firebase/app";
 import "firebase/firestore";
-import { getFirestore, setDoc, doc, deleteDoc, Firestore, collection, query, getDocs, onSnapshot, QuerySnapshot } from 'firebase/firestore';
+import {
+  getFirestore,
+  setDoc,
+  doc,
+  deleteDoc,
+  Firestore,
+  collection,
+  query,
+  getDocs,
+  onSnapshot,
+  QuerySnapshot,
+} from "firebase/firestore";
 import { Icon } from "native-base";
 import { getAuth, updateEmail, signOut, updatePassword } from "firebase/auth";
 import { auth } from "../firebase";
-const Separator = () => (
-  <View style={styles.separator} />
-);
+const Separator = () => <View style={styles.separator} />;
 
 const Stack = createNativeStackNavigator();
 
@@ -56,22 +70,22 @@ const firestore = getFirestore();
 //Main Menu & Teams Functionality
 function MainMenu({ navigation }) {
   const [items, setItems] = useState("");
-  const teamCol = collection(firestore, 'Teams');
+  const teamCol = collection(firestore, "Teams");
   const q = query(teamCol);
 
   //used to get live data from FIrebase
   const getTeams = async () => {
     const teams = [];
     const querySnapshot = await getDocs(teamCol);
-      querySnapshot.forEach((doc) => {
-        teams.push({ name: doc.data().Name, key: Math.random().toString() });
-      });
-      return teams;
-  }
+    querySnapshot.forEach((doc) => {
+      teams.push({ name: doc.data().Name, key: Math.random().toString() });
+    });
+    return teams;
+  };
 
   const pressHandler = (item) => {
     //alert that confirms the user wants to cancel the selected team
-    if (Platform.OS === 'android') {
+    if (Platform.OS === "android") {
       Alert.alert(
         "Confirm Team Deletion",
         `Are you sure you want to delete ${item.name} from the database?`,
@@ -79,23 +93,21 @@ function MainMenu({ navigation }) {
           {
             text: "No",
             onPress: () => console.log("Deletion cancelled"),
-            style: "cancel"
+            style: "cancel",
           },
           {
             text: "Yes",
             onPress: () => {
               setItems((prevItems) => {
-
                 deleteDoc(doc(firestore, "Teams", item.name));
 
                 return prevItems.filter((thisItem) => thisItem.key != item.key);
               });
-            }
-          }
+            },
+          },
         ]
-      )
-    }
-    else if (Platform.OS === 'ios') {
+      );
+    } else if (Platform.OS === "ios") {
       Alert.alert(
         "Confirm Team Deletion",
         `Are you sure you want to delete ${item.name} from the database?`,
@@ -103,25 +115,22 @@ function MainMenu({ navigation }) {
           {
             text: "No",
             onPress: () => console.log("Deletion cancelled"),
-            style: "cancel"
+            style: "cancel",
           },
           {
             text: "Yes",
             onPress: () => {
               setItems((prevItems) => {
-
                 deleteDoc(doc(firestore, "Teams", item.name));
 
                 return prevItems.filter((thisItem) => thisItem.key != item.key);
               });
-            }
-          }
+            },
+          },
         ]
-      )
-    }
-    else {
+      );
+    } else {
       setItems((prevItems) => {
-
         deleteDoc(doc(firestore, "Teams", item.name));
 
         return prevItems.filter((thisItem) => thisItem.key != item.key);
@@ -133,19 +142,18 @@ function MainMenu({ navigation }) {
     setItems((prevItems) => {
       try {
         setDoc(doc(firestore, "Teams", name), {
-          Name: name
+          Name: name,
         });
 
-        
         return [{ name: name, key: Math.random().toString() }, ...prevItems];
-      }
-      catch {
-        alert("Can't add team. This is likely because a team with the same name already exists");
+      } catch {
+        alert(
+          "Can't add team. This is likely because a team with the same name already exists"
+        );
       }
     });
   };
 
-  
   const DeleteItem = ({ item, pressHandler }) => {
     return (
       <TouchableOpacity
@@ -157,31 +165,29 @@ function MainMenu({ navigation }) {
     );
   };
   let teamNames = [];
-(async function(){
-  let its = await getTeams();
-  setTimeout(() => {
-    setItems(its);
-  }, 1000);
-   
-})();
-
+  (async function () {
+    let its = await getTeams();
+    setTimeout(() => {
+      setItems(its);
+    }, 1000);
+  })();
 
   return (
     <SafeAreaView style={styles.container}>
       <AddItem submitHandler={submitHandler} />
-      <View style = {styles.GoToItemsInstructionsView} >
-        <Text style = {styles.GoToItemsInstructions} >
+      <View style={styles.GoToItemsInstructionsView}>
+        <Text style={styles.GoToItemsInstructions}>
           Tap on a team to view and edit its items
         </Text>
-      </View> 
+      </View>
       <FlatList
         data={items}
         keyExtractor={(item) => item.key}
         renderItem={({ item }) => (
-          <Pressable 
+          <Pressable
             style={styles.flatListStyle}
-            onPress = {() => navigation.navigate("TeamItems")}
-            >
+            onPress={() => navigation.navigate("TeamItems")}
+          >
             <View style={{ flexDirection: "row", alignItems: "center" }}>
               <Text style={{ fontSize: 24 }}>{item.name}</Text>
             </View>
@@ -190,73 +196,68 @@ function MainMenu({ navigation }) {
         )}
       ></FlatList>
     </SafeAreaView>
-  )
+  );
 }
 
-function MainMenuNavigator ({ navigation }) {
+function MainMenuNavigator({ navigation }) {
   return (
-      <Stack.Navigator
-        initialRouteName = "Teams"
-        screenOptions = {{gestureEnabled: false}}
-      >
-        <Stack.Screen 
-          name = "Teams"
-          component = {MainMenu}
-          //options = {{ headerShown: false, }}
-        />
-        <Stack.Screen 
-          name = "TeamItems"
-          component={ItemsScreen}
-        />
-      </Stack.Navigator>
-  )
+    <Stack.Navigator
+      initialRouteName="Teams"
+      screenOptions={{ gestureEnabled: false }}
+    >
+      <Stack.Screen
+        name="Teams"
+        component={MainMenu}
+        //options = {{ headerShown: false, }}
+      />
+      <Stack.Screen name="TeamItems" component={ItemsScreen} />
+    </Stack.Navigator>
+  );
 }
-
 
 //Edit Current User Section
 function EditCurrentUser({ navigation }) {
-
-  const [userEmail, editUserEmail] = useState('') //Used for purposes of resetting the email address
-  const [userPassword, editUserPassword] = useState('') //Used for purposes of resetting the password address
+  const [userEmail, editUserEmail] = useState(""); //Used for purposes of resetting the email address
+  const [userPassword, editUserPassword] = useState(""); //Used for purposes of resetting the password address
 
   //function for changing the users email address
   const changeEmailAddress = async () => {
     try {
-      if((userEmail.toString).length < 1)
-      {
-        alert("Box is empty. Enter a valid email address")
-      }
-      else
-      {
-          await updateEmail(getAuth().currentUser, userEmail.toString());
-          await alert("Your Email address has successfully been updated! You will be signed out now");
-          await editUserEmail('');
-          await navigation.navigate('Login');
+      if (userEmail.toString.length < 1) {
+        alert("Box is empty. Enter a valid email address");
+      } else {
+        await updateEmail(getAuth().currentUser, userEmail.toString());
+        await alert(
+          "Your Email address has successfully been updated! You will be signed out now"
+        );
+        await editUserEmail("");
+        await navigation.navigate("Login");
       }
     } catch (error) {
       console.log(error.message);
-      editUserEmail('');
+      editUserEmail("");
       alert("Uh-Oh. Something went wrong. Your email was not changed.");
     }
   };
 
   const changePassword = async () => {
     try {
-      if((userPassword.toString).length < 3)
-      {
+      if (userPassword.toString.length < 3) {
         alert("Your Password is too short. Enter in a longer password");
-      }
-      else
-      {
-          await updatePassword(getAuth().currentUser, userPassword.toString());
-          await alert("Your Password address has successfully been updated! You will be signed out now");
-          await editUserPassword('');
-          await navigation.navigate('Login');
+      } else {
+        await updatePassword(getAuth().currentUser, userPassword.toString());
+        await alert(
+          "Your Password address has successfully been updated! You will be signed out now"
+        );
+        await editUserPassword("");
+        await navigation.navigate("Login");
       }
     } catch (error) {
       console.log(error.message);
-      editUserPassword('');
-      alert("Uh-Oh. Something went wrong. Your password was not changed. This may mean you have to have a recent login. Attempt to logout and then back in again.");
+      editUserPassword("");
+      alert(
+        "Uh-Oh. Something went wrong. Your password was not changed. This may mean you have to have a recent login. Attempt to logout and then back in again."
+      );
     }
   };
 
@@ -268,7 +269,7 @@ function EditCurrentUser({ navigation }) {
             Your current email address is {getAuth().currentUser.email}
           </Heading>
           <TextInput
-            onChangeText={value => editUserEmail(value)}
+            onChangeText={(value) => editUserEmail(value)}
             placeholder={"Enter a new email"}
             value={userEmail}
             style={styles.input}
@@ -289,10 +290,11 @@ function EditCurrentUser({ navigation }) {
       <Box safeArea flex={10} py="2" w="90%" mx="auto">
         <VStack space={3} mt="5">
           <Heading size="lg" fontWeight="600" color="coolGray.800">
-            Your current password is... Just kidding. No one can see your password
+            Your current password is... Just kidding. No one can see your
+            password
           </Heading>
           <TextInput
-            onChangeText={value => editUserPassword(value)}
+            onChangeText={(value) => editUserPassword(value)}
             placeholder={"Enter a new password"}
             value={userPassword}
             style={styles.input}
@@ -317,17 +319,15 @@ function EditCurrentUser({ navigation }) {
 //Logout Section
 function LogOut({ navigation }) {
   return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+    <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
       <Button
         onPress={async () => {
           try {
             signOut(auth);
-          }
-          catch (err) {
-            Alert.alert('There is something wrong!', err.message);
-          }
-          finally {
-            navigation.navigate('Login');
+          } catch (err) {
+            Alert.alert("There is something wrong!", err.message);
+          } finally {
+            navigation.navigate("Login");
           }
         }}
         title="Log Out Now"
@@ -345,38 +345,41 @@ function Settings() {
   );
 }
 
-
-
 const Drawer = createDrawerNavigator();
 
 function MyDrawer() {
   return (
     <Drawer.Navigator
-      initialRouteName='MainMenu'
+      initialRouteName="MainMenu"
       screenOptions={{
         drawerStyle: {
-          backgroundColor: 'red',
+          backgroundColor: "red",
         },
         drawerLabelStyle: {
-          color: 'white',
+          color: "white",
         },
-        title: '',
+        title: "",
       }}
     >
       <Drawer.Screen
-        name='Main Menu'
+        name="Main Menu"
         component={MainMenuNavigator}
-        options={{ drawerLabel: 'Main Menu' }}
+        options={{ drawerLabel: "Main Menu" }}
       />
       <Drawer.Screen
-        name='Edit Current User'
+        name="Edit Current User"
         component={EditCurrentUser}
-        options={{ drawerLabel: 'Edit Current User' }}
+        options={{ drawerLabel: "Edit Current User" }}
       />
       <Drawer.Screen
-        name='Settings'
+        name="Settings"
         component={Settings}
-        options={{ drawerLabel: 'Settings' }}
+        options={{ drawerLabel: "Settings" }}
+      />
+      <Drawer.Screen
+        name="Create"
+        component={Create}
+        options={{ drawerLabel: "Create" }}
       />
       <Drawer.Screen
         name="LogOut"
@@ -394,7 +397,7 @@ export default function Home() {
 const styles = StyleSheet.create({
   layout: {
     flex: 1,
-    justifyContent: 'center',
+    justifyContent: "center",
     padding: 5,
   },
   container: {
@@ -403,9 +406,9 @@ const styles = StyleSheet.create({
   },
   button: {
     flex: 1,
-    backgroundColor: '#ff4545',
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: "#ff4545",
+    alignItems: "center",
+    justifyContent: "center",
     paddingVertical: 50,
     paddingHorizontal: 50,
     borderRadius: 15,
@@ -414,7 +417,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    backgroundColor: '#ff4545',
+    backgroundColor: "#ff4545",
     marginBottom: 8,
     padding: 10,
     borderRadius: 8,
@@ -425,21 +428,21 @@ const styles = StyleSheet.create({
     marginHorizontal: 10,
     marginTop: 24,
     padding: 30,
-    backgroundColor: '#ff4545',
+    backgroundColor: "#ff4545",
     fontSize: 24,
   },
   text: {
     fontSize: 16,
-    color: 'white',
+    color: "white",
   },
   GoToItemsInstructionsView: {
-    alignItems: 'center',
+    alignItems: "center",
     marginBottom: 8,
   },
   GoToItemsInstructions: {
     fontSize: 16,
-    color: 'grey',
-    alignItems: 'center',
+    color: "grey",
+    alignItems: "center",
   },
   separator: {
     marginVertical: 8,
