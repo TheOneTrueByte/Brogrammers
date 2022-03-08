@@ -1,62 +1,92 @@
-import React, { useState } from "react";
-import { View, Button, TextInput } from "react-native";
+import React from "react";
+import { Text, View, TextInput, Button, StyleSheet } from "react-native";
+import { useForm, Controller } from "react-hook-form";
 
-const Create = () => {
-  const [teamName, setTeamName] = useState("");
-  const [quantity, setQuantity] = useState(0);
-  const [customerName, setCustomerName] = useState("John Doe");
+export default function Create() {
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    defaultValues: {
+      team: "",
+      quantity: "",
+      customerName: "",
+    },
+  });
+  const onSubmit = (data) => console.log(data);
 
   return (
-    <View
-      style={{
-        margin: 20,
-        marginTop: 100,
-      }}
-    >
-      <TextInput
-        required
-        placeholder="Enter name of the team"
-        onChange={(e) => {
-          setTeamName(e);
+    <View>
+      <h1>Create a new team</h1>
+      <br />
+      <h3>Enter the team name:</h3>
+      <Controller
+        control={control}
+        rules={{
+          required: true,
         }}
-        style={{
-          borderWidth: 2,
-          borderColor: "skyblue",
-          margin: 20,
-        }}
+        render={({ field: { onChange, onBlur, value } }) => (
+          <TextInput
+            style={styles.input}
+            onBlur={onBlur}
+            onChangeText={onChange}
+            value={value}
+          />
+        )}
+        name="team"
       />
-      <TextInput
-        required
-        placeholder="Enter quantity"
-        onChange={(e) => {
-          setQuantity(e);
+      {errors.team && <Text>This is required.</Text>}
+      <br />
+      <h3>Enter the quantity</h3>
+      <Controller
+        control={control}
+        rules={{
+          required: true,
         }}
-        style={{
-          borderWidth: 2,
-          borderColor: "skyblue",
-          margin: 20,
-        }}
+        render={({ field: { onChange, onBlur, value } }) => (
+          <TextInput
+            style={styles.input}
+            onBlur={onBlur}
+            onChangeText={onChange}
+            value={value}
+          />
+        )}
+        name="quantity"
       />
-      <TextInput
-        required
-        placeholder="Enter customer's name"
-        onChange={(e) => {
-          setCustomerName(e);
+      {errors.quantity && <Text>This is required.</Text>}
+      <br />
+      <h3>Enter the customer's name:</h3>
+      <Controller
+        control={control}
+        rules={{
+          required: true,
         }}
-        style={{
-          borderWidth: 2,
-          borderColor: "skyblue",
-          margin: 20,
-        }}
+        render={({ field: { onChange, onBlur, value } }) => (
+          <TextInput
+            style={styles.input}
+            onBlur={onBlur}
+            onChangeText={onChange}
+            value={value}
+          />
+        )}
+        name="customerName"
       />
-      <Button
-        title="submit"
-        onPress={() => {
-          console.log(teamName + " " + quantity + " " + customerName);
-        }}
-      />
+      {errors.customerName && <Text>This is required.</Text>}
+      <br />
+      <Button title="Submit" onPress={handleSubmit(onSubmit)} />
     </View>
   );
-};
+}
 
-export default Create;
+const styles = StyleSheet.create({
+  input: {
+    width: "100%",
+    padding: "12px 20px",
+    margin: "8px 0",
+    display: "inline-block",
+    border: "1px solid #ccc",
+    borderRadius: "4px",
+    boxSizing: "border-box",
+  },
+});
