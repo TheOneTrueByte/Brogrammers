@@ -208,7 +208,7 @@ function MainMenuNavigator({ navigation }) {
       <Stack.Screen
         name="Teams"
         component={MainMenu}
-        //options = {{ headerShown: false, }}
+      //options = {{ headerShown: false, }}
       />
       <Stack.Screen name="TeamItems" component={ItemsScreen} />
     </Stack.Navigator>
@@ -340,7 +340,18 @@ function LogOut({ navigation }) {
 function Settings() {
   return (
     <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-      <Text>Setting Screen</Text>
+      <Button
+        onPress={async () => {
+          try {
+            signOut(auth);
+          } catch (err) {
+            Alert.alert("There is something wrong!", err.message);
+          } finally {
+            alert("Delete Account not yet implemented.");
+          }
+        }}
+        title="Delete Account"
+      />
     </View>
   );
 }
