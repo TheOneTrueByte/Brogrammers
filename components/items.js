@@ -28,10 +28,12 @@ import { NavigationContainer, useNavigation } from "@react-navigation/native";
 import { TextInput } from "react-native-gesture-handler";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Login from "./Login";
+import Home from "./HomeScreen";
 
 import { background, borderLeft, style } from "styled-system";
 import AddItem from "./AddTeam";
 import AddTeamItem from "./AddItem";
+import MainMenu from "./HomeScreen"
 
 import { initializeApp } from "@firebase/app";
 import "firebase/firestore";
@@ -52,22 +54,22 @@ function ViewItems({ navigation }) {
     const [teamItems, setTeamItems] = useState("");
 
     return (
-        <SafeAreaView style = { styles.container }>
-          <View style = {styles.GoBackInstructionsView}>
-            <Text style = {styles.GoBackInstructionsText}>
-              Swipe right to go back to all teams  
-            </Text>  
-          </View>
-          <View style = {styles.addItemView}>
-            <Pressable 
-              style = {styles.addItemButton}
-              onPress={() => navigation.navigate("AddItemsScreen")}
-            >
-              <Text style = {styles.addItemButtonText} >Add Item</Text>
-            </Pressable> 
-          </View>
-          <Text>this is where the teams's items will be</Text>
-        </SafeAreaView>
+      <SafeAreaView style = { styles.container }>
+        <View style = {styles.GoBackInstructionsView}>
+          <Text style = {styles.GoBackInstructionsText}>
+            Swipe right on mobile to go back to all teams  
+          </Text>  
+        </View>
+        <View style = {styles.addItemView}>
+          <Pressable 
+            style = {styles.addItemButton}
+            onPress={() => navigation.navigate("AddItemsScreen")}
+          >
+            <Text style = {styles.addItemButtonText} >Add Item</Text>
+          </Pressable> 
+        </View>
+        <Text>this is where the teams's items will be</Text>
+      </SafeAreaView>
     );
 }
 
@@ -76,17 +78,18 @@ export default function ItemsNavigator({ navigation })
   return (
     <ItemsStack.Navigator 
       initialRouteName="ViewItems"
-      //screenOptions={{ gestureEnabled: false }}
     >
       <ItemsStack.Screen 
         name = "ViewItems"
         component = {ViewItems}
-        options = {{ headerShown: false, }}
+      />
+      <ItemsStack.Screen
+        name = "Teams"
+        component={MainMenu}
       />
       <ItemsStack.Screen 
         name = "AddItemsScreen"
         component = {AddItemsScreen}
-        options = {{ headerShown: false, }}
       />
     </ItemsStack.Navigator>
   );

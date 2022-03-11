@@ -212,10 +212,6 @@ function MainMenuNavigator({ navigation }) {
       <Stack.Screen 
         name="TeamItems" 
         component={ItemsScreen} 
-        options = {{
-          title: "Team Items",
-          headerShown: false,
-        }}
       />
     </Stack.Navigator>
   );
