@@ -8,8 +8,9 @@ import {
   Alert,
   View,
   Text,
+  Pressable
 } from "react-native";
-import Pressable from "react-native/Libraries/Components/Pressable/Pressable";
+
 
 //this will essentially be a form 
 //that will prompt the user for
