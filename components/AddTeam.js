@@ -7,7 +7,9 @@ import {
   SafeAreaView,
   Alert,
   View,
+  Text,
 } from "react-native";
+import Pressable from "react-native/Libraries/Components/Pressable/Pressable";
 
 export default function AddItem({ submitHandler }) {
   const [text, setText] = useState("");
@@ -35,7 +37,14 @@ export default function AddItem({ submitHandler }) {
           value={text}
       />
     </View>
-      <Button onPress={checkTextInput} title="Add Team" color="red"/>
+      <Pressable 
+          onPress={checkTextInput}
+          style = {styles.AddTeamButton}
+      >
+        <View>
+          <Text style = {styles.AddTeamText}>Add Team</Text>  
+        </View>  
+      </Pressable>
     </>
   );
 }
@@ -57,5 +66,26 @@ const styles = StyleSheet.create({
     backgroundColor: "#ddd",
     borderRadius: 8,
     margin: 8,
+  },
+  AddTeamButton: {
+    marginHorizontal: 8,
+    backgroundColor: "#ecf0f1",
+    alignItems: "center",
+    borderRadius: 8,
+    padding: 8,
+    shadowRadius: 1,
+    shadowOpacity: 0.5,
+    shadowOffset: {
+      height: 0,
+      width: 0,
+    },
+    shadowColor: "black",
+  },  
+  AddTeamButtonView: {
+  },
+  AddTeamText: {
+    fontSize: 16,
+    color: "red",
+    alignItems: "center",
   },
 });

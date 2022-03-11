@@ -28,7 +28,6 @@ import { NavigationContainer } from "@react-navigation/native";
 import { TextInput } from "react-native-gesture-handler";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Login from "./Login";
-import Create from "./Create";
 import {
   background,
   borderLeft,
@@ -37,7 +36,8 @@ import {
   style,
 } from "styled-system";
 import AddItem from "./AddTeam";
-import ViewItems from "./Items";
+import ItemsNavigator from "./Items"
+import AddTeamItem from "./AddItem";
 
 import { initializeApp } from "@firebase/app";
 import firebase from "firebase/app";
@@ -62,7 +62,7 @@ const Separator = () => <View style={styles.separator} />;
 const Stack = createNativeStackNavigator();
 
 function ItemsScreen({ navigation }) {
-  return <ViewItems />;
+  return <ItemsNavigator />;
 }
 
 const firestore = getFirestore();
@@ -203,14 +203,20 @@ function MainMenuNavigator({ navigation }) {
   return (
     <Stack.Navigator
       initialRouteName="Teams"
-      screenOptions={{ gestureEnabled: false }}
+      //screenOptions={{ gestureEnabled: false }}
     >
       <Stack.Screen
         name="Teams"
         component={MainMenu}
-      //options = {{ headerShown: false, }}
       />
-      <Stack.Screen name="TeamItems" component={ItemsScreen} />
+      <Stack.Screen 
+        name="TeamItems" 
+        component={ItemsScreen} 
+        options = {{
+          title: "Team Items",
+          headerShown: false,
+        }}
+      />
     </Stack.Navigator>
   );
 }
@@ -419,6 +425,7 @@ function MyDrawer() {
           color: "white",
         },
         title: "",
+        swipeEdgeWidth: 0,
       }}
     >
       <Drawer.Screen
@@ -436,11 +443,11 @@ function MyDrawer() {
         component={DeleteAccount}
         options={{ drawerLabel: "Delete Account" }}
       />
-      <Drawer.Screen
+      {/* <Drawer.Screen
         name="Create"
         component={Create}
         options={{ drawerLabel: "Create" }}
-      />
+      /> */}
       <Drawer.Screen
         name="LogOut"
         component={LogOut}
