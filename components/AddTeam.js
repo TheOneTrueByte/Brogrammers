@@ -8,8 +8,9 @@ import {
   Alert,
   View,
   Text,
+  Pressable
 } from "react-native";
-import Pressable from "react-native/Libraries/Components/Pressable/Pressable";
+
 
 export default function AddItem({ submitHandler }) {
   const [text, setText] = useState("");
