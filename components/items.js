@@ -82,6 +82,7 @@ export default function ItemsNavigator({ navigation })
       <ItemsStack.Screen 
         name = "ViewItems"
         component = {ViewItems}
+        options = {{ headerShown: false, }}
       />
       <ItemsStack.Screen
         name = "Teams"
@@ -90,6 +91,7 @@ export default function ItemsNavigator({ navigation })
       <ItemsStack.Screen 
         name = "AddItemsScreen"
         component = {AddItemsScreen}
+        options = {{ headerShown: false, }}
       />
     </ItemsStack.Navigator>
   );
