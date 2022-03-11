@@ -55,7 +55,7 @@ import {
   QuerySnapshot,
 } from "firebase/firestore";
 import { Icon } from "native-base";
-import { getAuth, updateEmail, signOut, updatePassword } from "firebase/auth";
+import { getAuth, updateEmail, signOut, updatePassword, EmailAuthProvider, reauthenticateWithCredential, deleteUser } from "firebase/auth";
 import { auth } from "../firebase";
 const Separator = () => <View style={styles.separator} />;
 
@@ -229,7 +229,7 @@ function EditCurrentUser({ navigation }) {
   //function for changing the users email address
   const changeEmailAddress = async () => {
     try {
-      if (userEmail.toString.length < 1) {
+      if (userEmail.length < 1) {
         alert("Box is empty. Enter a valid email address");
       } else {
         await updateEmail(getAuth().currentUser, userEmail.toString());
@@ -248,7 +248,7 @@ function EditCurrentUser({ navigation }) {
 
   const changePassword = async () => {
     try {
-      if (userPassword.toString.length < 3) {
+      if (userPassword.length < 3) {
         alert("Your Password is too short. Enter in a longer password");
       } else {
         await updatePassword(getAuth().currentUser, userPassword.toString());
@@ -343,22 +343,71 @@ function LogOut({ navigation }) {
 }
 
 //Other Settings Functionality
-function Settings() {
+function DeleteAccount({ navigation }) {
+
+  const [accountEmail, editAccountEmail] = useState(""); //Used for purposes of verifying password change
+  const [accountPassword, editAccountPassword] = useState(""); //Used for purposes of verifying password change
+  //Your current email address is {getAuth().currentUser.email}
+  const deleteAccountAction = async () => {
+
+      const user = getAuth().currentUser;
+      const credential = EmailAuthProvider.credential(
+        accountEmail,
+        accountPassword
+      )
+
+      reauthenticateWithCredential(user, credential).then(async () => {
+
+        deleteUser(user);
+
+        await alert(
+          "Your account has been deleted."
+        );
+        await editAccountEmail("");
+        await editAccountPassword("");
+        await navigation.navigate("Login");
+      }).catch((error) => {
+        alert("Can't verify user. Your account has NOT been deleted");
+      });
+    };
+
   return (
-    <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-      <Button
-        onPress={async () => {
-          try {
-            signOut(auth);
-          } catch (err) {
-            Alert.alert("There is something wrong!", err.message);
-          } finally {
-            alert("Delete Account not yet implemented.");
-          }
-        }}
-        title="Delete Account"
-      />
-    </View>
+    <NativeBaseProvider>
+    
+      <Box safeArea flex={10} py="2" w="90%" mx="auto">
+        <VStack space={3} mt="5">
+          <Heading size="lg" fontWeight="600" color="coolGray.800">
+            Warning! Continuing on this page will delete your account. Please speak with a manager first!
+          </Heading>
+          <Heading mt="1" color="coolGray.600" fontWeight="medium" size="xs">
+              Please enter your credentials
+          </Heading>
+          <TextInput
+            onChangeText={(value) => editAccountEmail(value)}
+            placeholder={"Email"}
+            value={accountEmail}
+            style={styles.input}
+          />
+          <TextInput
+            onChangeText={(value) => editAccountPassword(value)}
+            placeholder={"Password"}
+            value={accountPassword}
+            style={styles.input}
+          />
+          <Button
+            title="Delete Account"
+            onPress={() => {
+              deleteAccountAction();
+            }}
+            mt="2"
+            colorScheme="red"
+            _text={{ color: "white" }}
+          >
+            Delete Account
+          </Button>
+        </VStack>
+      </Box>
+    </NativeBaseProvider>
   );
 }
 
@@ -390,9 +439,9 @@ function MyDrawer() {
         options={{ drawerLabel: "Edit Current User" }}
       />
       <Drawer.Screen
-        name="Settings"
-        component={Settings}
-        options={{ drawerLabel: "Settings" }}
+        name="Delete Account"
+        component={DeleteAccount}
+        options={{ drawerLabel: "Delete Account" }}
       />
       {/* <Drawer.Screen
         name="Create"
