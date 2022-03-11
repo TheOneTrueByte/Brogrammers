@@ -17,6 +17,30 @@ import Pressable from "react-native/Libraries/Components/Pressable/Pressable";
 //of a new item
 export default function AddTeamItem({ navigation }) {
   return (
-    <Text>This is where new items are created</Text>
+    <SafeAreaView>
+      <View style = {styles.GoBackInstructionsView}>
+        <Text style = {styles.GoBackInstructionsText}>
+          Swipe right to go back to all items  
+        </Text>  
+      </View>
+      <Text>This is where new items are created</Text>
+
+    </SafeAreaView>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 5,
+  },
+  GoBackInstructionsView: {
+    alignItems: "center",
+    margin: 8,
+  },
+  GoBackInstructionsText: {
+    fontSize: 16,
+    color: "grey",
+    alignItems: "center",
+  },
+})

@@ -53,14 +53,19 @@ function ViewItems({ navigation }) {
 
     return (
         <SafeAreaView style = { styles.container }>
-            <View style = {styles.addItemView}>
-              <Pressable 
-                style = {styles.addItemButton}
-                onPress={() => navigation.navigate("AddItemsScreen")}
-              >
-                <Text style = {styles.addItemButtonText} >Add Item</Text>
-              </Pressable> 
-            </View>
+          <View style = {styles.GoBackInstructionsView}>
+            <Text style = {styles.GoBackInstructionsText}>
+              Swipe right to go back to all teams  
+            </Text>  
+          </View>
+          <View style = {styles.addItemView}>
+            <Pressable 
+              style = {styles.addItemButton}
+              onPress={() => navigation.navigate("AddItemsScreen")}
+            >
+              <Text style = {styles.addItemButtonText} >Add Item</Text>
+            </Pressable> 
+          </View>
           <Text>this is where the teams's items will be</Text>
         </SafeAreaView>
     );
@@ -109,5 +114,14 @@ const styles = StyleSheet.create({
   addItemButtonText: {
     fontSize: 16,
     color: "white",
-  }
+  },
+  GoBackInstructionsView: {
+    alignItems: "center",
+    marginTop: 8,
+  },
+  GoBackInstructionsText: {
+    fontSize: 16,
+    color: "grey",
+    alignItems: "center",
+  },
 })
