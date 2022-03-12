@@ -45,11 +45,14 @@ import {
   doc,
   deleteDoc,
   Firestore,
+  ref,
   collection,
   query,
   getDocs,
   onSnapshot,
   QuerySnapshot,
+  updateDoc,
+  arrayUnion,
 } from "firebase/firestore";
 import { Icon } from "native-base";
 import {
@@ -64,6 +67,7 @@ import {
 import { auth } from "../firebase";
 
 const AnotherStack = createNativeStackNavigator();
+const firestore = getFirestore();
 
 
 //this will essentially be a form
@@ -83,26 +87,40 @@ const AddTeamItem = ({ route, navigation }) => {
   useEffect(() => {
     setErr("");
   }, [itemName, itemQuantity, itemSize, itemColor]);
-  const AddItemToDatabase = () => {
+  const AddItemToDatabase = async () => {
     if (
       itemName.length > 0 &&
       itemQuantity.length > 0 &&
       itemSize.length > 0 &&
       itemColor.length > 0
     ) {
+      //Item Creation
       const item = {
-        name: itemName,
-        quantity: itemQuantity,
-        size: itemSize,
-        color: itemColor,
+        Name: itemName,
+        Quantity: itemQuantity,
+        Size: itemSize,
+        Color: itemColor,
       };
-      console.log("item", item);
-      editItemName("");
-      editItemQuantity("");
-      editItemSize("");
-      editItemColor("");
+
+      //Attempting to write item to firestore
+      try {
+        const currentTeamDoc = doc(firestore, "Teams", route.params.addTeamName)
+        await updateDoc(currentTeamDoc, {
+            Items: arrayUnion(item)
+        });
+        await alert("Item successfully added!")
+        editItemName("");
+        editItemQuantity("");
+        editItemSize("");
+        editItemColor("");
+      } catch {
+        alert(
+          "Can't add item. This could be a problem with your connection"
+        );
+      }
+
     } else {
-      setErr("Please enter all the field!!!");
+      setErr("Please complete every field!!!");
     }
   };
 
