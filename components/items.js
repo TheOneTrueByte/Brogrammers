@@ -24,7 +24,7 @@ import {
 } from "react-native";
 import { useState } from "react";
 import { createDrawerNavigator, DrawerItem } from "@react-navigation/drawer";
-import { NavigationContainer, useNavigation } from "@react-navigation/native";
+import { NavigationContainer, useNavigation, useRoute } from "@react-navigation/native";
 import { TextInput } from "react-native-gesture-handler";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Login from "./Login";
@@ -50,7 +50,7 @@ function AddItemsScreen({ navigation }) {
 }
 
 
-function ViewItems({ navigation }) {
+const ViewItems = ({ route, navigation }) => {
     const [teamItems, setTeamItems] = useState("");
 
     return (
@@ -69,6 +69,7 @@ function ViewItems({ navigation }) {
           </Pressable> 
         </View>
         <Text>this is where the teams's items will be</Text>
+        <Text>This is the team name: {route.params.teamName}</Text>
       </SafeAreaView>
     );
 }
