@@ -76,6 +76,7 @@ export default function AddTeamItem({ navigation }) {
   // Error message
   const [err, setErr] = useState("");
 
+  // Use effect for clear up error message
   useEffect(() => {
     setErr("");
   }, [itemName, itemQuantity, itemSize, itemColor]);
@@ -93,6 +94,10 @@ export default function AddTeamItem({ navigation }) {
         color: itemColor,
       };
       console.log("item", item);
+      editItemName("");
+      editItemQuantity("");
+      editItemSize("");
+      editItemColor("");
     } else {
       setErr("Please enter all the field!!!");
     }
