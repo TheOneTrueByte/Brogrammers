@@ -32,7 +32,7 @@ import Home from "./HomeScreen";
 
 import { background, borderLeft, style } from "styled-system";
 import AddItem from "./AddTeam";
-import AddTeamItem from "./AddItem";
+import AddTeamItems from "./AddItem";
 import MainMenu from "./HomeScreen"
 
 import { initializeApp } from "@firebase/app";
@@ -46,7 +46,7 @@ import { ScreenStack } from "react-native-screens";
 const ItemsStack = createNativeStackNavigator();
 
 function AddItemsScreen({ navigation }) {
-  return <AddTeamItem />
+  return <AddTeamItems />
 }
 
 
@@ -56,14 +56,11 @@ const ViewItems = ({ route, navigation }) => {
     return (
       <SafeAreaView style = { styles.container }>
         <View style = {styles.GoBackInstructionsView}>
-          <Text style = {styles.GoBackInstructionsText}>
-            Swipe right on mobile to go back to all teams  
-          </Text>  
         </View>
         <View style = {styles.addItemView}>
           <Pressable 
             style = {styles.addItemButton}
-            onPress={() => navigation.navigate("AddItemsScreen")}
+            onPress={() => navigation.navigate('AddItemsScreen', {screen: 'AddTeamItem', params: {addTeamName: route.params.teamName},})}
           >
             <Text style = {styles.addItemButtonText} >Add Item</Text>
           </Pressable> 

@@ -63,11 +63,14 @@ import {
 } from "firebase/auth";
 import { auth } from "../firebase";
 
+const AnotherStack = createNativeStackNavigator();
+
+
 //this will essentially be a form
 //that will prompt the user for
 //the name, color, and quantity
 //of a new item
-export default function AddTeamItem({ navigation }) {
+const AddTeamItem = ({ route, navigation }) => {
   const [itemName, editItemName] = useState(""); //Used for purposes of editingItemName
   const [itemQuantity, editItemQuantity] = useState(""); //Used for purposes of editingItemQuantity
   const [itemSize, editItemSize] = useState(""); //Used for purposes of editingItemSize
@@ -107,7 +110,7 @@ export default function AddTeamItem({ navigation }) {
     <NativeBaseProvider>
       <View style={styles.GoBackInstructionsView}>
         <Text style={styles.GoBackInstructionsText}>
-          Swipe right on mobile to go back to all teams
+          Team Name: {route.params.addTeamName}
         </Text>
       </View>
       <Box safeArea flex={10} py="2" w="90%" mx="auto">
@@ -179,6 +182,22 @@ export default function AddTeamItem({ navigation }) {
     </NativeBaseProvider>
   );
 }
+
+export default function AddTeamItems({ navigation })
+{
+  return (
+    <AnotherStack.Navigator 
+      initialRouteName="AddTeamItem"
+    >
+      <AnotherStack.Screen 
+        name = "AddTeamItem"
+        component = {AddTeamItem}
+        options = {{ headerShown: false, }}
+      />
+    </AnotherStack.Navigator>
+  );
+}
+
 
 const styles = StyleSheet.create({
   container: {
