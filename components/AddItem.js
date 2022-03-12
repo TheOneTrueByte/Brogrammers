@@ -150,14 +150,14 @@ export default function AddTeamItem({ navigation }) {
             value={itemColor}
             style={styles.input}
           />
-          <View
+          <Text
             style={{
               color: "#bf0b23",
               fontWeight: "bold",
             }}
           >
             {err}
-          </View>
+          </Text>
           <Button
             title="Add Item"
             onPress={() => {
