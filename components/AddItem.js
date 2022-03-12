@@ -83,8 +83,8 @@ export default function AddTeamItem({ navigation }) {
     if (
       itemName.length > 0 &&
       itemQuantity.length > 0 &&
-      itemSize > 0 &&
-      itemColor > 0
+      itemSize.length > 0 &&
+      itemColor.length > 0
     ) {
       const item = {
         name: itemName,
