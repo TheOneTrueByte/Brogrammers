@@ -15,7 +15,8 @@ import {
   ScrollView,
   Pressable,
 } from "react-native";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+
 import {
   createDrawerNavigator,
   DrawerItem,
@@ -33,7 +34,7 @@ import {
   style,
 } from "styled-system";
 import AddItem from "./AddTeam";
-import ItemsNavigator from "./Items"
+import ItemsNavigator from "./Items";
 
 import { initializeApp } from "@firebase/app";
 import firebase from "firebase/app";
@@ -51,31 +52,58 @@ import {
   QuerySnapshot,
 } from "firebase/firestore";
 import { Icon } from "native-base";
-import { getAuth, updateEmail, signOut, updatePassword, EmailAuthProvider, reauthenticateWithCredential, deleteUser } from "firebase/auth";
+import {
+  getAuth,
+  updateEmail,
+  signOut,
+  updatePassword,
+  EmailAuthProvider,
+  reauthenticateWithCredential,
+  deleteUser,
+} from "firebase/auth";
 import { auth } from "../firebase";
 
-
-//this will essentially be a form 
+//this will essentially be a form
 //that will prompt the user for
 //the name, color, and quantity
 //of a new item
 export default function AddTeamItem({ navigation }) {
-
   const [itemName, editItemName] = useState(""); //Used for purposes of editingItemName
   const [itemQuantity, editItemQuantity] = useState(""); //Used for purposes of editingItemQuantity
   const [itemSize, editItemSize] = useState(""); //Used for purposes of editingItemSize
   const [itemColor, editItemColor] = useState(""); //Used for purposes of editingItemColor
 
-  const AddItemToDatabase = async () => {
+  // Error message
+  const [err, setErr] = useState("");
 
-  }
+  useEffect(() => {
+    setErr("");
+  }, [itemName, itemQuantity, itemSize, itemColor]);
+  const AddItemToDatabase = () => {
+    if (
+      itemName.length > 0 &&
+      itemQuantity.length > 0 &&
+      itemSize > 0 &&
+      itemColor > 0
+    ) {
+      const item = {
+        name: itemName,
+        quantity: itemQuantity,
+        size: itemSize,
+        color: itemColor,
+      };
+      console.log("item", item);
+    } else {
+      setErr("Please enter all the field!!!");
+    }
+  };
 
   return (
     <NativeBaseProvider>
-      <View style = {styles.GoBackInstructionsView}>
-        <Text style = {styles.GoBackInstructionsText}>
-            Swipe right on mobile to go back to all teams  
-        </Text>  
+      <View style={styles.GoBackInstructionsView}>
+        <Text style={styles.GoBackInstructionsText}>
+          Swipe right on mobile to go back to all teams
+        </Text>
       </View>
       <Box safeArea flex={10} py="2" w="90%" mx="auto">
         <VStack space={3} mt="5">
@@ -83,41 +111,53 @@ export default function AddTeamItem({ navigation }) {
             This is the page that will allow you to create new Items
           </Heading>
           <Heading mt="1" color="coolGray.600" fontWeight="medium" size="xs">
-              Item Name
+            Item Name*
           </Heading>
           <TextInput
+            required
             onChangeText={(value) => editItemName(value)}
-            placeholder={"Name"}
+            placeholder={"Please enter name of the item"}
             value={itemName}
             style={styles.input}
           />
           <Heading mt="1" color="coolGray.600" fontWeight="medium" size="xs">
-              Item Quantity
+            Item Quantity*
           </Heading>
           <TextInput
+            required
             onChangeText={(value) => editItemQuantity(value)}
-            placeholder={"Quantity"}
+            placeholder={"Please enter the quantity"}
             value={itemQuantity}
             style={styles.input}
           />
           <Heading mt="1" color="coolGray.600" fontWeight="medium" size="xs">
-              Item Size
+            Item Size*
           </Heading>
           <TextInput
+            required
             onChangeText={(value) => editItemSize(value)}
-            placeholder={"Size"}
+            placeholder={"Please enter size"}
             value={itemSize}
             style={styles.input}
           />
           <Heading mt="1" color="coolGray.600" fontWeight="medium" size="xs">
-              Item Color
+            Item Color*
           </Heading>
           <TextInput
+            required
             onChangeText={(value) => editItemColor(value)}
-            placeholder={"Password"}
+            placeholder={"Please enter color"}
             value={itemColor}
             style={styles.input}
           />
+          <View
+            style={{
+              color: "#bf0b23",
+              fontWeight: "bold",
+            }}
+          >
+            {err}
+          </View>
           <Button
             title="Add Item"
             onPress={() => {
@@ -157,4 +197,4 @@ const styles = StyleSheet.create({
     borderColor: "grey",
     marginBottom: 10,
   },
-})
+});
