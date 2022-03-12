@@ -1,4 +1,4 @@
-import { Center } from "native-base";
+import { Center, keyboardDismissHandlerManager } from "native-base";
 import React, { useState } from "react";
 import {
   StyleSheet,
@@ -8,7 +8,8 @@ import {
   Alert,
   View,
   Text,
-  Pressable
+  Pressable,
+  Keyboard
 } from "react-native";
 
 
@@ -16,6 +17,9 @@ export default function AddItem({ submitHandler }) {
   const [text, setText] = useState("");
 
   const checkTextInput = () => {
+
+    Keyboard.dismiss();
+
     //Check for the Name TextInput
     if (!text.trim()) {
       alert("Please Enter Team Name");

@@ -123,10 +123,13 @@ const styles = StyleSheet.create({
   GoBackInstructionsView: {
     alignItems: "center",
     marginTop: 8,
+    justifyContent: "center",
   },
   GoBackInstructionsText: {
     fontSize: 16,
     color: "grey",
     alignItems: "center",
+    justifyContent: "center",
+    textAlign: "center",
   },
 })

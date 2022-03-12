@@ -148,6 +148,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: "grey",
     alignItems: "center",
+    textAlign: "center",
   },
   input: {
     height: 44,
