@@ -1,6 +1,6 @@
 import * as React from "react";
 import Home from "./HomeScreen";
-import ItemsNavigator from "./Items.js"
+//import ItemsNavigator from "./Items.js"
 import { MaterialCommunityIcons, Ionicons } from "@expo/vector-icons";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
