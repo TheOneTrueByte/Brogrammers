@@ -48,7 +48,7 @@ const Item = ({ color, name, quantity, size }) => (
     <View style={{ flexDirection: "row" }}>
       <View
         style={{
-          flexDirection: "column",
+          flexDirection: "row",
           alignItems: "left",
           flex: 7,
         }}
@@ -68,7 +68,7 @@ const Item = ({ color, name, quantity, size }) => (
         }}
       >
         <TouchableOpacity
-          style={{ backgroundColor: "blue", padding: 10 }}
+          style={{ backgroundColor: "red", padding: 10 }}
           onPress={() => {
             console.log("deleting item");
           }}
@@ -189,12 +189,19 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   item: {
-    backgroundColor: "#f9c2ff",
+    backgroundColor: "#4c34eb",
     padding: 20,
     marginVertical: 8,
     marginHorizontal: 16,
   },
   body: {
     fontSize: 32,
+    padding: 15,
+    margin: 5,
+    backgroundColor: "#eb34bd",
+    color: "white",
+    flex: 1,
+    justifyContent: "center",
+    textAlign: "center",
   },
 });
