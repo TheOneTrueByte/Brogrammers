@@ -31,7 +31,7 @@ import MainMenu from "./HomeScreen";
 
 import { initializeApp } from "@firebase/app";
 import "firebase/firestore";
-import { getFirestore, setDoc, doc, deleteDoc } from "firebase/firestore";
+import { getFirestore, setDoc, doc, deleteDoc, getDoc, getDocs, onSnapshot, query } from "firebase/firestore";
 import { Icon } from "native-base";
 import { getAuth, updateEmail, signOut } from "firebase/auth";
 import { auth } from "../firebase";
@@ -81,22 +81,13 @@ const Item = ({ color, name, quantity, size }) => (
 );
 
 const ViewItems = ({ route, navigation }) => {
-  const [teamItems, setTeamItems] = useState([
-    {
-      id: "1",
-      Color: "white",
-      Name: "Home Jersey",
-      Quantity: 9,
-      Size: "XS",
-    },
-    {
-      id: "2",
-      Color: "red",
-      Name: "Away Jersey",
-      Quantity: 13,
-      Size: "L",
-    },
-  ]);
+
+  const testing = onSnapshot(doc(getFirestore(), "Teams", route.params.teamName), (doc) => {
+    const backendItems = doc.data().Items
+    setTeamItems(backendItems);
+  });
+
+  const [teamItems, setTeamItems] = useState();
 
   const renderItem = ({ item }) => (
     <Item
