@@ -31,7 +31,7 @@ import MainMenu from "./HomeScreen";
 
 import { initializeApp } from "@firebase/app";
 import "firebase/firestore";
-import { getFirestore, setDoc, doc, deleteDoc, getDoc, getDocs, onSnapshot, query } from "firebase/firestore";
+import { getFirestore, setDoc, doc, deleteDoc, getDoc, getDocs, onSnapshot, query, updateDoc, deleteField, arrayRemove } from "firebase/firestore";
 import { Icon } from "native-base";
 import { getAuth, updateEmail, signOut } from "firebase/auth";
 import { auth } from "../firebase";
@@ -70,15 +70,25 @@ const Item = ({ color, name, quantity, size }) => (
           style={{ backgroundColor: "red", padding: 10 }}
           onPress={() => {
             console.log("deleting item");
+            deleteItem(color, name, quantity, size);
           }}
         >
           <Text style={{ fontSize: 25, color: "white" }}>Delete</Text>
         </TouchableOpacity>
+
       </View>
     </View>
   </View>
 );
 
+const deleteItem = async (color, name, quantity, size) => {
+  const teamDoc = doc(getFirestore(), "Teams", "Manchester United");
+  
+
+  await updateDoc(teamDoc, {
+    Items: arrayRemove({Color: color, Name: name, Quantity: quantity, Size: size})
+  });
+};
 const ViewItems = ({ route, navigation }) => {
 
   const testing = onSnapshot(doc(getFirestore(), "Teams", route.params.teamName), (doc) => {
@@ -87,6 +97,18 @@ const ViewItems = ({ route, navigation }) => {
   });
 
   const [teamItems, setTeamItems] = useState();
+
+  /*const deleteItem = async (item) => {
+    const teamDoc = doc(getFirestore(), "Teams", route.params.teamName);
+    const itemName = item.Name;
+    const itemSize = item.Size;
+    const itemColor = item.Color;
+    const itemQuant = item.Quantity;
+  
+    await updateDoc(teamDoc, {
+      "Items": arrayRemove({"Color:": itemColor, "Name:": itemName, "Quantity:": itemQuant, "Size:": itemSize})
+    });
+  };*/
 
   const renderItem = ({ item }) => (
     <Item

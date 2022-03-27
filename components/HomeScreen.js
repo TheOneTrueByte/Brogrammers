@@ -187,7 +187,7 @@ function MainMenu({ navigation }) {
         renderItem={({ item }) => (
           <Pressable
             style={styles.flatListStyle}
-            onPress={() => navigation.navigate('TeamItems', {screen: 'ViewItems', params: {teamName: item.name},})}
+            onPress={() => navigation.navigate('TeamItems', {screen: 'ViewItems', params: {teamName: item.name} })}
           >
             <View style={{ flexDirection: "row", alignItems: "center" }}>
               <Text style={{ fontSize: 24 }}>{item.name}</Text>
