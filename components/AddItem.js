@@ -34,7 +34,7 @@ import {
   style,
 } from "styled-system";
 import AddItem from "./AddTeam";
-import ItemsNavigator from "./Items";
+import ItemsNavigator from "./items";
 
 import { initializeApp } from "@firebase/app";
 import firebase from "firebase/app";
@@ -68,7 +68,6 @@ import { auth } from "../firebase";
 
 const AnotherStack = createNativeStackNavigator();
 const firestore = getFirestore();
-
 
 //this will essentially be a form
 //that will prompt the user for
@@ -104,21 +103,22 @@ const AddTeamItem = ({ route, navigation }) => {
 
       //Attempting to write item to firestore
       try {
-        const currentTeamDoc = doc(firestore, "Teams", route.params.addTeamName)
+        const currentTeamDoc = doc(
+          firestore,
+          "Teams",
+          route.params.addTeamName
+        );
         await updateDoc(currentTeamDoc, {
-            Items: arrayUnion(item)
+          Items: arrayUnion(item),
         });
-        await alert("Item successfully added!")
+        await alert("Item successfully added!");
         editItemName("");
         editItemQuantity("");
         editItemSize("");
         editItemColor("");
       } catch {
-        alert(
-          "Can't add item. This could be a problem with your connection"
-        );
+        alert("Can't add item. This could be a problem with your connection");
       }
-
     } else {
       setErr("Please complete every field!!!");
     }
@@ -199,23 +199,19 @@ const AddTeamItem = ({ route, navigation }) => {
       </Box>
     </NativeBaseProvider>
   );
-}
+};
 
-export default function AddTeamItems({ navigation })
-{
+export default function AddTeamItems({ navigation }) {
   return (
-    <AnotherStack.Navigator 
-      initialRouteName="AddTeamItem"
-    >
-      <AnotherStack.Screen 
-        name = "AddTeamItem"
-        component = {AddTeamItem}
-        options = {{ headerShown: false, }}
+    <AnotherStack.Navigator initialRouteName="AddTeamItem">
+      <AnotherStack.Screen
+        name="AddTeamItem"
+        component={AddTeamItem}
+        options={{ headerShown: false }}
       />
     </AnotherStack.Navigator>
   );
 }
-
 
 const styles = StyleSheet.create({
   container: {

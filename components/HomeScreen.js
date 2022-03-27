@@ -36,7 +36,7 @@ import {
   style,
 } from "styled-system";
 import AddItem from "./AddTeam";
-import ItemsNavigator from "./Items"
+import ItemsNavigator from "./items";
 import AddTeamItem from "./AddItem";
 
 import { initializeApp } from "@firebase/app";
@@ -55,7 +55,15 @@ import {
   QuerySnapshot,
 } from "firebase/firestore";
 import { Icon } from "native-base";
-import { getAuth, updateEmail, signOut, updatePassword, EmailAuthProvider, reauthenticateWithCredential, deleteUser } from "firebase/auth";
+import {
+  getAuth,
+  updateEmail,
+  signOut,
+  updatePassword,
+  EmailAuthProvider,
+  reauthenticateWithCredential,
+  deleteUser,
+} from "firebase/auth";
 import { auth } from "../firebase";
 const Separator = () => <View style={styles.separator} />;
 
@@ -186,7 +194,12 @@ function MainMenu({ navigation }) {
         renderItem={({ item }) => (
           <Pressable
             style={styles.flatListStyle}
-            onPress={() => navigation.navigate('TeamItems', {screen: 'ViewItems', params: {teamName: item.name},})}
+            onPress={() =>
+              navigation.navigate("TeamItems", {
+                screen: "ViewItems",
+                params: { teamName: item.name },
+              })
+            }
           >
             <View style={{ flexDirection: "row", alignItems: "center" }}>
               <Text style={{ fontSize: 24 }}>{item.name}</Text>
@@ -205,14 +218,8 @@ function MainMenuNavigator({ navigation }) {
       initialRouteName="Teams"
       //screenOptions={{ gestureEnabled: false }}
     >
-      <Stack.Screen
-        name="Teams"
-        component={MainMenu}
-      />
-      <Stack.Screen 
-        name="TeamItems" 
-        component={ItemsScreen}
-      />
+      <Stack.Screen name="Teams" component={MainMenu} />
+      <Stack.Screen name="TeamItems" component={ItemsScreen} />
     </Stack.Navigator>
   );
 }
@@ -340,43 +347,40 @@ function LogOut({ navigation }) {
 
 //Other Settings Functionality
 function DeleteAccount({ navigation }) {
-
   const [accountEmail, editAccountEmail] = useState(""); //Used for purposes of verifying password change
   const [accountPassword, editAccountPassword] = useState(""); //Used for purposes of verifying password change
   //Your current email address is {getAuth().currentUser.email}
   const deleteAccountAction = async () => {
+    const user = getAuth().currentUser;
+    const credential = EmailAuthProvider.credential(
+      accountEmail,
+      accountPassword
+    );
 
-      const user = getAuth().currentUser;
-      const credential = EmailAuthProvider.credential(
-        accountEmail,
-        accountPassword
-      )
-
-      reauthenticateWithCredential(user, credential).then(async () => {
-
+    reauthenticateWithCredential(user, credential)
+      .then(async () => {
         deleteUser(user);
 
-        await alert(
-          "Your account has been deleted."
-        );
+        await alert("Your account has been deleted.");
         await editAccountEmail("");
         await editAccountPassword("");
         await navigation.navigate("Login");
-      }).catch((error) => {
+      })
+      .catch((error) => {
         alert("Can't verify user. Your account has NOT been deleted");
       });
-    };
+  };
 
   return (
     <NativeBaseProvider>
-    
       <Box safeArea flex={10} py="2" w="90%" mx="auto">
         <VStack space={3} mt="5">
           <Heading size="lg" fontWeight="600" color="coolGray.800">
-            Warning! Continuing on this page will delete your account. Please speak with a manager first!
+            Warning! Continuing on this page will delete your account. Please
+            speak with a manager first!
           </Heading>
           <Heading mt="1" color="coolGray.600" fontWeight="medium" size="xs">
-              Please enter your credentials
+            Please enter your credentials
           </Heading>
           <TextInput
             onChangeText={(value) => editAccountEmail(value)}
