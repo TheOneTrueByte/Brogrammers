@@ -16,7 +16,7 @@ import {
   style,
 } from "styled-system";
 import AddItem from "./AddTeam";
-import ItemsNavigator from "./Items";
+import ItemsNavigator from "./items";
 import "firebase/firestore";
 import { getFirestore, doc, updateDoc, arrayUnion } from "firebase/firestore";
 
