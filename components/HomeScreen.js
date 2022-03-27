@@ -169,8 +169,9 @@ function MainMenu({ navigation }) {
     let its = await getTeams();
     setTimeout(() => {
       setItems(its);
-    }, 1000);
+    }, 100);
   })();
+  
 
   return (
     <SafeAreaView style={styles.container}>
