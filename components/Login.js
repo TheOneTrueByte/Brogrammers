@@ -1,34 +1,25 @@
 import * as React from "react";
 import Home from "./HomeScreen";
 //import ItemsNavigator from "./Items.js"
-import { MaterialCommunityIcons, Ionicons } from "@expo/vector-icons";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { StyleSheet, View, Alert } from "react-native";
+import { StyleSheet } from "react-native";
 import { useState } from "react";
 import { auth } from "../firebase";
 
 import {
   Image,
-  Center,
   NativeBaseProvider,
   Box,
   Text,
   Heading,
   VStack,
-  FormControl,
-  Input,
   Link,
   Button,
-  Icon,
-  IconButton,
   HStack,
-  Divider,
-  AspectRatio,
 } from "native-base";
 import { TextInput } from "react-native-gesture-handler";
 import { signInWithEmailAndPassword } from "@firebase/auth";
-import * as firebase from "../firebase";
 
 const Stack = createNativeStackNavigator();
 
@@ -37,7 +28,6 @@ function HomeScreen({ navigation }) {
 }
 
 const LoginScreen = ({ navigation }) => {
-
   const loginUser = async () => {
     try {
       const user = await signInWithEmailAndPassword(
@@ -45,18 +35,18 @@ const LoginScreen = ({ navigation }) => {
         emailField,
         passwordField
       );
-      editEmailField('');
-      editPasswordField('');    
+      editEmailField("");
+      editPasswordField("");
       navigation.navigate("Home");
     } catch (error) {
       console.log(error.message);
-      editPasswordField('');  
+      editPasswordField("");
       alert("Invalid Email/Password");
     }
   };
 
-  const [emailField, editEmailField] = useState('')
-  const [passwordField, editPasswordField] = useState('')
+  const [emailField, editEmailField] = useState("");
+  const [passwordField, editPasswordField] = useState("");
   return (
     <NativeBaseProvider>
       <Box safeArea flex={1} pt="10" pb="0" w="90%" mx="auto">
@@ -79,13 +69,13 @@ const LoginScreen = ({ navigation }) => {
 
         <VStack space={3} mt="5">
           <TextInput
-            onChangeText={value => editEmailField(value)}
+            onChangeText={(value) => editEmailField(value)}
             placeholder={"Email"}
             value={emailField}
             style={loginstyles.input}
           />
           <TextInput
-            onChangeText={value => editPasswordField(value)}
+            onChangeText={(value) => editPasswordField(value)}
             placeholder={"Password"}
             value={passwordField}
             secureTextEntry={true}
@@ -94,7 +84,7 @@ const LoginScreen = ({ navigation }) => {
           <Button
             title="Go to StoreSelection"
             onPress={() => {
-              loginUser();         
+              loginUser();
             }}
             mt="2"
             colorScheme="red"
@@ -143,7 +133,7 @@ function Login() {
           options={{
             headerShown: false,
           }}
-        />  
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );

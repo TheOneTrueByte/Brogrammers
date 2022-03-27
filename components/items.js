@@ -1,8 +1,6 @@
 import * as React from "react";
 
 //It shows the current items for the current team in a scrollable element
-
-import { NativeBaseProvider, Box, Heading, VStack } from "native-base";
 import {
   View,
   Text,
@@ -13,25 +11,14 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { useState } from "react";
-import { createDrawerNavigator, DrawerItem } from "@react-navigation/drawer";
-import {
-  NavigationContainer,
-  useNavigation,
-  useRoute,
-} from "@react-navigation/native";
-import { TextInput } from "react-native-gesture-handler";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import Login from "./Login";
-import Home from "./HomeScreen";
 
-import { background, borderLeft, style } from "styled-system";
-import AddItem from "./AddTeam";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+
 import AddTeamItems from "./AddItem";
 import MainMenu from "./HomeScreen";
 
-import { initializeApp } from "@firebase/app";
 import "firebase/firestore";
-import { getFirestore, setDoc, doc, deleteDoc, getDoc, getDocs, onSnapshot, query } from "firebase/firestore";
+import { getFirestore, doc, onSnapshot } from "firebase/firestore";
 import { Icon } from "native-base";
 import { getAuth, updateEmail, signOut } from "firebase/auth";
 import { auth } from "../firebase";
@@ -81,11 +68,13 @@ const Item = ({ color, name, quantity, size }) => (
 );
 
 const ViewItems = ({ route, navigation }) => {
-
-  const testing = onSnapshot(doc(getFirestore(), "Teams", route.params.teamName), (doc) => {
-    const backendItems = doc.data().Items
-    setTeamItems(backendItems);
-  });
+  const testing = onSnapshot(
+    doc(getFirestore(), "Teams", route.params.teamName),
+    (doc) => {
+      const backendItems = doc.data().Items;
+      setTeamItems(backendItems);
+    }
+  );
 
   const [teamItems, setTeamItems] = useState();
 
@@ -116,7 +105,7 @@ const ViewItems = ({ route, navigation }) => {
       </View>
       <Text>this is where the teams's items will be</Text>
       <Text>This is the team name: {route.params.teamName}</Text>
-      <br />
+      <Text>{"\n"}</Text>
       <FlatList
         data={teamItems}
         renderItem={renderItem}

@@ -1,27 +1,9 @@
 import * as React from "react";
 
 import { NativeBaseProvider, Box, Heading, VStack } from "native-base";
-import {
-  Button,
-  View,
-  Text,
-  Alert,
-  StyleSheet,
-  FlatList,
-  SafeAreaView,
-  StatusBar,
-  TouchableOpacity,
-  Platform,
-  ScrollView,
-  Pressable,
-} from "react-native";
+import { Button, View, Text, StyleSheet } from "react-native";
 import { useState, useEffect } from "react";
 
-import {
-  createDrawerNavigator,
-  DrawerItem,
-  getDrawerStatusFromState,
-} from "@react-navigation/drawer";
 import { NavigationContainer } from "@react-navigation/native";
 import { TextInput } from "react-native-gesture-handler";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
@@ -35,40 +17,11 @@ import {
 } from "styled-system";
 import AddItem from "./AddTeam";
 import ItemsNavigator from "./Items";
-
-import { initializeApp } from "@firebase/app";
-import firebase from "firebase/app";
 import "firebase/firestore";
-import {
-  getFirestore,
-  setDoc,
-  doc,
-  deleteDoc,
-  Firestore,
-  ref,
-  collection,
-  query,
-  getDocs,
-  onSnapshot,
-  QuerySnapshot,
-  updateDoc,
-  arrayUnion,
-} from "firebase/firestore";
-import { Icon } from "native-base";
-import {
-  getAuth,
-  updateEmail,
-  signOut,
-  updatePassword,
-  EmailAuthProvider,
-  reauthenticateWithCredential,
-  deleteUser,
-} from "firebase/auth";
-import { auth } from "../firebase";
+import { getFirestore, doc, updateDoc, arrayUnion } from "firebase/firestore";
 
 const AnotherStack = createNativeStackNavigator();
 const firestore = getFirestore();
-
 
 //this will essentially be a form
 //that will prompt the user for
@@ -104,21 +57,22 @@ const AddTeamItem = ({ route, navigation }) => {
 
       //Attempting to write item to firestore
       try {
-        const currentTeamDoc = doc(firestore, "Teams", route.params.addTeamName)
+        const currentTeamDoc = doc(
+          firestore,
+          "Teams",
+          route.params.addTeamName
+        );
         await updateDoc(currentTeamDoc, {
-            Items: arrayUnion(item)
+          Items: arrayUnion(item),
         });
-        await alert("Item successfully added!")
+        await alert("Item successfully added!");
         editItemName("");
         editItemQuantity("");
         editItemSize("");
         editItemColor("");
       } catch {
-        alert(
-          "Can't add item. This could be a problem with your connection"
-        );
+        alert("Can't add item. This could be a problem with your connection");
       }
-
     } else {
       setErr("Please complete every field!!!");
     }
@@ -199,23 +153,19 @@ const AddTeamItem = ({ route, navigation }) => {
       </Box>
     </NativeBaseProvider>
   );
-}
+};
 
-export default function AddTeamItems({ navigation })
-{
+export default function AddTeamItems({ navigation }) {
   return (
-    <AnotherStack.Navigator 
-      initialRouteName="AddTeamItem"
-    >
-      <AnotherStack.Screen 
-        name = "AddTeamItem"
-        component = {AddTeamItem}
-        options = {{ headerShown: false, }}
+    <AnotherStack.Navigator initialRouteName="AddTeamItem">
+      <AnotherStack.Screen
+        name="AddTeamItem"
+        component={AddTeamItem}
+        options={{ headerShown: false }}
       />
     </AnotherStack.Navigator>
   );
 }
-
 
 const styles = StyleSheet.create({
   container: {
