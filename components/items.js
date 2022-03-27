@@ -49,7 +49,6 @@ const Item = ({ color, name, quantity, size }) => (
       <View
         style={{
           flexDirection: "row",
-          alignItems: "left",
           flex: 7,
         }}
       >
@@ -116,7 +115,7 @@ const ViewItems = ({ route, navigation }) => {
       </View>
       <Text>this is where the teams's items will be</Text>
       <Text>This is the team name: {route.params.teamName}</Text>
-      <br />
+      <Text>{"\n"}</Text>
       <FlatList
         data={teamItems}
         renderItem={renderItem}
