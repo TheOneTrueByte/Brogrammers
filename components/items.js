@@ -53,30 +53,32 @@ const Item = ({ color, name, quantity, size }) => (
           style={{
             flexDirection: "column",
             flex: 7,
+            marginVertical: 5,
           }}
         >
-          <Text style={styles.body}>Color: {color}</Text>
-          <Text style={styles.body}>Name: {name}</Text>
-          <Text style={styles.body}>Quantity: {quantity}</Text>
-          <Text style={styles.body}>Size: {size}</Text>
+          <Text style={styles.itemNameText}>{name}</Text>
+          <Text style={styles.body}>{color}</Text>
+          <Text style={styles.body}>{size}</Text>
+          {/* <Text style={styles.body}>{quantity}</Text> */}
         </View>
         <View
           style={{
             alignItems: "right",
-            flex: 1,
+            flex: 3,
             alignItems: "center",
 
             justifyContent: "center",
           }}
         >
-          <TouchableOpacity
+          {/* <TouchableOpacity
             style={{ backgroundColor: "red", padding: 10 }}
             onPress={() => {
               console.log("deleting item");
             }}
           >
             <Text style={{ fontSize: 25, color: "white" }}>Delete</Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
+          <Text style = {styles.quantityText}>{quantity}</Text>
         </View>
       </View>
     </View>
@@ -118,7 +120,7 @@ const ViewItems = ({ route, navigation }) => {
         </Pressable>
       </View>
 
-      <Text>{"\n"}</Text>
+      {/* <Text>{"\n"}</Text> */}
       <FlatList
         data={teamItems}
         renderItem={renderItem}
@@ -183,22 +185,40 @@ const styles = StyleSheet.create({
   },
   item: {
     backgroundColor: "#ff4545",
-    padding: 20,
-    marginVertical: 8,
-    marginHorizontal: 16,
+    paddingVertical: 10,
+    paddingHorizontal: 16,
+    marginBottom: 8,
+    //marginHorizontal: 16,
     borderRadius: 8,
   },
   body: {
     fontSize: 16,
-    padding: 15,
-    margin: 5,
-    backgroundColor: "#eb34bd",
-    color: "white",
+    paddingTop: 5,
+    //margin: 5,
+    //backgroundColor: "#eb34bd",
+    color: "black",
     flex: 1,
-    justifyContent: "center",
-    textAlign: "center",
+    justifyContent: "space-between",
+    textAlign: "left",
+  },
+  itemNameText: {
+    fontSize: 20,
+    fontWeight: "500",
+    //paddingTop: 5,
+    //margin: 5,
+    //backgroundColor: "#eb34bd",
+    color: "black",
+    flex: 1,
+    justifyContent: "space-between",
+    textAlign: "left",
+  },
+  quantityText: {
+    fontSize: 40,
+    fontWeight: "700",
+    color: "white",
   },
   flatlistStyle: {
-    
+    //padding: 8,
+    marginHorizontal: 8,
   }
 });

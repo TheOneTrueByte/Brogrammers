@@ -169,7 +169,7 @@ function MainMenu({ navigation }) {
     let its = await getTeams();
     setTimeout(() => {
       setItems(its);
-    }, 100);
+    }, 2000);
   })();
   
 

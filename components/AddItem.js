@@ -113,10 +113,12 @@ const AddTeamItem = ({ route, navigation }) => {
         editItemQuantity("");
         editItemSize("");
         editItemColor("");
+        console.log("added team to database");
       } catch {
         alert(
           "Can't add item. This could be a problem with your connection"
         );
+        console.log("database write failed");
       }
 
     } else {
@@ -188,6 +190,7 @@ const AddTeamItem = ({ route, navigation }) => {
             title="Add Item"
             onPress={() => {
               AddItemToDatabase();
+              console.log("adding team to database...");
             }}
             mt="2"
             colorScheme="red"
