@@ -113,7 +113,7 @@ const AddTeamItem = ({ route, navigation }) => {
         editItemQuantity("");
         editItemSize("");
         editItemColor("");
-        console.log("added team to database");
+        console.log("added team to database"); 
       } catch {
         alert(
           "Can't add item. This could be a problem with your connection"
