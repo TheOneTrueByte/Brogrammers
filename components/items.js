@@ -44,39 +44,43 @@ function AddItemsScreen({ navigation }) {
 }
 
 const Item = ({ color, name, quantity, size }) => (
-  <View style={styles.item}>
-    <View style={{ flexDirection: "row" }}>
-      <View
-        style={{
-          flexDirection: "row",
-          flex: 7,
-        }}
-      >
-        <Text style={styles.body}>Color: {color}</Text>
-        <Text style={styles.body}>Name: {name}</Text>
-        <Text style={styles.body}>Quantity: {quantity}</Text>
-        <Text style={styles.body}>Size: {size}</Text>
-      </View>
-      <View
-        style={{
-          alignItems: "right",
-          flex: 1,
-          alignItems: "center",
-
-          justifyContent: "center",
-        }}
-      >
-        <TouchableOpacity
-          style={{ backgroundColor: "red", padding: 10 }}
-          onPress={() => {
-            console.log("deleting item");
+  <Pressable
+    style = {styles.flatlistStyle}
+  >
+    <View style={styles.item}>
+      <View style={{ flexDirection: "row" }}>
+        <View
+          style={{
+            flexDirection: "column",
+            flex: 7,
           }}
         >
-          <Text style={{ fontSize: 25, color: "white" }}>Delete</Text>
-        </TouchableOpacity>
+          <Text style={styles.body}>Color: {color}</Text>
+          <Text style={styles.body}>Name: {name}</Text>
+          <Text style={styles.body}>Quantity: {quantity}</Text>
+          <Text style={styles.body}>Size: {size}</Text>
+        </View>
+        <View
+          style={{
+            alignItems: "right",
+            flex: 1,
+            alignItems: "center",
+
+            justifyContent: "center",
+          }}
+        >
+          <TouchableOpacity
+            style={{ backgroundColor: "red", padding: 10 }}
+            onPress={() => {
+              console.log("deleting item");
+            }}
+          >
+            <Text style={{ fontSize: 25, color: "white" }}>Delete</Text>
+          </TouchableOpacity>
+        </View>
       </View>
     </View>
-  </View>
+  </Pressable>
 );
 
 const ViewItems = ({ route, navigation }) => {
@@ -178,13 +182,14 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   item: {
-    backgroundColor: "#4c34eb",
+    backgroundColor: "#ff4545",
     padding: 20,
     marginVertical: 8,
     marginHorizontal: 16,
+    borderRadius: 8,
   },
   body: {
-    fontSize: 32,
+    fontSize: 16,
     padding: 15,
     margin: 5,
     backgroundColor: "#eb34bd",
@@ -193,4 +198,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     textAlign: "center",
   },
+  flatlistStyle: {
+    
+  }
 });
