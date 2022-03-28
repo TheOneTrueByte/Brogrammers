@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { NativeBaseProvider, Box, Heading, VStack } from "native-base";
+import { NativeBaseProvider, Box, Heading, VStack, Select } from "native-base";
 import {
   Button,
   View,
@@ -113,7 +113,7 @@ const AddTeamItem = ({ route, navigation }) => {
         editItemQuantity("");
         editItemSize("");
         editItemColor("");
-        console.log("added team to database"); 
+        console.log("added team to database");
       } catch {
         alert(
           "Can't add item. This could be a problem with your connection"

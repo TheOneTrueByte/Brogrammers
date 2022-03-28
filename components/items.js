@@ -24,7 +24,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Login from "./Login";
 import Home from "./HomeScreen";
 
-import { background, borderLeft, style } from "styled-system";
+import { background, borderLeft, fontSize, style } from "styled-system";
 import AddItem from "./AddTeam";
 import AddTeamItems from "./AddItem";
 import MainMenu from "./HomeScreen";
@@ -43,9 +43,52 @@ function AddItemsScreen({ navigation }) {
   return <AddTeamItems />;
 }
 
-const Item = ({ color, name, quantity, size }) => (
+function EditItemsScreen({ navigation }) {
+  const [quantity, setQuantity] = useState(37);
+
+  const increment = () => setQuantity(prevQuantity => prevQuantity + 1);
+  const decrement = () => setQuantity(prevQuantity => prevQuantity - 1);
+
+  return (
+    <View style = {styles.editItemsContainer} >
+      <Text style = {styles.currentQuantityText } >Current Quantity: </Text>
+      <View
+        style = {styles.editItemsTextInputView}
+      >
+        <TextInput
+          required
+          value = {String(quantity)}
+          keyboardType = "number-pad"
+          returnKeyType = "done"
+          style = {styles.editItemsTextInput}
+          onChangeText = {setQuantity}
+        />
+      </View>
+      <View 
+        style = {{
+          flexDirection: "row",
+          justifyContent: "center",
+        }}
+      >
+        <Pressable onPress={decrement} >
+          <View style = {styles.plusMinusButtons}>
+            <Text style = {styles.plusMinusText } >-</Text>
+          </View>
+        </Pressable>
+        <Pressable onPress={increment}>
+          <View style = {styles.plusMinusButtons}>
+            <Text style = {styles.plusMinusText } >+</Text>
+          </View>
+        </Pressable>
+      </View>
+    </View>
+  )
+}
+
+const Item = ({ navigation, color, name, quantity, size }) => (
   <Pressable
     style = {styles.flatlistStyle}
+    onPress = {() => navigation.navigate("EditItemsScreen")}
   >
     <View style={styles.item}>
       <View style={{ flexDirection: "row" }}>
@@ -70,14 +113,6 @@ const Item = ({ color, name, quantity, size }) => (
             justifyContent: "center",
           }}
         >
-          {/* <TouchableOpacity
-            style={{ backgroundColor: "red", padding: 10 }}
-            onPress={() => {
-              console.log("deleting item");
-            }}
-          >
-            <Text style={{ fontSize: 25, color: "white" }}>Delete</Text>
-          </TouchableOpacity> */}
           <Text style = {styles.quantityText}>{quantity}</Text>
         </View>
       </View>
@@ -96,6 +131,7 @@ const ViewItems = ({ route, navigation }) => {
 
   const renderItem = ({ item }) => (
     <Item
+      navigation = {navigation}
       color={item.Color}
       name={item.Name}
       quantity={item.Quantity}
@@ -143,6 +179,11 @@ export default function ItemsNavigator({ navigation }) {
         name="AddItemsScreen"
         component={AddItemsScreen}
         options={{ headerShown: false }}
+      />
+      <ItemsStack.Screen 
+        name = "EditItemsScreen"
+        component = {EditItemsScreen}
+        options = {{ headerShown: false }}
       />
     </ItemsStack.Navigator>
   );
@@ -220,5 +261,44 @@ const styles = StyleSheet.create({
   flatlistStyle: {
     //padding: 8,
     marginHorizontal: 8,
+  },
+
+  currentQuantityText: {
+    fontSize: 25,
+    textAlign: "center",
+    paddingTop: 10
+  },
+  editItemsContainer: {
+    flex: 1,
+  },
+  editItemsTextInputView: {
+    paddingTop: 12,
+    alignItems: "center",
+  },
+  editItemsTextInput: {
+    height: 225,
+    width: 225,
+    padding: 10,
+    borderWidth: 0.5,
+    borderColor: "grey",
+    borderRadius: 20,
+    marginBottom: 10,
+    backgroundColor: "white",
+    textAlign: "center",
+    fontSize: 100,
+    fontWeight: "600"
+  },
+  plusMinusButtons: {
+    backgroundColor: "#ff4545",
+    borderRadius: 15,
+    margin: 10,
+    width: 100,
+    height: 100,
+    alignItems: "center",
+  },
+  plusMinusText: {
+    fontSize: 60,
+    paddingHorizontal: 30,
+    paddingVertical: 5,
   }
 });
