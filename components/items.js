@@ -43,8 +43,10 @@ function AddItemsScreen({ navigation }) {
   return <AddTeamItems />;
 }
 
-function EditItemsScreen({ navigation }) {
+function EditItemsScreen({ route, navigation }) {
   const [quantity, setQuantity] = useState(37);
+
+  const { itemName, itemID } = route.params;
 
   const increment = () => setQuantity(prevQuantity => prevQuantity + 1);
   const decrement = () => setQuantity(prevQuantity => prevQuantity - 1);
@@ -85,10 +87,10 @@ function EditItemsScreen({ navigation }) {
   )
 }
 
-const Item = ({ navigation, color, name, quantity, size }) => (
+const Item = ({ navigation, color, name, quantity, size, id }) => (
   <Pressable
     style = {styles.flatlistStyle}
-    onPress = {() => navigation.navigate("EditItemsScreen")}
+    onPress = {() => {navigation.navigate('EditItemsScreen', {itemName: name, itemID: id})}}
   >
     <View style={styles.item}>
       <View style={{ flexDirection: "row" }}>
@@ -136,6 +138,7 @@ const ViewItems = ({ route, navigation }) => {
       name={item.Name}
       quantity={item.Quantity}
       size={item.Size}
+      id = {item.Id}
     />
   );
 
@@ -276,8 +279,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   editItemsTextInput: {
-    height: 225,
-    width: 225,
+    height: 110,
+    width: 300,
     padding: 10,
     borderWidth: 0.5,
     borderColor: "grey",
@@ -285,20 +288,24 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     backgroundColor: "white",
     textAlign: "center",
-    fontSize: 100,
+    fontSize: 70,
     fontWeight: "600"
   },
   plusMinusButtons: {
     backgroundColor: "#ff4545",
     borderRadius: 15,
     margin: 10,
-    width: 100,
-    height: 100,
-    alignItems: "center",
+    width: 75,
+    height: 50,
+    //alignItems: "center",
+    //justifyContent: "center",
+    //alignContent: "center",
   },
   plusMinusText: {
-    fontSize: 60,
-    paddingHorizontal: 30,
-    paddingVertical: 5,
+    fontSize: 30,
+    //paddingHorizontal: 30,
+    //paddingVertical: 1,
+    textAlign: "center",
+    //justifyContent: "center",
   }
 });
