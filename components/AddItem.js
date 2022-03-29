@@ -34,7 +34,7 @@ import {
   style,
 } from "styled-system";
 import AddItem from "./AddTeam";
-import ItemsNavigator from "./Items";
+import ItemsNavigator from "./items";
 
 import { initializeApp } from "@firebase/app";
 import firebase from "firebase/app";

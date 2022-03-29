@@ -36,7 +36,7 @@ import {
   style,
 } from "styled-system";
 import AddItem from "./AddTeam";
-import ItemsNavigator from "./Items"
+import ItemsNavigator from "./items"
 import AddTeamItem from "./AddItem";
 
 import { initializeApp } from "@firebase/app";
@@ -57,6 +57,7 @@ import {
 import { Icon } from "native-base";
 import { getAuth, updateEmail, signOut, updatePassword, EmailAuthProvider, reauthenticateWithCredential, deleteUser } from "firebase/auth";
 import { auth } from "../firebase";
+import { useEffect } from "react/cjs/react.production.min";
 const Separator = () => <View style={styles.separator} />;
 
 const Stack = createNativeStackNavigator();
@@ -70,16 +71,45 @@ const firestore = getFirestore();
 //Main Menu & Teams Functionality
 function MainMenu({ navigation }) {
   const [items, setItems] = useState("");
+  const [temp, setTemp] = useState("");
   const teamCol = collection(firestore, "Teams");
   const q = query(teamCol);
 
-  //used to get live data from FIrebase
+   //used to delete and fetch
+   const deleteTeamBackEnd = async (teamname) => {
+     await deleteDoc(doc(firestore, "Teams", teamname));
+     await manualGetTeams();
+  };
+
+     //used to add and fetch
+     const addTeamBackEnd = async (teamname) => {
+      await setDoc(doc(firestore, "Teams", teamname), {
+        Name: teamname,
+      });
+
+      await manualGetTeams();
+    };
+
+  //used to get live data from firebase manually
+  const manualGetTeams = async () => {
+    const teams = [];
+    const snap = await getDocs(teamCol);
+    snap.forEach((doc) => {
+      teams.push({ name: doc.data().Name, key: Math.random().toString() });
+    });
+    console.log("This is a manual fetch");
+    await setTemp(teams);
+  };
+
+  //used to get live data from Firebase
   const getTeams = async () => {
     const teams = [];
     const querySnapshot = await getDocs(teamCol);
     querySnapshot.forEach((doc) => {
       teams.push({ name: doc.data().Name, key: Math.random().toString() });
     });
+    console.log("Automatic fetch");
+    await setTemp(teams);
     return teams;
   };
 
@@ -99,7 +129,9 @@ function MainMenu({ navigation }) {
             text: "Yes",
             onPress: () => {
               setItems((prevItems) => {
-                deleteDoc(doc(firestore, "Teams", item.name));
+                //deleteDoc(doc(firestore, "Teams", item.name));
+                deleteTeamBackEnd(item.name);
+                //manualGetTeams();
 
                 return prevItems.filter((thisItem) => thisItem.key != item.key);
               });
@@ -121,7 +153,7 @@ function MainMenu({ navigation }) {
             text: "Yes",
             onPress: () => {
               setItems((prevItems) => {
-                deleteDoc(doc(firestore, "Teams", item.name));
+                deleteTeamBackEnd(item.name);
 
                 return prevItems.filter((thisItem) => thisItem.key != item.key);
               });
@@ -131,7 +163,7 @@ function MainMenu({ navigation }) {
       );
     } else {
       setItems((prevItems) => {
-        deleteDoc(doc(firestore, "Teams", item.name));
+        deleteTeamBackEnd(item.name);
 
         return prevItems.filter((thisItem) => thisItem.key != item.key);
       });
@@ -141,9 +173,7 @@ function MainMenu({ navigation }) {
   const submitHandler = (name) => {
     setItems((prevItems) => {
       try {
-        setDoc(doc(firestore, "Teams", name), {
-          Name: name,
-        });
+        addTeamBackEnd(name);
 
         return [{ name: name, key: Math.random().toString() }, ...prevItems];
       } catch {
@@ -164,13 +194,15 @@ function MainMenu({ navigation }) {
       </TouchableOpacity>
     );
   };
-  let teamNames = [];
+
+  //Refresh FlatList
   (async function () {
-    let its = await getTeams();
+    let its = temp;
     setTimeout(() => {
       setItems(its);
-    }, 1000);
+    }, 3000);
   })();
+
 
   return (
     <SafeAreaView style={styles.container}>
