@@ -44,9 +44,13 @@ function AddItemsScreen({ navigation }) {
 }
 
 function EditItemsScreen({ route, navigation }) {
-  const [quantity, setQuantity] = useState(37);
+  const { itemName, itemColor, itemQuantity, itemSize, itemID } = route.params;
 
-  const { itemName, itemID } = route.params;
+  const [quantity, setQuantity] = useState(itemQuantity);
+  const [name, setName] = useState(itemName);
+  const [color, setColor] = useState(itemColor);
+  const [size, setSize] = useState(itemSize);
+
 
   const increment = () => setQuantity(prevQuantity => prevQuantity + 1);
   const decrement = () => setQuantity(prevQuantity => prevQuantity - 1);
@@ -62,7 +66,7 @@ function EditItemsScreen({ route, navigation }) {
           value = {String(quantity)}
           keyboardType = "number-pad"
           returnKeyType = "done"
-          style = {styles.editItemsTextInput}
+          style = {styles.editItemsQuantityTextInput}
           onChangeText = {setQuantity}
         />
       </View>
@@ -83,6 +87,54 @@ function EditItemsScreen({ route, navigation }) {
           </View>
         </Pressable>
       </View>
+      <View>
+        <Text style = {styles.editItemText} >Edit Name:</Text>
+        <TextInput
+          style = {styles.EditItemsTextInput}
+          onChangeText = {setName}
+          placeholder = {name}
+        />
+        <Text style = {styles.editItemText} >Edit Color:</Text>
+        <TextInput
+          style = {styles.EditItemsTextInput}
+          onChangeText = {setColor}
+          placeholder = {color}
+        />
+        <Text style = {styles.editItemText} >Edit Size:</Text>
+        <TextInput
+          style = {styles.EditItemsTextInput}
+          onChangeText = {setSize}
+          placeholder = {size}
+        />
+      </View>
+      <View>
+        <Pressable style = {styles.saveDeleteButtonPlacement}>
+          <View style = {styles.saveButton} >
+            <Text 
+              style = {{
+                color: "#ff4545",
+                fontSize: 16,
+                fontWeight: "500",
+              }}
+            >
+              Save Item
+            </Text>
+          </View>
+        </Pressable>
+        <Pressable style = {styles.saveDeleteButtonPlacement}>
+          <View style = {styles.deleteButton} >
+            <Text
+              style = {{
+                color: "white",
+                fontSize: 16,
+                fontWeight: "500",
+              }}
+            >
+              Delete Item
+            </Text>
+          </View>
+        </Pressable>
+      </View>
     </View>
   )
 }
@@ -90,7 +142,7 @@ function EditItemsScreen({ route, navigation }) {
 const Item = ({ navigation, color, name, quantity, size, id }) => (
   <Pressable
     style = {styles.flatlistStyle}
-    onPress = {() => {navigation.navigate('EditItemsScreen', {itemName: name, itemID: id})}}
+    onPress = {() => {navigation.navigate('EditItemsScreen', {itemName: name, itemColor: color, itemQuantity: quantity, itemSize: size, itemID: id})}}
   >
     <View style={styles.item}>
       <View style={{ flexDirection: "row" }}>
@@ -278,7 +330,7 @@ const styles = StyleSheet.create({
     paddingTop: 12,
     alignItems: "center",
   },
-  editItemsTextInput: {
+  editItemsQuantityTextInput: {
     height: 110,
     width: 300,
     padding: 10,
@@ -297,15 +349,46 @@ const styles = StyleSheet.create({
     margin: 10,
     width: 75,
     height: 50,
-    //alignItems: "center",
-    //justifyContent: "center",
-    //alignContent: "center",
   },
   plusMinusText: {
     fontSize: 30,
-    //paddingHorizontal: 30,
-    //paddingVertical: 1,
     textAlign: "center",
-    //justifyContent: "center",
+  },
+  EditItemsTextInput: {
+    height: 44,
+    padding: 10,
+    borderWidth: 0.5,
+    borderColor: "grey",
+    marginBottom: 12,
+    backgroundColor: "white",
+    borderRadius: 8,
+    marginHorizontal: 8,
+  },
+  editItemText: {
+    marginHorizontal: 8,
+    marginBottom: 4,
+  },
+  saveDeleteButtonPlacement: {
+    alignItems: "center",
+    paddingTop: 20,
+  },
+  saveButton: {
+    backgroundColor: "white",
+    //paddingHorizontal: 100,
+    width: 275,
+    paddingVertical: 10,
+    borderRadius: 8,
+    alignItems: "center",
+    borderColor: "grey",
+    borderWidth: .5
+  },
+  deleteButton: {
+    backgroundColor: "#ff4545",
+    width: 275,
+    paddingVertical: 10,
+    borderRadius: 8,
+    alignItems: "center",
+    borderColor: "grey",
+    borderWidth: .5
   }
 });
