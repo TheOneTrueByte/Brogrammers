@@ -73,7 +73,18 @@ function MainMenu({ navigation }) {
   const [items, setItems] = useState("");
   const [temp, setTemp] = useState("");
   const teamCol = collection(firestore, "Teams");
-  const q = query(teamCol);
+  const q = collection(firestore, "Teams");
+
+  const unsubscribe = onSnapshot(q, (snapshot) => {
+    const backendTeams = [];
+    snapshot.forEach((doc) => {
+      backendTeams.push({ name: doc.data().Name, key: Math.random().toString() });
+    });
+
+    setTemp(backendTeams)
+    console.log("This should not appear too often");
+  });
+
 
    //used to delete and fetch
    const deleteTeamBackEnd = async (teamname) => {
@@ -202,6 +213,7 @@ function MainMenu({ navigation }) {
       setItems(its);
     }, 3000);
   })();
+  
 
 
   return (
