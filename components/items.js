@@ -24,7 +24,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Login from "./Login";
 import Home from "./HomeScreen";
 
-import { background, borderLeft, style } from "styled-system";
+import { background, borderLeft, fontSize, style } from "styled-system";
 import AddItem from "./AddTeam";
 import AddTeamItems from "./AddItem";
 import MainMenu from "./HomeScreen";
@@ -43,40 +43,135 @@ function AddItemsScreen({ navigation }) {
   return <AddTeamItems />;
 }
 
-const Item = ({ color, name, quantity, size }) => (
-  <View style={styles.item}>
-    <View style={{ flexDirection: "row" }}>
-      <View
-        style={{
-          flexDirection: "row",
-          flex: 7,
-        }}
-      >
-        <Text style={styles.body}>Color: {color}</Text>
-        <Text style={styles.body}>Name: {name}</Text>
-        <Text style={styles.body}>Quantity: {quantity}</Text>
-        <Text style={styles.body}>Size: {size}</Text>
-      </View>
-      <View
-        style={{
-          alignItems: "right",
-          flex: 1,
-          alignItems: "center",
+function EditItemsScreen({ route, navigation }) {
+  const { itemName, itemColor, itemQuantity, itemSize, itemID } = route.params;
 
+  const [quantity, setQuantity] = useState(itemQuantity);
+  const [name, setName] = useState(itemName);
+  const [color, setColor] = useState(itemColor);
+  const [size, setSize] = useState(itemSize);
+
+
+  const increment = () => setQuantity(prevQuantity => prevQuantity + 1);
+  const decrement = () => setQuantity(prevQuantity => prevQuantity - 1);
+
+  return (
+    <View style = {styles.editItemsContainer} >
+      <Text style = {styles.currentQuantityText } >Current Quantity: </Text>
+      <View
+        style = {styles.editItemsTextInputView}
+      >
+        <TextInput
+          required
+          value = {String(quantity)}
+          keyboardType = "number-pad"
+          returnKeyType = "done"
+          style = {styles.editItemsQuantityTextInput}
+          onChangeText = {setQuantity}
+        />
+      </View>
+      <View 
+        style = {{
+          flexDirection: "row",
           justifyContent: "center",
         }}
       >
-        <TouchableOpacity
-          style={{ backgroundColor: "red", padding: 10 }}
-          onPress={() => {
-            console.log("deleting item");
-          }}
-        >
-          <Text style={{ fontSize: 25, color: "white" }}>Delete</Text>
-        </TouchableOpacity>
+        <Pressable onPress={decrement} >
+          <View style = {styles.plusMinusButtons}>
+            <Text style = {styles.plusMinusText } >-</Text>
+          </View>
+        </Pressable>
+        <Pressable onPress={increment}>
+          <View style = {styles.plusMinusButtons}>
+            <Text style = {styles.plusMinusText } >+</Text>
+          </View>
+        </Pressable>
+      </View>
+      <View>
+        <Text style = {styles.editItemText} >Edit Name:</Text>
+        <TextInput
+          style = {styles.EditItemsTextInput}
+          onChangeText = {setName}
+          placeholder = {name}
+        />
+        <Text style = {styles.editItemText} >Edit Color:</Text>
+        <TextInput
+          style = {styles.EditItemsTextInput}
+          onChangeText = {setColor}
+          placeholder = {color}
+        />
+        <Text style = {styles.editItemText} >Edit Size:</Text>
+        <TextInput
+          style = {styles.EditItemsTextInput}
+          onChangeText = {setSize}
+          placeholder = {size}
+        />
+      </View>
+      <View>
+        <Pressable style = {styles.saveDeleteButtonPlacement}>
+          <View style = {styles.saveButton} >
+            <Text 
+              style = {{
+                color: "#ff4545",
+                fontSize: 16,
+                fontWeight: "500",
+              }}
+            >
+              Save Item
+            </Text>
+          </View>
+        </Pressable>
+        <Pressable style = {styles.saveDeleteButtonPlacement}>
+          <View style = {styles.deleteButton} >
+            <Text
+              style = {{
+                color: "white",
+                fontSize: 16,
+                fontWeight: "500",
+              }}
+            >
+              Delete Item
+            </Text>
+          </View>
+        </Pressable>
       </View>
     </View>
-  </View>
+  )
+}
+
+const Item = ({ navigation, color, name, quantity, size, id }) => (
+  <Pressable
+    style = {styles.flatlistStyle}
+    onPress = {() => {navigation.navigate('EditItemsScreen', {itemName: name, itemColor: color, itemQuantity: quantity, itemSize: size, itemID: id})}}
+  >
+    <View style={styles.item}>
+      <View style={{ flexDirection: "row" }}>
+        <View
+          style={{
+            flexDirection: "column",
+            flex: 7,
+            marginVertical: 5,
+          }}
+        >
+          <Text style={styles.itemNameText}>{name}</Text>
+          <Text style={styles.body}>{color}</Text>
+          <Text style={styles.body}>{size}</Text>
+          {/* <Text style={styles.body}>{quantity}</Text> */}
+        </View>
+        <View
+          style={{
+            alignItems: "right",
+            flex: 3,
+            alignItems: "center",
+
+            justifyContent: "center",
+          }}
+        >
+          <Text style = {styles.quantityText}>{quantity}</Text>
+        </View>
+      </View>
+    </View>
+  </Pressable>
 );
 
 const ViewItems = ({ route, navigation }) => {
@@ -90,10 +185,12 @@ const ViewItems = ({ route, navigation }) => {
 
   const renderItem = ({ item }) => (
     <Item
+      navigation = {navigation}
       color={item.Color}
       name={item.Name}
       quantity={item.Quantity}
       size={item.Size}
+      id = {item.Id}
     />
   );
 
@@ -114,7 +211,7 @@ const ViewItems = ({ route, navigation }) => {
         </Pressable>
       </View>
 
-      <Text>{"\n"}</Text>
+      {/* <Text>{"\n"}</Text> */}
       <FlatList
         data={teamItems}
         renderItem={renderItem}
@@ -137,6 +234,11 @@ export default function ItemsNavigator({ navigation }) {
         name="AddItemsScreen"
         component={AddItemsScreen}
         options={{ headerShown: false }}
+      />
+      <ItemsStack.Screen 
+        name = "EditItemsScreen"
+        component = {EditItemsScreen}
+        options = {{ headerShown: false }}
       />
     </ItemsStack.Navigator>
   );
@@ -178,19 +280,115 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   item: {
-    backgroundColor: "#4c34eb",
-    padding: 20,
-    marginVertical: 8,
-    marginHorizontal: 16,
+    backgroundColor: "#ff4545",
+    paddingVertical: 10,
+    paddingHorizontal: 16,
+    marginBottom: 8,
+    //marginHorizontal: 16,
+    borderRadius: 8,
   },
   body: {
-    fontSize: 32,
-    padding: 15,
-    margin: 5,
-    backgroundColor: "#eb34bd",
-    color: "white",
+    fontSize: 16,
+    paddingTop: 5,
+    //margin: 5,
+    //backgroundColor: "#eb34bd",
+    color: "black",
     flex: 1,
-    justifyContent: "center",
+    justifyContent: "space-between",
+    textAlign: "left",
+  },
+  itemNameText: {
+    fontSize: 20,
+    fontWeight: "500",
+    //paddingTop: 5,
+    //margin: 5,
+    //backgroundColor: "#eb34bd",
+    color: "black",
+    flex: 1,
+    justifyContent: "space-between",
+    textAlign: "left",
+  },
+  quantityText: {
+    fontSize: 40,
+    fontWeight: "700",
+    color: "white",
+  },
+  flatlistStyle: {
+    //padding: 8,
+    marginHorizontal: 8,
+  },
+
+  currentQuantityText: {
+    fontSize: 25,
+    textAlign: "center",
+    paddingTop: 10
+  },
+  editItemsContainer: {
+    flex: 1,
+  },
+  editItemsTextInputView: {
+    paddingTop: 12,
+    alignItems: "center",
+  },
+  editItemsQuantityTextInput: {
+    height: 110,
+    width: 300,
+    padding: 10,
+    borderWidth: 0.5,
+    borderColor: "grey",
+    borderRadius: 20,
+    marginBottom: 10,
+    backgroundColor: "white",
+    textAlign: "center",
+    fontSize: 70,
+    fontWeight: "600"
+  },
+  plusMinusButtons: {
+    backgroundColor: "#ff4545",
+    borderRadius: 15,
+    margin: 10,
+    width: 75,
+    height: 50,
+  },
+  plusMinusText: {
+    fontSize: 30,
     textAlign: "center",
   },
+  EditItemsTextInput: {
+    height: 44,
+    padding: 10,
+    borderWidth: 0.5,
+    borderColor: "grey",
+    marginBottom: 12,
+    backgroundColor: "white",
+    borderRadius: 8,
+    marginHorizontal: 8,
+  },
+  editItemText: {
+    marginHorizontal: 8,
+    marginBottom: 4,
+  },
+  saveDeleteButtonPlacement: {
+    alignItems: "center",
+    paddingTop: 20,
+  },
+  saveButton: {
+    backgroundColor: "white",
+    //paddingHorizontal: 100,
+    width: 275,
+    paddingVertical: 10,
+    borderRadius: 8,
+    alignItems: "center",
+    borderColor: "grey",
+    borderWidth: .5
+  },
+  deleteButton: {
+    backgroundColor: "#ff4545",
+    width: 275,
+    paddingVertical: 10,
+    borderRadius: 8,
+    alignItems: "center",
+    borderColor: "grey",
+    borderWidth: .5
+  }
 });
