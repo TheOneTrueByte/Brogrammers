@@ -72,19 +72,9 @@ const firestore = getFirestore();
 function MainMenu({ navigation }) {
   const [items, setItems] = useState("");
   const [temp, setTemp] = useState("");
+  const [flag, setFlag] = useState(true)
   const teamCol = collection(firestore, "Teams");
   const q = collection(firestore, "Teams");
-
-  const unsubscribe = onSnapshot(q, (snapshot) => {
-    const backendTeams = [];
-    snapshot.forEach((doc) => {
-      backendTeams.push({ name: doc.data().Name, key: Math.random().toString() });
-    });
-
-    setTemp(backendTeams)
-    console.log("This should not appear too often");
-  });
-
 
    //used to delete and fetch
    const deleteTeamBackEnd = async (teamname) => {
@@ -109,6 +99,7 @@ function MainMenu({ navigation }) {
       teams.push({ name: doc.data().Name, key: Math.random().toString() });
     });
     console.log("This is a manual fetch");
+    setFlag(false)
     await setTemp(teams);
   };
 
@@ -209,6 +200,11 @@ function MainMenu({ navigation }) {
   //Refresh FlatList
   (async function () {
     let its = temp;
+    if(flag)
+    {
+      manualGetTeams();
+      setFlag(false);
+    }
     setTimeout(() => {
       setItems(its);
     }, 3000);
@@ -223,6 +219,12 @@ function MainMenu({ navigation }) {
         <Text style={styles.GoToItemsInstructions}>
           Tap on a team to view and edit its items
         </Text>
+        <Button
+            title="Refresh"
+            onPress={() => {
+              manualGetTeams();
+            }}
+      ></Button>
       </View>
       <FlatList
         data={items}
