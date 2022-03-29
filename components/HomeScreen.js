@@ -57,6 +57,7 @@ import {
 import { Icon } from "native-base";
 import { getAuth, updateEmail, signOut, updatePassword, EmailAuthProvider, reauthenticateWithCredential, deleteUser } from "firebase/auth";
 import { auth } from "../firebase";
+import { useEffect } from "react/cjs/react.production.min";
 const Separator = () => <View style={styles.separator} />;
 
 const Stack = createNativeStackNavigator();
@@ -71,27 +72,46 @@ const firestore = getFirestore();
 function MainMenu({ navigation }) {
   const [items, setItems] = useState("");
   const [temp, setTemp] = useState("");
+  const [flag, setFlag] = useState(true)
   const teamCol = collection(firestore, "Teams");
   const q = collection(firestore, "Teams");
 
-  const unsubscribe = onSnapshot(q, (snapshot) => {
-    const backendTeams = [];
-    snapshot.forEach((doc) => {
-      backendTeams.push({ name: doc.data().Name, key: Math.random().toString() });
+   //used to delete and fetch
+   const deleteTeamBackEnd = async (teamname) => {
+     await deleteDoc(doc(firestore, "Teams", teamname));
+     await manualGetTeams();
+  };
+
+     //used to add and fetch
+     const addTeamBackEnd = async (teamname) => {
+      await setDoc(doc(firestore, "Teams", teamname), {
+        Name: teamname,
+      });
+
+      await manualGetTeams();
+    };
+
+  //used to get live data from firebase manually
+  const manualGetTeams = async () => {
+    const teams = [];
+    const snap = await getDocs(teamCol);
+    snap.forEach((doc) => {
+      teams.push({ name: doc.data().Name, key: Math.random().toString() });
     });
+    console.log("This is a manual fetch");
+    setFlag(false)
+    await setTemp(teams);
+  };
 
-    setTemp(backendTeams)
-    console.log("This should not appear too often");
-  });
-
-
-  //used to get live data from FIrebase
+  //used to get live data from Firebase
   const getTeams = async () => {
     const teams = [];
     const querySnapshot = await getDocs(teamCol);
     querySnapshot.forEach((doc) => {
       teams.push({ name: doc.data().Name, key: Math.random().toString() });
     });
+    console.log("Automatic fetch");
+    await setTemp(teams);
     return teams;
   };
 
@@ -111,7 +131,9 @@ function MainMenu({ navigation }) {
             text: "Yes",
             onPress: () => {
               setItems((prevItems) => {
-                deleteDoc(doc(firestore, "Teams", item.name));
+                //deleteDoc(doc(firestore, "Teams", item.name));
+                deleteTeamBackEnd(item.name);
+                //manualGetTeams();
 
                 return prevItems.filter((thisItem) => thisItem.key != item.key);
               });
@@ -133,7 +155,7 @@ function MainMenu({ navigation }) {
             text: "Yes",
             onPress: () => {
               setItems((prevItems) => {
-                deleteDoc(doc(firestore, "Teams", item.name));
+                deleteTeamBackEnd(item.name);
 
                 return prevItems.filter((thisItem) => thisItem.key != item.key);
               });
@@ -143,7 +165,7 @@ function MainMenu({ navigation }) {
       );
     } else {
       setItems((prevItems) => {
-        deleteDoc(doc(firestore, "Teams", item.name));
+        deleteTeamBackEnd(item.name);
 
         return prevItems.filter((thisItem) => thisItem.key != item.key);
       });
@@ -153,9 +175,7 @@ function MainMenu({ navigation }) {
   const submitHandler = (name) => {
     setItems((prevItems) => {
       try {
-        setDoc(doc(firestore, "Teams", name), {
-          Name: name,
-        });
+        addTeamBackEnd(name);
 
         return [{ name: name, key: Math.random().toString() }, ...prevItems];
       } catch {
@@ -176,14 +196,21 @@ function MainMenu({ navigation }) {
       </TouchableOpacity>
     );
   };
-  let teamNames = [];
+
+  //Refresh FlatList
   (async function () {
     let its = temp;
+    if(flag)
+    {
+      manualGetTeams();
+      setFlag(false);
+    }
     setTimeout(() => {
       setItems(its);
     }, 3000);
   })();
   
+
 
   return (
     <SafeAreaView style={styles.container}>
@@ -192,6 +219,12 @@ function MainMenu({ navigation }) {
         <Text style={styles.GoToItemsInstructions}>
           Tap on a team to view and edit its items
         </Text>
+        <Button
+            title="Refresh"
+            onPress={() => {
+              manualGetTeams();
+            }}
+      ></Button>
       </View>
       <FlatList
         data={items}
