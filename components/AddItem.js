@@ -190,7 +190,7 @@ const AddTeamItem = ({ route, navigation }) => {
             title="Add Item"
             onPress={() => {
               AddItemToDatabase();
-              console.log("adding team to database...");
+              console.log("adding item to database...");
             }}
             mt="2"
             colorScheme="red"
