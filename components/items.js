@@ -17,6 +17,7 @@ import { useState } from "react";
 import { createDrawerNavigator, DrawerItem } from "@react-navigation/drawer";
 import {
   NavigationContainer,
+  StackActions,
   useNavigation,
   useRoute,
 } from "@react-navigation/native";
@@ -32,11 +33,12 @@ import MainMenu from "./HomeScreen";
 
 import { initializeApp } from "@firebase/app";
 import "firebase/firestore";
-import { getFirestore, setDoc, doc, deleteDoc, getDoc, getDocs, onSnapshot, query } from "firebase/firestore";
+import { getFirestore, setDoc, doc, deleteDoc, getDoc, getDocs, onSnapshot, query, updateDoc, arrayRemove } from "firebase/firestore";
 import { Icon } from "native-base";
 import { getAuth, updateEmail, signOut } from "firebase/auth";
 import { auth } from "../firebase";
 import { ScreenStack } from "react-native-screens";
+import { useIsFocused } from "@react-navigation/native";
 
 const ItemsStack = createNativeStackNavigator();
 
@@ -45,16 +47,84 @@ function AddItemsScreen({ navigation }) {
 }
 
 function EditItemsScreen({ route, navigation }) {
-  const { itemName, itemColor, itemQuantity, itemSize, itemID } = route.params;
+  const { itemName, itemColor, itemQuantity, itemSize, itemID, teamName } = route.params;
 
   const [quantity, setQuantity] = useState(itemQuantity);
   const [name, setName] = useState(itemName);
   const [color, setColor] = useState(itemColor);
   const [size, setSize] = useState(itemSize);
-
+  const [id, setID] = useState(itemID);
+  const [teamNameBackEnd, setTeamNameBackEnd] = useState(teamName);
 
   const increment = () => setQuantity(prevQuantity => prevQuantity + 1);
   const decrement = () => setQuantity(prevQuantity => prevQuantity - 1);
+
+  //function for deleting item
+  const DeleteItemBackend = async () => 
+  {
+    try {
+      const itemToRemove = {
+        Name: itemName,
+        Quantity: itemQuantity,
+        Size: itemSize,
+        Color: itemColor,
+        TeamName: teamName,
+      };
+
+      const documentRef = doc(getFirestore(), "Teams", teamName)
+      console.log("Right before remove")
+        await updateDoc(documentRef, {
+          Items: arrayRemove(itemToRemove)
+        });
+
+      console.log("Remove finished")
+      await alert ("Item successfully removed!")
+      const popAction = StackActions.pop(1);
+      await navigation.dispatch(popAction);
+    } catch {
+        alert("Can't remove item. This could be a problem with your connection") 
+    }
+  };
+
+    //function for deleting item
+    const EditItemBackend = async () => {
+      try {
+        const itemToUpdate = {
+          Name: name,
+          Quantity: quantity,
+          Size: size,
+          Color: color,
+          TeamName: teamName,
+        };
+
+        const documentRef = doc(getFirestore(), "Teams", teamName)
+        //This section to remove and then add new edited item
+        console.log("Right before remove")
+        await updateDoc(documentRef, {
+          Items: arrayRemove(itemToRemove)
+        });
+
+        console.log("Remove finished")
+        //This section to remove: END
+
+
+        //This section to add the updated item
+        console.log("Before adding updated item");
+
+        await updateDoc(currentTeamDoc, {
+          Items: arrayUnion(itemToUpdate)
+        });
+        await alert("Item successfully updated!")
+        const popAction = StackActions.pop(1);
+        await navigation.dispatch(popAction);
+
+
+        console.log("After adding updated item");
+        //This section to add the updated item: END
+      } catch {
+        alert("Your edited item was not put in. If data has been corrupted, your item may be deleted")
+      }
+    };
 
   return (
     <View style = {styles.editItemsContainer} >
@@ -117,6 +187,9 @@ function EditItemsScreen({ route, navigation }) {
                 fontSize: 16,
                 fontWeight: "500",
               }}
+              onPress={() => {
+                EditItemBackend();
+              }}
             >
               Save Item
             </Text>
@@ -130,6 +203,9 @@ function EditItemsScreen({ route, navigation }) {
                 fontSize: 16,
                 fontWeight: "500",
               }}
+              onPress={() => {
+                DeleteItemBackend();
+              }}
             >
               Delete Item
             </Text>
@@ -140,10 +216,10 @@ function EditItemsScreen({ route, navigation }) {
   )
 }
 
-const Item = ({ navigation, color, name, quantity, size, id }) => (
+const Item = ({ navigation, color, name, quantity, size, id, teamname }) => (
   <Pressable
     style = {styles.flatlistStyle}
-    onPress = {() => {navigation.navigate('EditItemsScreen', {itemName: name, itemColor: color, itemQuantity: quantity, itemSize: size, itemID: id})}}
+    onPress = {() => {navigation.navigate('EditItemsScreen', {itemName: name, itemColor: color, itemQuantity: quantity, itemSize: size, itemID: id, teamName: teamname})}}
   >
     <View style={styles.item}>
       <View style={{ flexDirection: "row" }}>
@@ -177,15 +253,12 @@ const Item = ({ navigation, color, name, quantity, size, id }) => (
 
 const ViewItems = ({ route, navigation }) => {
 
+  const isFocused = useIsFocused();
+
   useEffect(() => {
     console.log("Use Effect Is here")
     setItemFlag(true);
-  }, []);
-
-  /*const testing = onSnapshot(doc(getFirestore(), "Teams", route.params.teamName), (doc) => {
-    const backendItems = doc.data().Items
-    setTeamItems(backendItems);
-  });*/
+  }, [isFocused]);
 
   const [teamItems, setTeamItems] = useState();
   const [tempItems, setTempItems] = useState("");
@@ -211,7 +284,8 @@ const ViewItems = ({ route, navigation }) => {
       name={item.Name}
       quantity={item.Quantity}
       size={item.Size}
-      id = {item.Id}
+      id = {item.id}
+      teamname = {item.TeamName}
     />
   );
 
