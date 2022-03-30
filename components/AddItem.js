@@ -100,6 +100,7 @@ const AddTeamItem = ({ route, navigation }) => {
         Quantity: itemQuantity,
         Size: itemSize,
         Color: itemColor,
+        TeamName: route.params.addTeamName,
       };
 
       //Attempting to write item to firestore
