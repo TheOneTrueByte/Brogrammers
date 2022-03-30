@@ -33,7 +33,7 @@ import MainMenu from "./HomeScreen";
 
 import { initializeApp } from "@firebase/app";
 import "firebase/firestore";
-import { getFirestore, setDoc, doc, deleteDoc, getDoc, getDocs, onSnapshot, query, updateDoc, arrayRemove } from "firebase/firestore";
+import { getFirestore, setDoc, doc, deleteDoc, getDoc, getDocs, onSnapshot, query, updateDoc, arrayRemove, arrayUnion } from "firebase/firestore";
 import { Icon } from "native-base";
 import { getAuth, updateEmail, signOut } from "firebase/auth";
 import { auth } from "../firebase";
@@ -89,11 +89,11 @@ function EditItemsScreen({ route, navigation }) {
     //function for deleting item
     const EditItemBackend = async () => {
       try {
-        const itemToUpdate = {
-          Name: name,
-          Quantity: quantity,
-          Size: size,
-          Color: color,
+        const itemToRemove = {
+          Name: itemName,
+          Quantity: itemQuantity,
+          Size: itemSize,
+          Color: itemColor,
           TeamName: teamName,
         };
 
@@ -109,11 +109,28 @@ function EditItemsScreen({ route, navigation }) {
 
 
         //This section to add the updated item
+
+        const itemToUpdateIn = {
+          Name: name,
+          Quantity: quantity,
+          Size: size,
+          Color: color,
+          TeamName: teamName,
+        };
         console.log("Before adding updated item");
 
-        await updateDoc(currentTeamDoc, {
-          Items: arrayUnion(itemToUpdate)
+        const newDocRef = doc(getFirestore(), "Teams", teamName)
+
+        console.log(name)
+        console.log(quantity)
+        console.log(size)
+        console.log(color)
+        console.log(teamName)
+
+        await updateDoc(newDocRef, {
+          Items: arrayUnion(itemToUpdateIn)
         });
+
         await alert("Item successfully updated!")
         const popAction = StackActions.pop(1);
         await navigation.dispatch(popAction);
@@ -138,7 +155,7 @@ function EditItemsScreen({ route, navigation }) {
           keyboardType = "number-pad"
           returnKeyType = "done"
           style = {styles.editItemsQuantityTextInput}
-          onChangeText = {setQuantity}
+          onChangeText={(value) => setQuantity(value)}
         />
       </View>
       <View 
@@ -162,19 +179,22 @@ function EditItemsScreen({ route, navigation }) {
         <Text style = {styles.editItemText} >Edit Name:</Text>
         <TextInput
           style = {styles.EditItemsTextInput}
-          onChangeText = {setName}
+          onChangeText={(value) => setName(value)}
+          value={name}
           placeholder = {name}
         />
         <Text style = {styles.editItemText} >Edit Color:</Text>
         <TextInput
           style = {styles.EditItemsTextInput}
-          onChangeText = {setColor}
+          onChangeText={(value) => setColor(value)}
+          value={color}
           placeholder = {color}
         />
         <Text style = {styles.editItemText} >Edit Size:</Text>
         <TextInput
           style = {styles.EditItemsTextInput}
-          onChangeText = {setSize}
+          onChangeText={(value) => setSize(value)}
+          value={size}
           placeholder = {size}
         />
       </View>
