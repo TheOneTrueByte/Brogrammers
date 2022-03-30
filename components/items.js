@@ -1,4 +1,5 @@
 import * as React from "react";
+import { useEffect } from "react"
 
 //It shows the current items for the current team in a scrollable element
 
@@ -176,12 +177,32 @@ const Item = ({ navigation, color, name, quantity, size, id }) => (
 
 const ViewItems = ({ route, navigation }) => {
 
-  const testing = onSnapshot(doc(getFirestore(), "Teams", route.params.teamName), (doc) => {
+  useEffect(() => {
+    console.log("Use Effect Is here")
+    setItemFlag(true);
+  }, []);
+
+  /*const testing = onSnapshot(doc(getFirestore(), "Teams", route.params.teamName), (doc) => {
     const backendItems = doc.data().Items
     setTeamItems(backendItems);
-  });
+  });*/
 
   const [teamItems, setTeamItems] = useState();
+  const [tempItems, setTempItems] = useState("");
+  const [itemFlag, setItemFlag] = useState(true);
+  const docRef = doc(getFirestore(), "Teams", route.params.teamName)
+
+
+ //used to get live data from firebase manually
+  const manualGetItems = async () => {
+    const itemslist = [];
+    const docSnap = await getDoc(docRef);
+    
+    console.log("This is a manual item fetch");
+    setItemFlag(false)
+    await setTempItems(docSnap.data().Items);
+  };
+
 
   const renderItem = ({ item }) => (
     <Item
@@ -194,28 +215,50 @@ const ViewItems = ({ route, navigation }) => {
     />
   );
 
+  //Refresh FlatList
+  (async function () {
+    let itt = tempItems;
+    if(itemFlag)
+    {
+      manualGetItems();
+      setItemFlag(false);
+    }
+    setTimeout(() => {
+      setTeamItems(itt);
+    }, 2000);
+  })();
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.GoBackInstructionsView}></View>
       <View style={styles.addItemView}>
+      <Pressable
+          style={styles.RefreshButton}
+          onPress={() => {
+            manualGetItems();
+            }
+          }
+        >
+          <Text style={styles.addItemButtonText}>Refresh</Text>
+        </Pressable>
         <Pressable
           style={styles.addItemButton}
-          onPress={() =>
+          onPress={() => {
             navigation.navigate("AddItemsScreen", {
               screen: "AddTeamItem",
               params: { addTeamName: route.params.teamName },
-            })
+            })}
           }
         >
           <Text style={styles.addItemButtonText}>Add Item</Text>
-        </Pressable>
+          </Pressable>
       </View>
 
       {/* <Text>{"\n"}</Text> */}
       <FlatList
         data={teamItems}
         renderItem={renderItem}
-        keyExtractor={(item) => item.id}
+        keyExtractor={(item, index) => index.toString()}
       />
     </SafeAreaView>
   );
@@ -258,6 +301,16 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     backgroundColor: "#ff4545",
+    marginBottom: 8,
+    padding: 10,
+    borderRadius: 8,
+    justifyContent: "center",
+  },
+  RefreshButton: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    backgroundColor: "#0CCBFF",
     marginBottom: 8,
     padding: 10,
     borderRadius: 8,

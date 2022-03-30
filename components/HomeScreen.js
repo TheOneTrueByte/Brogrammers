@@ -72,7 +72,7 @@ const firestore = getFirestore();
 function MainMenu({ navigation }) {
   const [items, setItems] = useState("");
   const [temp, setTemp] = useState("");
-  const [flag, setFlag] = useState(true)
+  const [flag, setFlag] = useState(true);
   const teamCol = collection(firestore, "Teams");
   const q = collection(firestore, "Teams");
 
@@ -98,7 +98,7 @@ function MainMenu({ navigation }) {
     snap.forEach((doc) => {
       teams.push({ name: doc.data().Name, key: Math.random().toString() });
     });
-    console.log("This is a manual fetch");
+    console.log("This is a manual team fetch");
     setFlag(false)
     await setTemp(teams);
   };
@@ -110,7 +110,7 @@ function MainMenu({ navigation }) {
     querySnapshot.forEach((doc) => {
       teams.push({ name: doc.data().Name, key: Math.random().toString() });
     });
-    console.log("Automatic fetch");
+    console.log("Automatic team fetch");
     await setTemp(teams);
     return teams;
   };
@@ -207,7 +207,7 @@ function MainMenu({ navigation }) {
     }
     setTimeout(() => {
       setItems(its);
-    }, 3000);
+    }, 2000);
   })();
   
 
