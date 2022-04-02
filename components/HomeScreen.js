@@ -219,12 +219,14 @@ function MainMenu({ navigation }) {
         <Text style={styles.GoToItemsInstructions}>
           Tap on a team to view and edit its items
         </Text>
-        <Button
-            title="Refresh"
+          <TouchableOpacity
+            style={{backgroundColor: '#2196f3', height: 50, width: 1000, padding: 15, alignItems: 'center'}}
             onPress={() => {
               manualGetTeams();
             }}
-      ></Button>
+          >
+            <text style={{color: 'white', fontWeight: 'bold', fontSize: 15}}>Refresh</text>
+          </TouchableOpacity>        
       </View>
       <FlatList
         data={items}
