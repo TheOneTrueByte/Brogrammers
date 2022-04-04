@@ -216,7 +216,7 @@ function MainMenu({ navigation }) {
       <AddItem submitHandler={submitHandler} />
       <View style={styles.GoToItemsInstructionsView}>
         <Text style={styles.GoToItemsInstructions}>
-          Tap on a team to view and edit its items
+          {'\n'}Tap on a team to view and edit its items{'\n'}
         </Text>
         <TouchableOpacity
           style={{ backgroundColor: '#2196f3', height: 50, width: 1000, padding: 15, alignItems: 'center' }}
