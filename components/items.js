@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useEffect } from "react"
+import { useEffect } from "react";
 
 //It shows the current items for the current team in a scrollable element
 
@@ -33,7 +33,19 @@ import MainMenu from "./HomeScreen";
 
 import { initializeApp } from "@firebase/app";
 import "firebase/firestore";
-import { getFirestore, setDoc, doc, deleteDoc, getDoc, getDocs, onSnapshot, query, updateDoc, arrayRemove, arrayUnion } from "firebase/firestore";
+import {
+  getFirestore,
+  setDoc,
+  doc,
+  deleteDoc,
+  getDoc,
+  getDocs,
+  onSnapshot,
+  query,
+  updateDoc,
+  arrayRemove,
+  arrayUnion,
+} from "firebase/firestore";
 import { Icon } from "native-base";
 import { getAuth, updateEmail, signOut } from "firebase/auth";
 import { auth } from "../firebase";
@@ -47,7 +59,8 @@ function AddItemsScreen({ navigation }) {
 }
 
 function EditItemsScreen({ route, navigation }) {
-  const { itemName, itemColor, itemQuantity, itemSize, itemID, teamName } = route.params;
+  const { itemName, itemColor, itemQuantity, itemSize, itemID, teamName } =
+    route.params;
 
   const [quantity, setQuantity] = useState(itemQuantity);
   const [name, setName] = useState(itemName);
@@ -56,12 +69,11 @@ function EditItemsScreen({ route, navigation }) {
   const [id, setID] = useState(itemID);
   const [teamNameBackEnd, setTeamNameBackEnd] = useState(teamName);
 
-  const increment = () => setQuantity(prevQuantity => prevQuantity + 1);
-  const decrement = () => setQuantity(prevQuantity => prevQuantity - 1);
+  const increment = () => setQuantity((prevQuantity) => prevQuantity + 1);
+  const decrement = () => setQuantity((prevQuantity) => prevQuantity - 1);
 
   //function for deleting item
-  const DeleteItemBackend = async () => 
-  {
+  const DeleteItemBackend = async () => {
     try {
       const itemToRemove = {
         Name: itemName,
@@ -71,138 +83,136 @@ function EditItemsScreen({ route, navigation }) {
         TeamName: teamName,
       };
 
-      const documentRef = doc(getFirestore(), "Teams", teamName)
-      console.log("Right before remove")
-        await updateDoc(documentRef, {
-          Items: arrayRemove(itemToRemove)
-        });
+      const documentRef = doc(getFirestore(), "Teams", teamName);
+      console.log("Right before remove");
+      await updateDoc(documentRef, {
+        Items: arrayRemove(itemToRemove),
+      });
 
-      console.log("Remove finished")
-      await alert ("Item successfully removed!")
+      console.log("Remove finished");
+      await alert("Item successfully removed!");
       const popAction = StackActions.pop(1);
       await navigation.dispatch(popAction);
     } catch {
-        alert("Can't remove item. This could be a problem with your connection") 
+      alert("Can't remove item. This could be a problem with your connection");
     }
   };
 
-    //function for deleting item
-    const EditItemBackend = async () => {
-      try {
-        const itemToRemove = {
-          Name: itemName,
-          Quantity: itemQuantity,
-          Size: itemSize,
-          Color: itemColor,
-          TeamName: teamName,
-        };
+  //function for deleting item
+  const EditItemBackend = async () => {
+    try {
+      const itemToRemove = {
+        Name: itemName,
+        Quantity: itemQuantity,
+        Size: itemSize,
+        Color: itemColor,
+        TeamName: teamName,
+      };
 
-        const documentRef = doc(getFirestore(), "Teams", teamName)
-        //This section to remove and then add new edited item
-        console.log("Right before remove")
-        await updateDoc(documentRef, {
-          Items: arrayRemove(itemToRemove)
-        });
+      const documentRef = doc(getFirestore(), "Teams", teamName);
+      //This section to remove and then add new edited item
+      console.log("Right before remove");
+      await updateDoc(documentRef, {
+        Items: arrayRemove(itemToRemove),
+      });
 
-        console.log("Remove finished")
-        //This section to remove: END
+      console.log("Remove finished");
+      //This section to remove: END
 
+      //This section to add the updated item
 
-        //This section to add the updated item
+      const itemToUpdateIn = {
+        Name: name,
+        Quantity: quantity,
+        Size: size,
+        Color: color,
+        TeamName: teamName,
+      };
+      console.log("Before adding updated item");
 
-        const itemToUpdateIn = {
-          Name: name,
-          Quantity: quantity,
-          Size: size,
-          Color: color,
-          TeamName: teamName,
-        };
-        console.log("Before adding updated item");
+      const newDocRef = doc(getFirestore(), "Teams", teamName);
 
-        const newDocRef = doc(getFirestore(), "Teams", teamName)
+      console.log(name);
+      console.log(quantity);
+      console.log(size);
+      console.log(color);
+      console.log(teamName);
 
-        console.log(name)
-        console.log(quantity)
-        console.log(size)
-        console.log(color)
-        console.log(teamName)
+      await updateDoc(newDocRef, {
+        Items: arrayUnion(itemToUpdateIn),
+      });
 
-        await updateDoc(newDocRef, {
-          Items: arrayUnion(itemToUpdateIn)
-        });
+      await alert("Item successfully updated!");
+      const popAction = StackActions.pop(1);
+      await navigation.dispatch(popAction);
 
-        await alert("Item successfully updated!")
-        const popAction = StackActions.pop(1);
-        await navigation.dispatch(popAction);
-
-
-        console.log("After adding updated item");
-        //This section to add the updated item: END
-      } catch {
-        alert("Your edited item was not put in. If data has been corrupted, your item may be deleted")
-      }
-    };
+      console.log("After adding updated item");
+      //This section to add the updated item: END
+    } catch {
+      alert(
+        "Your edited item was not put in. If data has been corrupted, your item may be deleted"
+      );
+    }
+  };
 
   return (
-    <View style = {styles.editItemsContainer} >
-      <Text style = {styles.currentQuantityText } >Current Quantity: </Text>
-      <View
-        style = {styles.editItemsTextInputView}
-      >
+    <View style={styles.editItemsContainer}>
+      <Text style={styles.currentQuantityText}>Current Quantity: </Text>
+      <View style={styles.editItemsTextInputView}>
         <TextInput
           required
-          value = {String(quantity)}
-          keyboardType = "number-pad"
-          returnKeyType = "done"
-          style = {styles.editItemsQuantityTextInput}
+          value={String(quantity)}
+          keyboardType="number-pad"
+          returnKeyType="done"
+          style={styles.editItemsQuantityTextInput}
           onChangeText={(value) => setQuantity(value)}
         />
       </View>
-      <View 
-        style = {{
+      <View
+        style={{
           flexDirection: "row",
           justifyContent: "center",
         }}
       >
-        <Pressable onPress={decrement} >
-          <View style = {styles.plusMinusButtons}>
-            <Text style = {styles.plusMinusText } >-</Text>
+        <Pressable onPress={decrement}>
+          <View style={styles.plusMinusButtons}>
+            <Text style={styles.plusMinusText}>-</Text>
           </View>
         </Pressable>
         <Pressable onPress={increment}>
-          <View style = {styles.plusMinusButtons}>
-            <Text style = {styles.plusMinusText } >+</Text>
+          <View style={styles.plusMinusButtons}>
+            <Text style={styles.plusMinusText}>+</Text>
           </View>
         </Pressable>
       </View>
       <View>
-        <Text style = {styles.editItemText} >Edit Name:</Text>
+        <Text style={styles.editItemText}>Edit Name:</Text>
         <TextInput
-          style = {styles.EditItemsTextInput}
+          style={styles.EditItemsTextInput}
           onChangeText={(value) => setName(value)}
           value={name}
-          placeholder = {name}
+          placeholder={name}
         />
-        <Text style = {styles.editItemText} >Edit Color:</Text>
+        <Text style={styles.editItemText}>Edit Color:</Text>
         <TextInput
-          style = {styles.EditItemsTextInput}
+          style={styles.EditItemsTextInput}
           onChangeText={(value) => setColor(value)}
           value={color}
-          placeholder = {color}
+          placeholder={color}
         />
-        <Text style = {styles.editItemText} >Edit Size:</Text>
+        <Text style={styles.editItemText}>Edit Size:</Text>
         <TextInput
-          style = {styles.EditItemsTextInput}
+          style={styles.EditItemsTextInput}
           onChangeText={(value) => setSize(value)}
           value={size}
-          placeholder = {size}
+          placeholder={size}
         />
       </View>
       <View>
-        <Pressable style = {styles.saveDeleteButtonPlacement}>
-          <View style = {styles.saveButton} >
-            <Text 
-              style = {{
+        <Pressable style={styles.saveDeleteButtonPlacement}>
+          <View style={styles.saveButton}>
+            <Text
+              style={{
                 color: "#ff4545",
                 fontSize: 16,
                 fontWeight: "500",
@@ -215,10 +225,10 @@ function EditItemsScreen({ route, navigation }) {
             </Text>
           </View>
         </Pressable>
-        <Pressable style = {styles.saveDeleteButtonPlacement}>
-          <View style = {styles.deleteButton} >
+        <Pressable style={styles.saveDeleteButtonPlacement}>
+          <View style={styles.deleteButton}>
             <Text
-              style = {{
+              style={{
                 color: "white",
                 fontSize: 16,
                 fontWeight: "500",
@@ -233,13 +243,22 @@ function EditItemsScreen({ route, navigation }) {
         </Pressable>
       </View>
     </View>
-  )
+  );
 }
 
 const Item = ({ navigation, color, name, quantity, size, id, teamname }) => (
   <Pressable
-    style = {styles.flatlistStyle}
-    onPress = {() => {navigation.navigate('EditItemsScreen', {itemName: name, itemColor: color, itemQuantity: quantity, itemSize: size, itemID: id, teamName: teamname})}}
+    style={styles.flatlistStyle}
+    onPress={() => {
+      navigation.navigate("EditItemsScreen", {
+        itemName: name,
+        itemColor: color,
+        itemQuantity: quantity,
+        itemSize: size,
+        itemID: id,
+        teamName: teamname,
+      });
+    }}
   >
     <View style={styles.item}>
       <View style={{ flexDirection: "row" }}>
@@ -264,7 +283,7 @@ const Item = ({ navigation, color, name, quantity, size, id, teamname }) => (
             justifyContent: "center",
           }}
         >
-          <Text style = {styles.quantityText}>{quantity}</Text>
+          <Text style={styles.quantityText}>{quantity}</Text>
         </View>
       </View>
     </View>
@@ -272,48 +291,44 @@ const Item = ({ navigation, color, name, quantity, size, id, teamname }) => (
 );
 
 const ViewItems = ({ route, navigation }) => {
-
   const isFocused = useIsFocused();
 
   useEffect(() => {
-    console.log("Use Effect Is here")
+    console.log("Use Effect Is here");
     setItemFlag(true);
   }, [isFocused]);
 
   const [teamItems, setTeamItems] = useState();
   const [tempItems, setTempItems] = useState("");
   const [itemFlag, setItemFlag] = useState(true);
-  const docRef = doc(getFirestore(), "Teams", route.params.teamName)
+  const docRef = doc(getFirestore(), "Teams", route.params.teamName);
 
-
- //used to get live data from firebase manually
+  //used to get live data from firebase manually
   const manualGetItems = async () => {
     const itemslist = [];
     const docSnap = await getDoc(docRef);
-    
+
     console.log("This is a manual item fetch");
-    setItemFlag(false)
+    setItemFlag(false);
     await setTempItems(docSnap.data().Items);
   };
 
-
   const renderItem = ({ item }) => (
     <Item
-      navigation = {navigation}
+      navigation={navigation}
       color={item.Color}
       name={item.Name}
       quantity={item.Quantity}
       size={item.Size}
-      id = {item.id}
-      teamname = {item.TeamName}
+      id={item.id}
+      teamname={item.TeamName}
     />
   );
 
   //Refresh FlatList
   (async function () {
     let itt = tempItems;
-    if(itemFlag)
-    {
+    if (itemFlag) {
       manualGetItems();
       setItemFlag(false);
     }
@@ -326,12 +341,11 @@ const ViewItems = ({ route, navigation }) => {
     <SafeAreaView style={styles.container}>
       <View style={styles.GoBackInstructionsView}></View>
       <View style={styles.addItemView}>
-      <Pressable
+        <Pressable
           style={styles.RefreshButton}
           onPress={() => {
             manualGetItems();
-            }
-          }
+          }}
         >
           <Text style={styles.addItemButtonText}>Refresh</Text>
         </Pressable>
@@ -341,11 +355,11 @@ const ViewItems = ({ route, navigation }) => {
             navigation.navigate("AddItemsScreen", {
               screen: "AddTeamItem",
               params: { addTeamName: route.params.teamName },
-            })}
-          }
+            });
+          }}
         >
           <Text style={styles.addItemButtonText}>Add Item</Text>
-          </Pressable>
+        </Pressable>
       </View>
 
       {/* <Text>{"\n"}</Text> */}
@@ -372,10 +386,10 @@ export default function ItemsNavigator({ navigation }) {
         component={AddItemsScreen}
         options={{ headerShown: false }}
       />
-      <ItemsStack.Screen 
-        name = "EditItemsScreen"
-        component = {EditItemsScreen}
-        options = {{ headerShown: false }}
+      <ItemsStack.Screen
+        name="EditItemsScreen"
+        component={EditItemsScreen}
+        options={{ headerShown: false }}
       />
     </ItemsStack.Navigator>
   );
@@ -468,7 +482,7 @@ const styles = StyleSheet.create({
   currentQuantityText: {
     fontSize: 25,
     textAlign: "center",
-    paddingTop: 10
+    paddingTop: 10,
   },
   editItemsContainer: {
     flex: 1,
@@ -488,7 +502,7 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     textAlign: "center",
     fontSize: 70,
-    fontWeight: "600"
+    fontWeight: "600",
   },
   plusMinusButtons: {
     backgroundColor: "#ff4545",
@@ -527,7 +541,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     alignItems: "center",
     borderColor: "grey",
-    borderWidth: .5
+    borderWidth: 0.5,
   },
   deleteButton: {
     backgroundColor: "#ff4545",
@@ -536,6 +550,6 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     alignItems: "center",
     borderColor: "grey",
-    borderWidth: .5
-  }
+    borderWidth: 0.5,
+  },
 });
