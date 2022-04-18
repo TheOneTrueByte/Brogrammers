@@ -58,6 +58,7 @@ import { Icon } from "native-base";
 import { getAuth, updateEmail, signOut, updatePassword, EmailAuthProvider, reauthenticateWithCredential, deleteUser } from "firebase/auth";
 import { auth } from "../firebase";
 import { useEffect } from "react/cjs/react.production.min";
+import { backgroundColor } from "react-native/Libraries/Components/View/ReactNativeStyleAttributes";
 const Separator = () => <View style={styles.separator} />;
 
 const Stack = createNativeStackNavigator();
@@ -210,7 +211,6 @@ function MainMenu({ navigation }) {
   })();
 
 
-
   return (
     <SafeAreaView style={styles.container}>
       <AddItem submitHandler={submitHandler} />
@@ -219,7 +219,7 @@ function MainMenu({ navigation }) {
           {'\n'}Tap on a team to view and edit its items{'\n'}
         </Text>
         <TouchableOpacity
-          style={{ backgroundColor: '#2196f3', height: 50, width: 1000, padding: 15, alignItems: 'center' }}
+          style={{ backgroundColor: '#2196f3', height: 50, width: 300, padding: 15, alignItems: 'center' , borderRadius: 8}}
           onPress={() => {
             manualGetTeams();
           }}

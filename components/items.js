@@ -40,6 +40,7 @@ import { getAuth, updateEmail, signOut } from "firebase/auth";
 import { auth } from "../firebase";
 import { ScreenStack } from "react-native-screens";
 import { useIsFocused } from "@react-navigation/native";
+import { backgroundColor } from "react-native/Libraries/Components/View/ReactNativeStyleAttributes";
 
 const ItemsStack = createNativeStackNavigator();
 
@@ -165,15 +166,21 @@ function EditItemsScreen({ route, navigation }) {
           justifyContent: "center",
         }}
       >
-        <Pressable onPress={decrement} >
-          <View style = {styles.plusMinusButtons}>
+        <Pressable style={({pressed}) => [ 
+            {
+              backgroundColor: pressed ? "#802424" : "#ff4545"
+            },
+            styles.plusMinusButtons]}
+            onPress={decrement}>
             <Text style = {styles.plusMinusText } >-</Text>
-          </View>
         </Pressable>
-        <Pressable onPress={increment}>
-          <View style = {styles.plusMinusButtons}>
+        <Pressable style={({pressed}) => [ 
+            {
+              backgroundColor: pressed ? "#802424" : "#ff4545"
+            },
+            styles.plusMinusButtons]}
+            onPress={increment}>
             <Text style = {styles.plusMinusText } >+</Text>
-          </View>
         </Pressable>
       </View>
       <ScrollView 
@@ -202,38 +209,48 @@ function EditItemsScreen({ route, navigation }) {
         />
       </ScrollView>
       <View>
-        <Pressable style = {styles.saveDeleteButtonPlacement}>
-          <View style = {styles.saveButton} >
+        <View style = {styles.saveDeleteButtonPlacement}>
+          <Pressable 
+            style={({pressed}) => [ 
+            {
+              backgroundColor: pressed ? "grey" : "white"
+            },
+            styles.saveButton]} 
+            onPress={() => {
+                EditItemBackend();
+            }}>
             <Text 
               style = {{
                 color: "#ff4545",
                 fontSize: 16,
                 fontWeight: "500",
               }}
-              onPress={() => {
-                EditItemBackend();
-              }}
             >
               Save Item
             </Text>
-          </View>
-        </Pressable>
-        <Pressable style = {styles.saveDeleteButtonPlacement}>
-          <View style = {styles.deleteButton} >
+          </Pressable>
+        </View>
+        <View style = {styles.saveDeleteButtonPlacement}>
+          <Pressable 
+            style={({pressed}) => [ 
+            {
+              backgroundColor: pressed ? "#802424" : "#ff4545"
+            },
+            styles.deleteButton]} 
+            onPress={() => {
+              DeleteItemBackend();
+            }}>
             <Text
               style = {{
                 color: "white",
                 fontSize: 16,
                 fontWeight: "500",
               }}
-              onPress={() => {
-                DeleteItemBackend();
-              }}
             >
               Delete Item
             </Text>
-          </View>
-        </Pressable>
+          </Pressable>
+        </View>
       </View>
     </View>
   )
@@ -241,7 +258,7 @@ function EditItemsScreen({ route, navigation }) {
 
 const Item = ({ navigation, color, name, quantity, size, id, teamname }) => (
   <Pressable
-    style = {styles.flatlistStyle}
+    style={styles.flatlistStyle}
     onPress = {() => {navigation.navigate('EditItemsScreen', {itemName: name, itemColor: color, itemQuantity: quantity, itemSize: size, itemID: id, teamName: teamname})}}
   >
     <View style={styles.item}>
@@ -330,7 +347,12 @@ const ViewItems = ({ route, navigation }) => {
       <View style={styles.GoBackInstructionsView}></View>
       <View style={styles.addItemView}>
       <Pressable
-          style={styles.RefreshButton}
+          style={({pressed}) => [ 
+            {
+              backgroundColor: pressed ? "#046f8c" : "#0CCBFF"
+            },
+            styles.RefreshButton
+          ]}
           onPress={() => {
             manualGetItems();
             }
@@ -339,7 +361,12 @@ const ViewItems = ({ route, navigation }) => {
           <Text style={styles.addItemButtonText}>Refresh</Text>
         </Pressable>
         <Pressable
-          style={styles.addItemButton}
+          style={({pressed}) => [ 
+            {
+              backgroundColor: pressed ? "#802424" : "#ff4545"
+            },
+            styles.addItemButton
+          ]}
           onPress={() => {
             navigation.navigate("AddItemsScreen", {
               screen: "AddTeamItem",
@@ -352,10 +379,13 @@ const ViewItems = ({ route, navigation }) => {
       </View>
 
       {/* <Text>{"\n"}</Text> */}
+
+  
       <FlatList
         data={teamItems}
         renderItem={renderItem}
         keyExtractor={(item, index) => index.toString()}
+        ListEmptyComponent={<Text style={{marginLeft: 20, fontSize: 20}}>This team currently doesn't have any items</Text>}
       />
     </SafeAreaView>
   );
@@ -397,7 +427,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    backgroundColor: "#ff4545",
+
     marginBottom: 8,
     padding: 10,
     borderRadius: 8,
@@ -407,11 +437,11 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    backgroundColor: "#0CCBFF",
     marginBottom: 8,
     padding: 10,
     borderRadius: 8,
     justifyContent: "center",
+    
   },
   addItemButtonText: {
     fontSize: 16,
@@ -466,6 +496,7 @@ const styles = StyleSheet.create({
   flatlistStyle: {
     //padding: 8,
     marginHorizontal: 8,
+    borderRadius: 8
   },
 
   currentQuantityText: {
@@ -497,11 +528,11 @@ const styles = StyleSheet.create({
     fontWeight: "600"
   },
   plusMinusButtons: {
-    backgroundColor: "#ff4545",
     borderRadius: 15,
     margin: 10,
     width: 75,
     height: 50,
+    padding: 3
   },
   plusMinusText: {
     fontSize: 30,
@@ -526,7 +557,6 @@ const styles = StyleSheet.create({
     paddingTop: 20,
   },
   saveButton: {
-    backgroundColor: "white",
     //paddingHorizontal: 100,
     width: 275,
     paddingVertical: 10,
@@ -536,7 +566,6 @@ const styles = StyleSheet.create({
     borderWidth: .5
   },
   deleteButton: {
-    backgroundColor: "#ff4545",
     width: 275,
     paddingVertical: 10,
     borderRadius: 8,
