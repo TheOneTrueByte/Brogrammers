@@ -139,54 +139,58 @@ const AddTeamItem = ({ route, navigation }) => {
           <Heading size="lg" fontWeight="600" color="coolGray.800">
             This is the page that will allow you to create new Items
           </Heading>
-          <Heading mt="1" color="coolGray.600" fontWeight="medium" size="xs">
-            Item Name*
-          </Heading>
-          <TextInput
-            required
-            onChangeText={(value) => editItemName(value)}
-            placeholder={"Please enter name of the item"}
-            value={itemName}
-            style={styles.input}
-          />
-          <Heading mt="1" color="coolGray.600" fontWeight="medium" size="xs">
-            Item Quantity*
-          </Heading>
-          <TextInput
-            required
-            onChangeText={(value) => editItemQuantity(value)}
-            placeholder={"Please enter the quantity"}
-            value={itemQuantity}
-            style={styles.input}
-          />
-          <Heading mt="1" color="coolGray.600" fontWeight="medium" size="xs">
-            Item Size*
-          </Heading>
-          <TextInput
-            required
-            onChangeText={(value) => editItemSize(value)}
-            placeholder={"Please enter size"}
-            value={itemSize}
-            style={styles.input}
-          />
-          <Heading mt="1" color="coolGray.600" fontWeight="medium" size="xs">
-            Item Color*
-          </Heading>
-          <TextInput
-            required
-            onChangeText={(value) => editItemColor(value)}
-            placeholder={"Please enter color"}
-            value={itemColor}
-            style={styles.input}
-          />
-          <Text
-            style={{
-              color: "#bf0b23",
-              fontWeight: "bold",
-            }}
-          >
-            {err}
-          </Text>
+
+          <ScrollView style = {styles.addItemsScrollView}>
+            <Heading mt="1" color="coolGray.600" fontWeight="medium" size="xs">
+              Item Name*
+            </Heading>
+            <TextInput
+              required
+              onChangeText={(value) => editItemName(value)}
+              placeholder={"Please enter name of the item"}
+              value={itemName}
+              style={styles.input}
+            />
+            <Heading mt="1" color="coolGray.600" fontWeight="medium" size="xs">
+              Item Quantity*
+            </Heading>
+            <TextInput
+              required
+              onChangeText={(value) => editItemQuantity(value)}
+              placeholder={"Please enter the quantity"}
+              value={itemQuantity}
+              style={styles.input}
+            />
+            <Heading mt="1" color="coolGray.600" fontWeight="medium" size="xs">
+              Item Size*
+            </Heading>
+            <TextInput
+              required
+              onChangeText={(value) => editItemSize(value)}
+              placeholder={"Please enter size"}
+              value={itemSize}
+              style={styles.input}
+            />
+            <Heading mt="1" color="coolGray.600" fontWeight="medium" size="xs">
+              Item Color*
+            </Heading>
+            <TextInput
+              required
+              onChangeText={(value) => editItemColor(value)}
+              placeholder={"Please enter color"}
+              value={itemColor}
+              style={styles.input}
+            />
+            <Text
+              style={{
+                color: "#bf0b23",
+                fontWeight: "bold",
+              }}
+            >
+              {err}
+            </Text>
+          </ScrollView>
+
           <Button
             title="Add Item"
             onPress={() => {
@@ -235,6 +239,9 @@ const styles = StyleSheet.create({
     color: "grey",
     alignItems: "center",
     textAlign: "center",
+  },
+  addItemsScrollView: {
+    flexGrow: 0
   },
   input: {
     height: 44,

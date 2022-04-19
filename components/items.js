@@ -12,6 +12,7 @@ import {
   SafeAreaView,
   Pressable,
   TouchableOpacity,
+  ScrollView
 } from "react-native";
 import { useState } from "react";
 import { createDrawerNavigator, DrawerItem } from "@react-navigation/drawer";
@@ -175,7 +176,9 @@ function EditItemsScreen({ route, navigation }) {
           </View>
         </Pressable>
       </View>
-      <View>
+      <ScrollView 
+      style ={styles.editItemsScrollView} 
+      >
         <Text style = {styles.editItemText} >Edit Name:</Text>
         <TextInput
           style = {styles.EditItemsTextInput}
@@ -197,7 +200,7 @@ function EditItemsScreen({ route, navigation }) {
           value={size}
           placeholder = {size}
         />
-      </View>
+      </ScrollView>
       <View>
         <Pressable style = {styles.saveDeleteButtonPlacement}>
           <View style = {styles.saveButton} >
@@ -472,6 +475,9 @@ const styles = StyleSheet.create({
   },
   editItemsContainer: {
     flex: 1,
+  },
+  editItemsScrollView: {
+    flexGrow: 0
   },
   editItemsTextInputView: {
     paddingTop: 12,
