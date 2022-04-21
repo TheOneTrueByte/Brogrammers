@@ -24,7 +24,6 @@ import {
 } from "@react-navigation/native";
 import { TextInput } from "react-native-gesture-handler";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import Login from "./Login";
 import Home from "./HomeScreen";
 
 import { background, borderLeft, fontSize, style } from "styled-system";
@@ -35,7 +34,6 @@ import MainMenu from "./HomeScreen";
 import { initializeApp } from "@firebase/app";
 import "firebase/firestore";
 import { getFirestore, setDoc, doc, deleteDoc, getDoc, getDocs, onSnapshot, query, updateDoc, arrayRemove, arrayUnion } from "firebase/firestore";
-import { Icon } from "native-base";
 import { getAuth, updateEmail, signOut } from "firebase/auth";
 import { auth } from "../firebase";
 import { ScreenStack } from "react-native-screens";
@@ -107,10 +105,15 @@ function EditItemsScreen({ route, navigation }) {
 
         console.log("Remove finished")
         //This section to remove: END
+      } catch
+      {
+        alert("Your edited item was not put in. No changes have been made")
+      }
 
 
         //This section to add the updated item
 
+      try {
         const itemToUpdateIn = {
           Name: name,
           Quantity: quantity,
@@ -440,8 +443,6 @@ const styles = StyleSheet.create({
   body: {
     fontSize: 16,
     paddingTop: 5,
-    //margin: 5,
-    //backgroundColor: "#eb34bd",
     color: "black",
     flex: 1,
     justifyContent: "space-between",
@@ -450,9 +451,6 @@ const styles = StyleSheet.create({
   itemNameText: {
     fontSize: 20,
     fontWeight: "500",
-    //paddingTop: 5,
-    //margin: 5,
-    //backgroundColor: "#eb34bd",
     color: "black",
     flex: 1,
     justifyContent: "space-between",
@@ -464,7 +462,6 @@ const styles = StyleSheet.create({
     color: "white",
   },
   flatlistStyle: {
-    //padding: 8,
     marginHorizontal: 8,
   },
 
@@ -527,7 +524,6 @@ const styles = StyleSheet.create({
   },
   saveButton: {
     backgroundColor: "white",
-    //paddingHorizontal: 100,
     width: 275,
     paddingVertical: 10,
     borderRadius: 8,
