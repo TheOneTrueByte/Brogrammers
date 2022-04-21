@@ -184,7 +184,7 @@ function EditItemsScreen({ route, navigation }) {
         </Pressable>
       </View>
       <ScrollView 
-      style ={styles.editItemsScrollView} 
+        style = {styles.editItemsScrollView} 
       >
         <Text style = {styles.editItemText} >Edit Name:</Text>
         <TextInput
