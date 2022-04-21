@@ -486,11 +486,6 @@ function MyDrawer() {
         component={DeleteAccount}
         options={{ drawerLabel: "Delete Account" }}
       />
-      {/* <Drawer.Screen
-        name="Create"
-        component={Create}
-        options={{ drawerLabel: "Create" }}
-      /> */}
       <Drawer.Screen
         name="LogOut"
         component={LogOut}
