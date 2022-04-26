@@ -259,6 +259,7 @@ function MainMenuNavigator({ navigation }) {
       <Stack.Screen
         name="TeamItems"
         component={ItemsScreen}
+        options = {{title: "Items"}}
       />
     </Stack.Navigator>
   );
