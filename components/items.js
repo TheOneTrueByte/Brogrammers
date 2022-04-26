@@ -174,6 +174,14 @@ const Item = ({ navigation, color, name, quantity, size, id }) => (
   </Pressable>
 );
 
+const NoItems = () => {
+  return (
+    <View style = {styles.NoItemsView} >
+      <Text style = {styles.NoItemsText} >This team currently does not have any items.</Text>
+    </View>
+  )
+}
+
 const ViewItems = ({ route, navigation }) => {
 
   const testing = onSnapshot(doc(getFirestore(), "Teams", route.params.teamName), (doc) => {
@@ -215,7 +223,9 @@ const ViewItems = ({ route, navigation }) => {
       <FlatList
         data={teamItems}
         renderItem={renderItem}
-        keyExtractor={(item) => item.id}
+        keyExtractor={(item, index) => index.toString()}
+        ListEmptyComponent = {NoItems}
+        contentContainerStyle = {{flexGrow: 1}}
       />
     </SafeAreaView>
   );
@@ -284,7 +294,7 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 16,
     marginBottom: 8,
-    //marginHorizontal: 16,
+    //marginHorizontal: 16, 
     borderRadius: 8,
   },
   body: {
@@ -390,5 +400,17 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderColor: "grey",
     borderWidth: .5
+  },
+  NoItemsView: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  NoItemsText: {
+    textAlign: "center",
+    justifyContent: "center",
+    alignItems: "center",
+    color: "#999999",
+    fontWeight: "600",
   }
 });
