@@ -219,7 +219,7 @@ function MainMenu({ navigation }) {
           {'\n'}Tap on a team to view and edit its items{'\n'}
         </Text>
         <TouchableOpacity
-          style={{ backgroundColor: '#2196f3', height: 50, width: 1000, padding: 15, alignItems: 'center' }}
+          style={{ backgroundColor: '#2196f3', height: 50, width: 400, padding: 15, alignItems: 'center', borderRadius: 8}}
           onPress={() => {
             manualGetTeams();
           }}
@@ -230,6 +230,10 @@ function MainMenu({ navigation }) {
       <FlatList
         data={items}
         keyExtractor={(item) => item.key}
+        ListEmptyComponent = {
+          <View style = {{flex:1, alignItems:"center", justifyContent: "center"}}>
+            <Text style={{color: "#999999", fontSize:25}}>There are no teams to be displayed at this moment.</Text>
+          </View>}
         renderItem={({ item }) => (
           <Pressable
             style={styles.flatListStyle}
