@@ -26,7 +26,7 @@ import { TextInput } from "react-native-gesture-handler";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Home from "./HomeScreen";
 
-import { background, borderLeft, fontSize, style } from "styled-system";
+import { background, borderLeft, fontSize, justifyContent, style } from "styled-system";
 import AddItem from "./AddTeam";
 import AddTeamItems from "./AddItem";
 import MainMenu from "./HomeScreen";
@@ -277,6 +277,12 @@ const Item = ({ navigation, color, name, quantity, size, id, teamname }) => (
   </Pressable>
 );
 
+const NoItems = () => (
+  <View style = {styles.NoItemsView}>
+    <Text style = {styles.NoItemsText}>This team currently does not have any items.</Text>
+  </View>
+)
+
 const ViewItems = ({ route, navigation }) => {
 
   const isFocused = useIsFocused();
@@ -359,6 +365,8 @@ const ViewItems = ({ route, navigation }) => {
         data={teamItems}
         renderItem={renderItem}
         keyExtractor={(item, index) => index.toString()}
+        contentContainerStyle = {{flexGrow: 1}}
+        ListEmptyComponent = {NoItems}
       />
     </SafeAreaView>
   );
@@ -539,5 +547,16 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderColor: "grey",
     borderWidth: .5
+  },
+  NoItemsView: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  NoItemsText: {
+    color: "#999999",
+    fontWeight: "600",
+    textAlign: "center",
+    fontSize: 14,
   }
 });
