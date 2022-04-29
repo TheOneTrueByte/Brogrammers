@@ -206,7 +206,7 @@ const AddTeamItem = ({ route, navigation }) => {
         </VStack>
       </Box>
     </NativeBaseProvider>
-  );
+  ); 
 }
 
 export default function AddTeamItems({ navigation })
