@@ -168,13 +168,13 @@ function EditItemsScreen({ route, navigation }) {
           justifyContent: "center",
         }}
       >
-        <Pressable onPress={decrement} >
-          <View style = {styles.plusMinusButtons}>
+        <Pressable style = {({pressed}) => [{backgroundColor : pressed ? "#7d2525" : "#ff4545"}, styles.plusMinusButtons]} onPress={decrement} >
+          <View>
             <Text style = {styles.plusMinusText } >-</Text>
           </View>
         </Pressable>
-        <Pressable onPress={increment}>
-          <View style = {styles.plusMinusButtons}>
+        <Pressable style = {({pressed}) => [{backgroundColor : pressed ? "#7d2525" : "#ff4545"}, styles.plusMinusButtons]} onPress={increment}>
+          <View>
             <Text style = {styles.plusMinusText } >+</Text>
           </View>
         </Pressable>
@@ -205,38 +205,40 @@ function EditItemsScreen({ route, navigation }) {
         />
       </ScrollView>
       <View>
-        <Pressable style = {styles.saveDeleteButtonPlacement}>
-          <View style = {styles.saveButton} >
+        <View style = {styles.saveDeleteButtonPlacement}>
+          <Pressable style = {({pressed}) => [{backgroundColor : pressed ? "grey" : "white"}, styles.saveButton]} 
+            onPress={() => {
+              EditItemBackend();
+            }}>
             <Text 
               style = {{
                 color: "#ff4545",
                 fontSize: 16,
                 fontWeight: "500",
               }}
-              onPress={() => {
-                EditItemBackend();
-              }}
+              
             >
               Save Item
             </Text>
-          </View>
-        </Pressable>
-        <Pressable style = {styles.saveDeleteButtonPlacement}>
-          <View style = {styles.deleteButton} >
+          </Pressable>
+        </View>
+        <View style = {styles.saveDeleteButtonPlacement}>
+          <Pressable style = {({pressed}) => [{backgroundColor : pressed ? "#7d2525" : "#ff4545"}, styles.deleteButton]}
+             onPress={() => {
+                DeleteItemBackend();
+              }}>
             <Text
               style = {{
                 color: "white",
                 fontSize: 16,
                 fontWeight: "500",
               }}
-              onPress={() => {
-                DeleteItemBackend();
-              }}
+              
             >
               Delete Item
             </Text>
-          </View>
-        </Pressable>
+          </Pressable>
+        </View>
       </View>
     </View>
   )
@@ -339,7 +341,7 @@ const ViewItems = ({ route, navigation }) => {
       <View style={styles.GoBackInstructionsView}></View>
       <View style={styles.addItemView}>
       <Pressable
-          style={styles.RefreshButton}
+          style = {({pressed}) => [{backgroundColor : pressed ? "#0880A1" : "#0CCBFF"}, styles.RefreshButton]}
           onPress={() => {
             manualGetItems();
             }
@@ -348,7 +350,7 @@ const ViewItems = ({ route, navigation }) => {
           <Text style={styles.addItemButtonText}>Refresh</Text>
         </Pressable>
         <Pressable
-          style={styles.addItemButton}
+          style = {({pressed}) => [{backgroundColor : pressed ? "#7d2525" : "#ff4545"}, styles.addItemButton]}
           onPress={() => {
             navigation.navigate("AddItemsScreen", {
               screen: "AddTeamItem",
@@ -408,7 +410,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    backgroundColor: "#ff4545",
+    //backgroundColor: "#ff4545",
     marginBottom: 8,
     padding: 10,
     borderRadius: 8,
@@ -418,7 +420,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    backgroundColor: "#0CCBFF",
+    //backgroundColor: "#0CCBFF",
     marginBottom: 8,
     padding: 10,
     borderRadius: 8,
@@ -502,14 +504,16 @@ const styles = StyleSheet.create({
     fontWeight: "600"
   },
   plusMinusButtons: {
-    backgroundColor: "#ff4545",
+   // backgroundColor: "#ff4545",
     borderRadius: 15,
+    alignItems: "center",
     margin: 10,
     width: 75,
     height: 50,
   },
   plusMinusText: {
     fontSize: 30,
+    marginTop: 3,
     textAlign: "center",
   },
   EditItemsTextInput: {
@@ -531,7 +535,7 @@ const styles = StyleSheet.create({
     paddingTop: 20,
   },
   saveButton: {
-    backgroundColor: "white",
+    //backgroundColor: "white",
     width: 275,
     paddingVertical: 10,
     borderRadius: 8,
@@ -540,7 +544,7 @@ const styles = StyleSheet.create({
     borderWidth: .5
   },
   deleteButton: {
-    backgroundColor: "#ff4545",
+    //backgroundColor: "#ff4545",
     width: 275,
     paddingVertical: 10,
     borderRadius: 8,
